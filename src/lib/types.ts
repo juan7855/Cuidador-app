@@ -1,6 +1,5 @@
 import type {
   patients,
-  clinicalProfiles,
   medications,
   meals,
   exercises,
@@ -12,11 +11,19 @@ import type {
 // Forma plana que usa el UI: fila de `patients` fusionada con su
 // `clinical_profiles` (conditions/allergies/doctors/labs/goals/notes viven
 // en esa tabla en la base de datos real, compartida con la otra app).
-export type Patient = typeof patients.$inferSelect &
-  Pick<
-    typeof clinicalProfiles.$inferSelect,
-    "conditions" | "allergies" | "chronicMeds" | "doctors" | "labs" | "goals" | "notes"
-  >;
+// Estos campos se tipan como no-nulos a propósito: en la base de datos real
+// `conditions`/`allergies` son nullable, pero la API siempre los normaliza a
+// `[]`/`null` al construir este objeto (ver patients/route.ts y
+// patients/[id]/route.ts), así que el UI no necesita revisar null.
+export type Patient = Omit<typeof patients.$inferSelect, "pin"> & {
+  conditions: string[];
+  allergies: string[];
+  chronicMeds: string[];
+  doctors: { name: string; specialty: string; phone: string }[];
+  labs: { name: string; value: string; status: "normal" | "high" | "low"; date: string }[];
+  goals: { calories: number; waterGlasses: number; exerciseMin: number; steps: number } | null;
+  notes: string | null;
+};
 export type Medication = typeof medications.$inferSelect;
 export type Meal = typeof meals.$inferSelect;
 export type Exercise = typeof exercises.$inferSelect;

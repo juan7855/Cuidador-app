@@ -62,8 +62,12 @@ export async function GET(
     .where(eq(clinicalProfiles.patientId, pid))
     .limit(1);
 
+  // El PIN no se expone en el dashboard: el cuidador ya lo vio una vez al
+  // crear el paciente (ver POST /api/patients), y no hace falta reenviarlo
+  // al navegador en cada carga.
+  const { pin: _pin, ...patientPublic } = patientRow;
   const patient = {
-    ...patientRow,
+    ...patientPublic,
     conditions: clinicalRow?.conditions ?? [],
     allergies: clinicalRow?.allergies ?? [],
     chronicMeds: clinicalRow?.chronicMeds ?? [],

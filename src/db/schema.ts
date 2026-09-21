@@ -23,6 +23,9 @@ import {
 export const patients = pgTable("patients", {
   id: serial("id").primaryKey(), // (real)
   name: text("name").notNull(), // (real)
+  // Clave de 4 dígitos con la que el paciente entra a MiSalud (la app del
+  // adulto mayor). Esta app solo la escribe al crear un paciente nuevo.
+  pin: text("pin").notNull().unique(), // (real)
   // Estas columnas son nullable en la base de datos real (para no romper los
   // inserts de la otra app, que no las conoce), pero esta app siempre las
   // rellena para sus propios pacientes, así que se tipan como requeridas
@@ -57,8 +60,10 @@ export const clinicalProfiles = pgTable("clinical_profiles", {
     .notNull()
     .unique()
     .references(() => patients.id, { onDelete: "cascade" }), // (real)
-  conditions: text("conditions").array().notNull().default([]), // (real)
-  allergies: text("allergies").array().notNull().default([]), // (real)
+  // (real, nullable — confirmado contra el schema.ts canónico de MiSalud)
+  conditions: text("conditions").array(),
+  dietRestrictions: text("diet_restrictions").array(), // (real)
+  allergies: text("allergies").array(), // (real)
   chronicMeds: text("chronic_meds").array().notNull().default([]), // (nueva)
   doctors: jsonb("doctors").$type<
     { name: string; specialty: string; phone: string }[]
@@ -149,6 +154,14 @@ export const meals = pgTable("meals", {
   carbs: real("carbs").notNull().default(0), // (nueva)
   fat: real("fat").notNull().default(0), // (nueva)
   tone: text("tone").notNull().default("emerald"), // (nueva)
+  // Estas 5 son de la otra app (MiSalud las muestra en su menú), NOT NULL
+  // sin default en la base real. Esta app no las edita en su propio UI,
+  // pero debe rellenarlas al crear una comida para no violar la restricción.
+  slug: text("slug").notNull(), // (real)
+  article: text("article").notNull(), // (real) ej. "el desayuno"
+  emoji: text("emoji").notNull().default("🍽️"), // (real)
+  accent: text("accent").notNull().default("emerald"), // (real)
+  items: text("items").array().notNull().default([]), // (real)
 });
 
 export const mealLogs = pgTable("meal_logs", {
@@ -188,6 +201,14 @@ export const exercises = pgTable("exercises", {
   icon: text("icon").notNull().default("Footprints"), // (nueva)
   description: text("description").notNull(), // (real)
   items: jsonb("items").$type<{ name: string; detail: string }[]>(), // (nueva)
+  // De la otra app (catálogo que ve el paciente en MiSalud), NOT NULL sin
+  // default en la base real. Esta app no las edita en su propio UI, pero
+  // debe rellenarlas al crear un ejercicio para no violar la restricción.
+  level: text("level").notNull().default("Ligero"), // (real)
+  emoji: text("emoji").notNull().default("🏃"), // (real)
+  durationSeconds: integer("duration_seconds").notNull().default(900), // (real)
+  steps: text("steps").array().notNull().default([]), // (real)
+  tip: text("tip").notNull().default(""), // (real)
 });
 
 export const exerciseLogs = pgTable("exercise_logs", {
@@ -228,6 +249,25 @@ export const routineLogs = pgTable("routine_logs", {
     .references(() => patients.id, { onDelete: "cascade" }), // (real)
   date: date("date", { mode: "string" }).notNull(), // (real)
   done: boolean("completed").notNull().default(false), // (real, columna "completed")
+});
+
+// Catálogo de actividades de Mente Activa que ve el paciente en MiSalud
+// (tabla real, sin logs de finalización: esa app no lleva cronómetro ahí).
+// Esta app no tiene UI para editarlo todavía; se usa solo al crear un
+// paciente nuevo, para sembrarle un catálogo inicial.
+export const cognitiveActivities = pgTable("cognitive_activities", {
+  id: serial("id").primaryKey(), // (real)
+  patientId: integer("patient_id")
+    .notNull()
+    .references(() => patients.id, { onDelete: "cascade" }), // (real)
+  name: text("name").notNull(), // (real)
+  level: text("level").notNull(), // (real) "Fácil" | "Reto"
+  emoji: text("emoji").notNull(), // (real)
+  durationLabel: text("duration_label").notNull(), // (real) ej. "5 min"
+  description: text("description").notNull(), // (real)
+  steps: text("steps").array().notNull(), // (real)
+  tip: text("tip").notNull(), // (real)
+  createdAt: timestamp("created_at").defaultNow(), // (real)
 });
 
 // Mente activa: puntuaciones de juegos — tabla nueva, no existe en la otra app.

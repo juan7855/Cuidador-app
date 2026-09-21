@@ -206,6 +206,22 @@ export function toneOf(name: string): Tone {
   return TONES[name] ?? TONES.blue;
 }
 
+// routine_activities.time_of_day es una columna compartida con MiSalud (la
+// app del adulto mayor), que agrupa su rutina en 3 franjas en inglés
+// ("morning"/"afternoon"/"evening"). Esta app históricamente usa 5 franjas
+// en español. Sin este mapeo, las filas que crea el flujo de "Nuevo
+// paciente" (que sigue la convención de MiSalud) no aparecerían en ninguna
+// franja aquí, aunque sí se vean bien del lado del paciente.
+const PHASE_ALIASES: Record<string, string> = {
+  morning: "Mañana",
+  afternoon: "Tarde",
+  evening: "Noche",
+};
+
+export function normalizePhase(phase: string): string {
+  return PHASE_ALIASES[phase] ?? phase;
+}
+
 export async function jsonFetch<T>(url: string, init?: RequestInit): Promise<T> {
   const res = await fetch(url, {
     headers: { "Content-Type": "application/json" },

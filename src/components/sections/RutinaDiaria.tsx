@@ -4,7 +4,7 @@ import { Check, PartyPopper } from "lucide-react";
 import { Card, CardTitle, Chip, CheckButton, ProgressRing, MiniBars, DyIcon } from "@/components/ui";
 import { SectionHeader } from "@/components/sections/_shared";
 import { sectionById } from "@/components/nav";
-import { cn, hourLabel, isToday, toneOf } from "@/lib/utils";
+import { cn, hourLabel, isToday, normalizePhase, toneOf } from "@/lib/utils";
 import type { DashboardData, RoutineRow } from "@/lib/types";
 
 const PHASES: { id: string; label: string; icon: string; tone: string }[] = [
@@ -79,7 +79,7 @@ export default function RutinaDiaria({
       <div className="flex flex-col gap-5 sm:gap-6">
         {PHASES.map((phase) => {
           const tasks = data.routine
-            .filter((r) => r.phase === phase.id)
+            .filter((r) => normalizePhase(r.phase) === phase.id)
             .sort((a, b) => a.time.localeCompare(b.time));
           if (!tasks.length) return null;
           const done = tasks.filter((x) => x.doneToday).length;
