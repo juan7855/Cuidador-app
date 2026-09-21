@@ -1,8 +1,12 @@
 import { NextResponse } from "next/server";
+import { and, eq } from "drizzle-orm";
 import { db } from "@/db";
 import {
+  medications,
   medicationLogs,
+  meals,
   mealLogs,
+  exercises,
   exerciseLogs,
   routineLogs,
   waterLogs,
@@ -21,6 +25,9 @@ interface LogBody {
   glasses?: number;
 }
 
+// Las tablas de logs son compartidas con otra app y no podemos asumir que
+// tengan un índice único (medication_id, date) etc. en producción, así que
+// hacemos upsert manual en vez de depender de ON CONFLICT.
 export async function POST(req: Request) {
   const body = (await req.json()) as LogBody;
   const pid = Number(body.patientId);
@@ -35,67 +42,88 @@ export async function POST(req: Request) {
       case "med": {
         const medicationId = Number(body.id);
         const taken = Boolean(body.done);
-        await db
-          .insert(medicationLogs)
-          .values({
-            medicationId,
-            patientId: pid,
-            date,
-            taken,
-            takenAt: taken ? new Date() : null,
-          })
-          .onConflictDoUpdate({
-            target: [medicationLogs.medicationId, medicationLogs.date],
-            set: { taken, takenAt: taken ? new Date() : null },
-          });
+        const takenAt = taken ? new Date() : null;
+        const existing = await db
+          .select({ id: medicationLogs.id })
+          .from(medicationLogs)
+          .where(and(eq(medicationLogs.medicationId, medicationId), eq(medicationLogs.date, date)))
+          .limit(1);
+        if (existing.length) {
+          await db
+            .update(medicationLogs)
+            .set({ taken, takenAt })
+            .where(eq(medicationLogs.id, existing[0].id));
+        } else {
+          await db.insert(medicationLogs).values({ medicationId, patientId: pid, date, taken, takenAt });
+        }
         break;
       }
       case "meal": {
         const mealId = Number(body.id);
         const done = Boolean(body.done);
-        await db
-          .insert(mealLogs)
-          .values({ mealId, patientId: pid, date, done })
-          .onConflictDoUpdate({
-            target: [mealLogs.mealId, mealLogs.date],
-            set: { done },
-          });
+        const existing = await db
+          .select({ id: mealLogs.id })
+          .from(mealLogs)
+          .where(and(eq(mealLogs.mealId, mealId), eq(mealLogs.date, date)))
+          .limit(1);
+        if (existing.length) {
+          await db.update(mealLogs).set({ done }).where(eq(mealLogs.id, existing[0].id));
+        } else {
+          await db.insert(mealLogs).values({ mealId, patientId: pid, date, done });
+        }
         break;
       }
       case "exercise": {
         const exerciseId = Number(body.id);
         const done = Boolean(body.done);
         const minutes = done ? Number(body.minutes ?? 0) : 0;
-        await db
-          .insert(exerciseLogs)
-          .values({ exerciseId, patientId: pid, date, done, minutes })
-          .onConflictDoUpdate({
-            target: [exerciseLogs.exerciseId, exerciseLogs.date],
-            set: { done, minutes },
-          });
+        const [ex] = await db
+          .select({ name: exercises.title })
+          .from(exercises)
+          .where(eq(exercises.id, exerciseId))
+          .limit(1);
+        const exerciseName = ex?.name ?? "Ejercicio";
+        const existing = await db
+          .select({ id: exerciseLogs.id })
+          .from(exerciseLogs)
+          .where(and(eq(exerciseLogs.exerciseId, exerciseId), eq(exerciseLogs.date, date)))
+          .limit(1);
+        if (existing.length) {
+          await db.update(exerciseLogs).set({ done, minutes }).where(eq(exerciseLogs.id, existing[0].id));
+        } else {
+          await db
+            .insert(exerciseLogs)
+            .values({ exerciseId, exerciseName, patientId: pid, date, done, minutes });
+        }
         break;
       }
       case "routine": {
         const taskId = Number(body.id);
         const done = Boolean(body.done);
-        await db
-          .insert(routineLogs)
-          .values({ taskId, patientId: pid, date, done })
-          .onConflictDoUpdate({
-            target: [routineLogs.taskId, routineLogs.date],
-            set: { done },
-          });
+        const existing = await db
+          .select({ id: routineLogs.id })
+          .from(routineLogs)
+          .where(and(eq(routineLogs.taskId, taskId), eq(routineLogs.date, date)))
+          .limit(1);
+        if (existing.length) {
+          await db.update(routineLogs).set({ done }).where(eq(routineLogs.id, existing[0].id));
+        } else {
+          await db.insert(routineLogs).values({ taskId, patientId: pid, date, done });
+        }
         break;
       }
       case "water": {
         const glasses = Math.max(0, Math.min(16, Number(body.glasses ?? 0)));
-        await db
-          .insert(waterLogs)
-          .values({ patientId: pid, date, glasses })
-          .onConflictDoUpdate({
-            target: [waterLogs.patientId, waterLogs.date],
-            set: { glasses },
-          });
+        const existing = await db
+          .select({ id: waterLogs.id })
+          .from(waterLogs)
+          .where(and(eq(waterLogs.patientId, pid), eq(waterLogs.date, date)))
+          .limit(1);
+        if (existing.length) {
+          await db.update(waterLogs).set({ glasses }).where(eq(waterLogs.id, existing[0].id));
+        } else {
+          await db.insert(waterLogs).values({ patientId: pid, date, glasses });
+        }
         break;
       }
       default:

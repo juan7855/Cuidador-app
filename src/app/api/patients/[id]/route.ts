@@ -3,6 +3,7 @@ import { and, desc, eq, gte } from "drizzle-orm";
 import { db } from "@/db";
 import {
   patients,
+  clinicalProfiles,
   dailyVitals,
   medications,
   medicationLogs,
@@ -54,6 +55,23 @@ export async function GET(
   if (!patientRow) {
     return NextResponse.json({ error: "Paciente no encontrado" }, { status: 404 });
   }
+
+  const [clinicalRow] = await db
+    .select()
+    .from(clinicalProfiles)
+    .where(eq(clinicalProfiles.patientId, pid))
+    .limit(1);
+
+  const patient = {
+    ...patientRow,
+    conditions: clinicalRow?.conditions ?? [],
+    allergies: clinicalRow?.allergies ?? [],
+    chronicMeds: clinicalRow?.chronicMeds ?? [],
+    doctors: clinicalRow?.doctors ?? [],
+    labs: clinicalRow?.labs ?? [],
+    goals: clinicalRow?.goals ?? null,
+    notes: clinicalRow?.notes ?? null,
+  };
 
   const today = todayKey();
   const dates = lastNDates(7);
@@ -197,7 +215,7 @@ export async function GET(
   }
 
   const data: DashboardData = {
-    patient: patientRow,
+    patient,
     today,
     vitals: vitalsRows,
     todayVital: vitalsRows.find((v) => v.date === today) ?? vitalsRows[vitalsRows.length - 1],

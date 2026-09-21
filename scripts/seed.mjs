@@ -1,4 +1,10 @@
-// Seed de la aplicación de salud. Uso: node scripts/seed.mjs
+// Seed de datos de demostración para "app cuidador".
+// Uso: node scripts/seed.mjs
+//
+// IMPORTANTE: esta base de datos es compartida con otra app. Este script
+// NUNCA hace TRUNCATE ni borra filas existentes: solo inserta pacientes de
+// demo nuevos (si ya existe un paciente con el mismo nombre, se omite por
+// completo, incluidos sus datos de las últimas semanas).
 import "dotenv/config";
 import pg from "pg";
 
@@ -19,6 +25,22 @@ const daysAgo = (n, hour = 12) => {
   d.setHours(hour, 0, 0, 0);
   return d.toISOString();
 };
+const slugify = (s) =>
+  s
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+
+async function uniquePin(client) {
+  for (let i = 0; i < 20; i++) {
+    const pin = String(Math.floor(1000 + Math.random() * 9000));
+    const { rows } = await client.query("SELECT 1 FROM patients WHERE pin = $1", [pin]);
+    if (!rows.length) return pin;
+  }
+  throw new Error("No se pudo generar un PIN único");
+}
 
 // Patrones de 7 días (el último es hoy)
 const vitalsSeries = {
@@ -54,7 +76,7 @@ const vitalsSeries = {
   },
 };
 
-const patients = [
+const patientsSeed = [
   {
     key: "maria",
     name: "María González",
@@ -256,24 +278,36 @@ const bestScores = {
 async function main() {
   const client = await pool.connect();
   try {
-    await client.query("BEGIN");
-    await client.query("TRUNCATE game_scores, routine_logs, routine_tasks, exercise_logs, exercises, water_logs, meal_logs, meals, medication_logs, medications, daily_vitals, patients RESTART IDENTITY CASCADE");
+    for (let pi = 0; pi < patientsSeed.length; pi++) {
+      const p = patientsSeed[pi];
 
-    for (let pi = 0; pi < patients.length; pi++) {
-      const p = patients[pi];
+      const already = await client.query("SELECT id FROM patients WHERE name = $1", [p.name]);
+      if (already.rows.length) {
+        console.log(`↷ ${p.name} ya existe (id ${already.rows[0].id}), se omite por completo.`);
+        continue;
+      }
+
+      await client.query("BEGIN");
+
+      const pin = await uniquePin(client);
       const pRes = await client.query(
         `INSERT INTO patients
-          (name, relation, gender, age, birth_date, blood_type, height_cm, weight_kg,
-           avatar_from, avatar_to, conditions, allergies, chronic_meds, phone, insurance,
-           address, emergency_contact, doctors, labs, notes, goals)
-         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21)
+          (name, pin, relation, gender, age, birth_date, blood_type, height_cm, weight_kg,
+           avatar_from, avatar_to, phone, insurance, address, emergency_contact)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)
          RETURNING id`,
-        [p.name, p.relation, p.gender, p.age, p.birthDate, p.bloodType, p.heightCm, p.weightKg,
-         p.avatarFrom, p.avatarTo, p.conditions, p.allergies, p.chronicMeds, p.phone, p.insurance,
-         p.address, JSON.stringify(p.emergencyContact), JSON.stringify(p.doctors),
-         JSON.stringify(p.labs), p.notes, JSON.stringify(p.goals)]
+        [p.name, pin, p.relation, p.gender, p.age, p.birthDate, p.bloodType, p.heightCm, p.weightKg,
+         p.avatarFrom, p.avatarTo, p.phone, p.insurance, p.address, JSON.stringify(p.emergencyContact)]
       );
       const pid = pRes.rows[0].id;
+
+      await client.query(
+        `INSERT INTO clinical_profiles
+          (patient_id, conditions, allergies, chronic_meds, doctors, labs, goals, notes)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`,
+        [pid, p.conditions, p.allergies, p.chronicMeds, JSON.stringify(p.doctors),
+         JSON.stringify(p.labs), JSON.stringify(p.goals), p.notes]
+      );
 
       // Vitals de 7 días
       const s = vitalsSeries[p.key];
@@ -287,63 +321,72 @@ async function main() {
         );
       }
 
-      // Medicación
+      // Medicación (dose = "dosage")
       const medIds = [];
       for (const m of medsByPatient[p.key]) {
         const [name, activeSubstance, dosage, form, time, period, withFood, stock, unit, lowAt, instructions, tone] = m;
         const r = await client.query(
           `INSERT INTO medications
-            (patient_id, name, active_substance, dosage, form, time, period, with_food, stock, stock_unit, low_stock_at, instructions, tone, active)
+            (patient_id, name, active_substance, dose, form, time, period, with_food, stock, stock_unit, low_stock_at, instructions, tone, active)
            VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,true) RETURNING id`,
           [pid, name, activeSubstance, dosage, form, time, period, withFood, stock, unit, lowAt, instructions, tone]
         );
         medIds.push(r.rows[0].id);
       }
       // Logs de medicación de los últimos 6 días (hoy se crea al interactuar)
-      medIds.forEach((mid, mi) => {
+      for (const [mi, mid] of medIds.entries()) {
         for (let off = 6; off >= 1; off--) {
           const taken = (off * 7 + mi * 3 + pi) % 11 !== 0;
-          client.query(
+          await client.query(
             `INSERT INTO medication_logs (medication_id, patient_id, date, taken, taken_at)
-             VALUES ($1,$2,$3,$4,$5) ON CONFLICT DO NOTHING`,
+             VALUES ($1,$2,$3,$4,$5)`,
             [mid, pid, dKey(off), taken, taken ? daysAgo(off, 9) : null]
           );
         }
-      });
+      }
 
-      // Comidas
+      // Comidas (name = "title"; slug/article/emoji/accent/items son
+      // columnas de la otra app, NOT NULL: se rellenan con valores mínimos)
       const mealIds = [];
-      for (const meal of mealsByPatient[p.key]) {
+      for (const [idx, meal] of mealsByPatient[p.key].entries()) {
         const [slot, time, title, foods, calories, protein, carbs, fat, tone] = meal;
+        const slug = `${slugify(p.name)}-${slugify(title)}-${pid}-${idx}`;
         const r = await client.query(
-          `INSERT INTO meals (patient_id, slot, time, title, foods, calories, protein, carbs, fat, tone)
-           VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING id`,
-          [pid, slot, time, title, foods, calories, protein, carbs, fat, tone]
+          `INSERT INTO meals
+            (patient_id, slug, name, article, time, emoji, accent, items, slot, foods, calories, protein, carbs, fat, tone)
+           VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15) RETURNING id`,
+          [pid, slug, title, foods, time, "🍽️", tone, [foods], slot, foods, calories, protein, carbs, fat, tone]
         );
         mealIds.push(r.rows[0].id);
       }
-      mealIds.forEach((mid, mi) => {
+      for (const [mi, mid] of mealIds.entries()) {
         for (let off = 6; off >= 1; off--) {
           const done = (off * 5 + mi) % 9 !== 0;
-          client.query(
-            `INSERT INTO meal_logs (meal_id, patient_id, date, done)
-             VALUES ($1,$2,$3,$4) ON CONFLICT DO NOTHING`,
+          await client.query(
+            `INSERT INTO meal_logs (meal_id, patient_id, date, eaten)
+             VALUES ($1,$2,$3,$4)`,
             [mid, pid, dKey(off), done]
           );
         }
-      });
+      }
 
-      // Ejercicio semanal
+      // Ejercicio semanal (name = "title"; level/emoji/duration_seconds/
+      // steps/tip son columnas de la otra app, NOT NULL)
       const exIds = [];
       for (const e of exByPatient[p.key]) {
         const [dayOfWeek, title, durationMin, calories, intensity, icon, description, items] = e;
+        const steps = items.map(([name, detail]) => `${name}: ${detail}`);
         const r = await client.query(
-          `INSERT INTO exercises (patient_id, day_of_week, title, duration_min, calories, intensity, icon, description, items)
-           VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING id`,
-          [pid, dayOfWeek, title, durationMin, calories, intensity, icon, description,
+          `INSERT INTO exercises
+            (patient_id, name, level, emoji, duration_seconds, description, steps, tip,
+             day_of_week, duration_min, calories, intensity, icon, items)
+           VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14) RETURNING id`,
+          [pid, title, intensity, "🏃", durationMin * 60, description, steps,
+           "Detente si aparecen mareos, dolor en el pecho o falta de aire.",
+           dayOfWeek, durationMin, calories, intensity, icon,
            JSON.stringify(items.map(([name, detail]) => ({ name, detail })))]
         );
-        exIds.push({ id: r.rows[0].id, dayOfWeek, durationMin });
+        exIds.push({ id: r.rows[0].id, dayOfWeek, durationMin, title });
       }
       // Logs de ejercicio de los últimos 6 días
       for (let off = 6; off >= 1; off--) {
@@ -353,48 +396,46 @@ async function main() {
         const ex = exIds.find((x) => x.dayOfWeek === dow);
         if (ex) {
           const done = (off * 3 + pi) % 8 !== 0;
-          client.query(
-            `INSERT INTO exercise_logs (exercise_id, patient_id, date, done, minutes)
-             VALUES ($1,$2,$3,$4,$5) ON CONFLICT DO NOTHING`,
-            [ex.id, pid, dKey(off), done, done ? ex.durationMin : 0]
+          await client.query(
+            `INSERT INTO exercise_logs (exercise_id, exercise_name, patient_id, date, completed, minutes)
+             VALUES ($1,$2,$3,$4,$5,$6)`,
+            [ex.id, ex.title, pid, dKey(off), done, done ? ex.durationMin : 0]
           );
         }
       }
 
-      // Rutina
+      // Rutina (time_of_day = "phase", scheduled_time = "time", description = "detail")
       const taskIds = [];
       for (const t of routine) {
         const [phase, time, title, detail, icon] = t;
         const r = await client.query(
-          `INSERT INTO routine_tasks (patient_id, phase, time, title, detail, icon)
+          `INSERT INTO routine_activities (patient_id, time_of_day, scheduled_time, title, description, icon)
            VALUES ($1,$2,$3,$4,$5,$6) RETURNING id`,
           [pid, phase, time, title, detail, icon]
         );
         taskIds.push(r.rows[0].id);
       }
-      taskIds.forEach((tid, ti) => {
+      for (const [ti, tid] of taskIds.entries()) {
         for (let off = 6; off >= 1; off--) {
           const done = (off * 4 + ti) % 13 !== 0;
-          client.query(
-            `INSERT INTO routine_logs (task_id, patient_id, date, done)
-             VALUES ($1,$2,$3,$4) ON CONFLICT DO NOTHING`,
+          await client.query(
+            `INSERT INTO routine_logs (activity_id, patient_id, date, completed)
+             VALUES ($1,$2,$3,$4)`,
             [tid, pid, dKey(off), done]
           );
         }
-      });
+      }
 
       // Agua (6 días atrás + hoy)
       for (let off = 6; off >= 1; off--) {
         const glasses = Math.max(3, Math.min(9, ((off * 3 + pi * 2) % 9) + 2));
         await client.query(
-          `INSERT INTO water_logs (patient_id, date, glasses) VALUES ($1,$2,$3)
-           ON CONFLICT (patient_id, date) DO UPDATE SET glasses = EXCLUDED.glasses`,
+          `INSERT INTO water_logs (patient_id, date, glasses) VALUES ($1,$2,$3)`,
           [pid, dKey(off), glasses]
         );
       }
       await client.query(
-        `INSERT INTO water_logs (patient_id, date, glasses) VALUES ($1,$2,$3)
-         ON CONFLICT (patient_id, date) DO UPDATE SET glasses = EXCLUDED.glasses`,
+        `INSERT INTO water_logs (patient_id, date, glasses) VALUES ($1,$2,$3)`,
         [pid, dKey(0), waterToday[p.key]]
       );
 
@@ -406,12 +447,14 @@ async function main() {
           [pid, game, score, "Mejor marca registrada", daysAgo(1 + (pi % 3), 18)]
         );
       }
+
+      await client.query("COMMIT");
+      console.log(`✓ ${p.name} creado (id ${pid}, PIN ${pin}).`);
     }
 
-    await client.query("COMMIT");
-    console.log("✅ Seed completado: 3 pacientes con datos de 7 días.");
+    console.log("✅ Seed completado.");
   } catch (err) {
-    await client.query("ROLLBACK");
+    await client.query("ROLLBACK").catch(() => {});
     console.error("❌ Error en el seed:", err);
     process.exitCode = 1;
   } finally {

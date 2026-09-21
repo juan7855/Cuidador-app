@@ -1,12 +1,12 @@
-import { asc } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 import { db } from "@/db";
-import { patients } from "@/db/schema";
+import { patients, clinicalProfiles } from "@/db/schema";
 import HealthApp from "@/components/HealthApp";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const list = await db
+  const rows = await db
     .select({
       id: patients.id,
       name: patients.name,
@@ -16,10 +16,13 @@ export default async function Home() {
       bloodType: patients.bloodType,
       avatarFrom: patients.avatarFrom,
       avatarTo: patients.avatarTo,
-      conditions: patients.conditions,
+      conditions: clinicalProfiles.conditions,
     })
     .from(patients)
+    .leftJoin(clinicalProfiles, eq(clinicalProfiles.patientId, patients.id))
     .orderBy(asc(patients.id));
+
+  const list = rows.map((r) => ({ ...r, conditions: r.conditions ?? [] }));
 
   return <HealthApp patients={list} />;
 }

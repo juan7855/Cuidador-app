@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
-import { asc } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 import { db } from "@/db";
-import { patients } from "@/db/schema";
+import { patients, clinicalProfiles } from "@/db/schema";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const list = await db
+  const rows = await db
     .select({
       id: patients.id,
       name: patients.name,
@@ -16,10 +16,13 @@ export async function GET() {
       bloodType: patients.bloodType,
       avatarFrom: patients.avatarFrom,
       avatarTo: patients.avatarTo,
-      conditions: patients.conditions,
+      conditions: clinicalProfiles.conditions,
     })
     .from(patients)
+    .leftJoin(clinicalProfiles, eq(clinicalProfiles.patientId, patients.id))
     .orderBy(asc(patients.name));
+
+  const list = rows.map((r) => ({ ...r, conditions: r.conditions ?? [] }));
 
   return NextResponse.json(list);
 }

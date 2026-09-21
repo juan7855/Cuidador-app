@@ -1,5 +1,6 @@
 import type {
   patients,
+  clinicalProfiles,
   medications,
   meals,
   exercises,
@@ -8,7 +9,14 @@ import type {
   gameScores,
 } from "@/db/schema";
 
-export type Patient = typeof patients.$inferSelect;
+// Forma plana que usa el UI: fila de `patients` fusionada con su
+// `clinical_profiles` (conditions/allergies/doctors/labs/goals/notes viven
+// en esa tabla en la base de datos real, compartida con la otra app).
+export type Patient = typeof patients.$inferSelect &
+  Pick<
+    typeof clinicalProfiles.$inferSelect,
+    "conditions" | "allergies" | "chronicMeds" | "doctors" | "labs" | "goals" | "notes"
+  >;
 export type Medication = typeof medications.$inferSelect;
 export type Meal = typeof meals.$inferSelect;
 export type Exercise = typeof exercises.$inferSelect;
