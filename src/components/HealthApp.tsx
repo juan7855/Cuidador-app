@@ -271,7 +271,7 @@ export default function HealthApp({ patients }: { patients: LitePatient[] }) {
       )}
       {section === "perfil" && <PerfilClinico data={data} />}
       {section === "meds" && (
-        <Medicamentos data={data} onToggle={markMed} onAdded={addMedication} />
+        <Medicamentos data={data} onToggle={markMed} onChanged={addMedication} />
       )}
       {section === "food" && (
         <Alimentacion

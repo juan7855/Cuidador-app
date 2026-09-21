@@ -206,6 +206,14 @@ export function toneOf(name: string): Tone {
   return TONES[name] ?? TONES.blue;
 }
 
+export function periodFromHour(time: string): string {
+  if (time === "—") return "Mañana";
+  const h = Number(time.split(":")[0]);
+  if (h < 12) return "Mañana";
+  if (h < 19) return "Tarde";
+  return "Noche";
+}
+
 // routine_activities.time_of_day es una columna compartida con MiSalud (la
 // app del adulto mayor), que agrupa su rutina en 3 franjas en inglés
 // ("morning"/"afternoon"/"evening"). Esta app históricamente usa 5 franjas

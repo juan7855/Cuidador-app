@@ -1,7 +1,16 @@
 "use client";
 
-import { useState } from "react";
-import { Plus, PackageX, Clock, UtensilsCrossed, Info, Pill as PillIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import {
+  Plus,
+  PackageX,
+  Clock,
+  UtensilsCrossed,
+  Info,
+  Pill as PillIcon,
+  Pencil,
+  Trash2,
+} from "lucide-react";
 import {
   Card,
   Chip,
@@ -28,14 +37,29 @@ const FORM_OPTIONS = ["Tableta", "Comprimido", "Cápsula", "Inhalador", "Inyecci
 export default function Medicamentos({
   data,
   onToggle,
-  onAdded,
+  onChanged,
 }: {
   data: DashboardData;
   onToggle: (id: number, done: boolean) => void;
-  onAdded: () => Promise<void>;
+  onChanged: () => Promise<void>;
 }) {
   const def = sectionById("meds");
   const [open, setOpen] = useState(false);
+  const [editing, setEditing] = useState<MedicationRow | null>(null);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
+
+  const handleDelete = async (med: MedicationRow) => {
+    if (!window.confirm(`¿Eliminar ${med.name} ${med.dosage}? Se borrará también su historial de tomas.`)) {
+      return;
+    }
+    setDeletingId(med.id);
+    try {
+      const res = await fetch(`/api/medications/${med.id}`, { method: "DELETE" });
+      if (res.ok) await onChanged();
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   const scheduled = data.meds.filter((m) => m.scheduled);
   const takenToday = scheduled.filter((m) => m.takenToday).length;
@@ -153,7 +177,14 @@ export default function Medicamentos({
             </div>
             <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
               {items.map((m) => (
-                <MedCard key={m.id} med={m} onToggle={onToggle} />
+                <MedCard
+                  key={m.id}
+                  med={m}
+                  onToggle={onToggle}
+                  onEdit={() => setEditing(m)}
+                  onDelete={() => handleDelete(m)}
+                  deleting={deletingId === m.id}
+                />
               ))}
             </div>
           </div>
@@ -195,17 +226,29 @@ export default function Medicamentos({
                     )}
                   </div>
                 </div>
+                <MedActions
+                  onEdit={() => setEditing(m)}
+                  onDelete={() => handleDelete(m)}
+                  deleting={deletingId === m.id}
+                />
               </Card>
             ))}
           </div>
         </div>
       )}
 
-      <AddMedModal
+      <MedModal
         open={open}
         onClose={() => setOpen(false)}
         patientId={data.patient.id}
-        onAdded={onAdded}
+        onSaved={onChanged}
+      />
+      <MedModal
+        open={Boolean(editing)}
+        onClose={() => setEditing(null)}
+        patientId={data.patient.id}
+        medication={editing}
+        onSaved={onChanged}
       />
     </div>
   );
@@ -220,12 +263,48 @@ function MedIcon({ med }: { med: MedicationRow }) {
   );
 }
 
+function MedActions({
+  onEdit,
+  onDelete,
+  deleting,
+}: {
+  onEdit: () => void;
+  onDelete: () => void;
+  deleting: boolean;
+}) {
+  return (
+    <div className="mt-3 flex items-center gap-1 border-t border-slate-100 pt-3">
+      <button
+        type="button"
+        onClick={onEdit}
+        className="inline-flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 text-xs font-bold text-slate-500 transition hover:bg-slate-100"
+      >
+        <Pencil size={13} strokeWidth={2.4} /> Editar
+      </button>
+      <button
+        type="button"
+        onClick={onDelete}
+        disabled={deleting}
+        className="inline-flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 text-xs font-bold text-slate-500 transition hover:bg-rose-50 hover:text-rose-600 disabled:opacity-50"
+      >
+        <Trash2 size={13} strokeWidth={2.4} /> {deleting ? "Eliminando…" : "Eliminar"}
+      </button>
+    </div>
+  );
+}
+
 function MedCard({
   med,
   onToggle,
+  onEdit,
+  onDelete,
+  deleting,
 }: {
   med: MedicationRow;
   onToggle: (id: number, done: boolean) => void;
+  onEdit: () => void;
+  onDelete: () => void;
+  deleting: boolean;
 }) {
   const t = toneOf(med.tone);
   const low = med.stock <= med.lowStockAt;
@@ -298,68 +377,86 @@ function MedCard({
           barClassName={low ? "bg-amber-500" : "bg-emerald-500"}
         />
       </div>
+
+      <MedActions onEdit={onEdit} onDelete={onDelete} deleting={deleting} />
     </Card>
   );
 }
 
-function AddMedModal({
+const EMPTY_MED_FORM = {
+  name: "",
+  activeSubstance: "",
+  dosage: "",
+  form: "Tableta",
+  time: "08:00",
+  rescue: false,
+  withFood: false,
+  stock: 30,
+  instructions: "",
+};
+
+function formFromMedication(med: MedicationRow): typeof EMPTY_MED_FORM {
+  return {
+    name: med.name,
+    activeSubstance: med.activeSubstance ?? "",
+    dosage: med.dosage,
+    form: med.form,
+    time: med.time === "—" ? EMPTY_MED_FORM.time : med.time,
+    rescue: med.time === "—",
+    withFood: med.withFood,
+    stock: med.stock,
+    instructions: med.instructions ?? "",
+  };
+}
+
+function MedModal({
   open,
   onClose,
   patientId,
-  onAdded,
+  medication,
+  onSaved,
 }: {
   open: boolean;
   onClose: () => void;
   patientId: number;
-  onAdded: () => Promise<void>;
+  medication?: MedicationRow | null;
+  onSaved: () => Promise<void>;
 }) {
-  const [form, setForm] = useState({
-    name: "",
-    activeSubstance: "",
-    dosage: "",
-    form: "Tableta",
-    time: "08:00",
-    rescue: false,
-    withFood: false,
-    stock: 30,
-    instructions: "",
-  });
+  const isEdit = Boolean(medication);
+  const [form, setForm] = useState(EMPTY_MED_FORM);
   const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+    setForm(medication ? formFromMedication(medication) : EMPTY_MED_FORM);
+  }, [open, medication]);
 
   const submit = async () => {
     if (!form.name.trim() || !form.dosage.trim()) return;
     setSaving(true);
     try {
-      const res = await fetch("/api/medications", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          patientId,
-          name: form.name,
-          activeSubstance: form.activeSubstance,
-          dosage: form.dosage,
-          form: form.form,
-          time: form.rescue ? "—" : form.time,
-          withFood: form.withFood,
-          stock: Number(form.stock),
-          instructions: form.instructions,
-          tone: "blue",
-        }),
-      });
+      const res = await fetch(
+        isEdit ? `/api/medications/${medication!.id}` : "/api/medications",
+        {
+          method: isEdit ? "PATCH" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            patientId,
+            name: form.name,
+            activeSubstance: form.activeSubstance,
+            dosage: form.dosage,
+            form: form.form,
+            time: form.rescue ? "—" : form.time,
+            withFood: form.withFood,
+            stock: Number(form.stock),
+            instructions: form.instructions,
+            tone: "blue",
+          }),
+        }
+      );
       if (res.ok) {
-        await onAdded();
+        await onSaved();
         onClose();
-        setForm({
-          name: "",
-          activeSubstance: "",
-          dosage: "",
-          form: "Tableta",
-          time: "08:00",
-          rescue: false,
-          withFood: false,
-          stock: 30,
-          instructions: "",
-        });
       }
     } finally {
       setSaving(false);
@@ -367,7 +464,7 @@ function AddMedModal({
   };
 
   return (
-    <Modal open={open} onClose={onClose} title="Añadir medicamento">
+    <Modal open={open} onClose={onClose} title={isEdit ? "Editar medicamento" : "Añadir medicamento"}>
       <div className="flex max-h-[70vh] flex-col gap-4 overflow-y-auto pr-1">
         <div>
           <label className="label">Nombre comercial *</label>

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { medications } from "@/db/schema";
+import { periodFromHour } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -17,14 +18,6 @@ interface MedBody {
   instructions?: string;
   tone?: string;
 }
-
-const PERIOD_FROM_HOUR = (time: string) => {
-  if (time === "—") return "Mañana";
-  const h = Number(time.split(":")[0]);
-  if (h < 12) return "Mañana";
-  if (h < 19) return "Tarde";
-  return "Noche";
-};
 
 export async function POST(req: Request) {
   const body = (await req.json()) as MedBody;
@@ -46,7 +39,7 @@ export async function POST(req: Request) {
       dosage: body.dosage.trim(),
       form: body.form || "Tableta",
       time: body.time,
-      period: body.period || PERIOD_FROM_HOUR(body.time),
+      period: body.period || periodFromHour(body.time),
       withFood: Boolean(body.withFood),
       stock: Number(body.stock ?? 0),
       stockUnit:
