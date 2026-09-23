@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { createHash, timingSafeEqual } from "node:crypto";
 import {
   ACCESS_COOKIE,
-  ACCESS_MAX_AGE,
   getAccessCode,
   sessionToken,
 } from "@/lib/access";
@@ -61,7 +60,6 @@ export async function POST(req: Request) {
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
     path: "/",
-    maxAge: ACCESS_MAX_AGE,
   });
   return res;
 }

@@ -2,9 +2,9 @@
 // La clave real vive en la variable de entorno ACCESS_CODE (nunca en el código).
 // La cookie de sesión no contiene la clave: guarda un HMAC derivado de ella, así
 // que cambiar ACCESS_CODE invalida todas las sesiones abiertas.
+// La cookie es de sesión (sin maxAge): se descarta al cerrar el navegador.
 
 export const ACCESS_COOKIE = "vc_access";
-export const ACCESS_MAX_AGE = 60 * 60 * 24 * 30; // 30 días
 
 export function getAccessCode(): string | null {
   const code = process.env.ACCESS_CODE?.trim();
