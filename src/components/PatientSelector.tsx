@@ -12,6 +12,7 @@ import {
   UserPlus,
   Copy,
   Check,
+  Trash2,
 } from "lucide-react";
 import { Avatar, Card, Chip, Modal } from "@/components/ui";
 import { cn } from "@/lib/utils";
@@ -37,7 +38,36 @@ export default function PatientSelector({
 }) {
   const [loadingId, setLoadingId] = useState<number | null>(null);
   const [addOpen, setAddOpen] = useState(false);
+  const [toDelete, setToDelete] = useState<LitePatient | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
   const router = useRouter();
+
+  const closeDelete = () => {
+    if (deleting) return;
+    setToDelete(null);
+    setDeleteError(null);
+  };
+
+  const confirmDelete = async () => {
+    if (!toDelete) return;
+    setDeleting(true);
+    setDeleteError(null);
+    try {
+      const res = await fetch(`/api/patients/${toDelete.id}`, { method: "DELETE" });
+      if (!res.ok) {
+        const json = await res.json().catch(() => ({}));
+        setDeleteError(json.error ?? "No se pudo eliminar el paciente");
+        return;
+      }
+      setToDelete(null);
+      router.refresh();
+    } catch {
+      setDeleteError("No se pudo eliminar. Revisa tu conexión.");
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   const choose = async (id: number) => {
     setLoadingId(id);
@@ -103,7 +133,7 @@ export default function PatientSelector({
             <Card
               key={p.id}
               className={cn(
-                "group animate-fade-up overflow-hidden p-0 transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-pop)]"
+                "group relative animate-fade-up overflow-hidden p-0 transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-pop)]"
               )}
             >
               <button
@@ -177,6 +207,14 @@ export default function PatientSelector({
                   )}
                 </span>
               </button>
+              <button
+                onClick={() => setToDelete(p)}
+                aria-label={`Eliminar a ${p.name}`}
+                title="Eliminar paciente"
+                className="absolute bottom-5 right-14 z-10 flex h-8 w-8 items-center justify-center rounded-full text-slate-300 transition hover:bg-rose-50 hover:text-rose-600"
+              >
+                <Trash2 size={16} />
+              </button>
             </Card>
           ))}
         </div>
@@ -196,6 +234,39 @@ export default function PatientSelector({
           </div>
         </footer>
       </div>
+
+      <Modal
+        open={toDelete !== null}
+        onClose={closeDelete}
+        title="Eliminar paciente"
+      >
+        <div className="flex flex-col gap-4">
+          <p className="text-sm font-semibold text-slate-600">
+            ¿Seguro que quieres eliminar a{" "}
+            <strong className="text-slate-900">{toDelete?.name}</strong>? Se
+            borrarán también sus medicamentos, comidas, ejercicios, rutina,
+            signos vitales y todo su historial. Esta acción no se puede
+            deshacer.
+          </p>
+          {deleteError && (
+            <p className="rounded-xl bg-rose-50 px-3.5 py-2.5 text-xs font-bold text-rose-600">
+              {deleteError}
+            </p>
+          )}
+          <div className="flex gap-3">
+            <button onClick={closeDelete} className="btn-ghost flex-1" disabled={deleting}>
+              Cancelar
+            </button>
+            <button
+              onClick={confirmDelete}
+              disabled={deleting}
+              className="flex-1 rounded-2xl bg-rose-600 px-4 py-3 text-sm font-bold text-white transition hover:bg-rose-700 active:scale-[0.98] disabled:opacity-60"
+            >
+              {deleting ? "Eliminando…" : "Sí, eliminar"}
+            </button>
+          </div>
+        </div>
+      </Modal>
 
       <NewPatientModal
         open={addOpen}
@@ -239,6 +310,7 @@ function NewPatientModal({
   const [created, setCreated] = useState<CreatedPatient | null>(null);
   const [copied, setCopied] = useState(false);
 
+  // Cierra y descarta todo: se usa tras crear el paciente o al pulsar "Cancelar".
   const close = () => {
     onClose();
     setTimeout(() => {
@@ -248,6 +320,10 @@ function NewPatientModal({
       setCopied(false);
     }, 200);
   };
+
+  // Cierre accidental (clic fuera, X, Escape): conserva el borrador del formulario.
+  // Si ya se creó el paciente no hay borrador que guardar, así que se limpia todo.
+  const dismiss = () => (created ? close() : onClose());
 
   const submit = async () => {
     if (!form.name.trim()) return;
@@ -339,7 +415,7 @@ function NewPatientModal({
   }
 
   return (
-    <Modal open={open} onClose={close} title="Nuevo paciente">
+    <Modal open={open} onClose={dismiss} title="Nuevo paciente">
       <div className="flex max-h-[70vh] flex-col gap-4 overflow-y-auto pr-1">
         <div>
           <label className="label">Nombre completo *</label>

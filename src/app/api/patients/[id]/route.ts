@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { and, desc, eq, gte } from "drizzle-orm";
+import { and, desc, eq, gte, sql } from "drizzle-orm";
 import { db } from "@/db";
 import {
   patients,
@@ -15,6 +15,7 @@ import {
   routineLogs,
   waterLogs,
   gameScores,
+  cognitiveActivities,
 } from "@/db/schema";
 import {
   dayNum,
@@ -246,4 +247,49 @@ export async function GET(
   };
 
   return NextResponse.json(data);
+}
+
+// Borra el paciente y todo lo que cuelga de él. La base es compartida con
+// MiSalud y no controlamos sus migraciones, así que no confiamos en ON DELETE
+// CASCADE: se borran primero los registros hijos (logs antes que sus padres).
+export async function DELETE(
+  _req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+  const pid = Number(id);
+  if (!pid || Number.isNaN(pid)) {
+    return NextResponse.json({ error: "Paciente no válido" }, { status: 400 });
+  }
+
+  try {
+    const deleted = await db.transaction(async (tx) => {
+      await tx.delete(medicationLogs).where(eq(medicationLogs.patientId, pid));
+      await tx.delete(mealLogs).where(eq(mealLogs.patientId, pid));
+      await tx.delete(exerciseLogs).where(eq(exerciseLogs.patientId, pid));
+      await tx.delete(routineLogs).where(eq(routineLogs.patientId, pid));
+      await tx.delete(waterLogs).where(eq(waterLogs.patientId, pid));
+      await tx.delete(gameScores).where(eq(gameScores.patientId, pid));
+      await tx.delete(dailyVitals).where(eq(dailyVitals.patientId, pid));
+      await tx.delete(medications).where(eq(medications.patientId, pid));
+      await tx.delete(meals).where(eq(meals.patientId, pid));
+      await tx.delete(exercises).where(eq(exercises.patientId, pid));
+      await tx.delete(routineTasks).where(eq(routineTasks.patientId, pid));
+      await tx
+        .delete(cognitiveActivities)
+        .where(eq(cognitiveActivities.patientId, pid));
+      await tx.delete(clinicalProfiles).where(eq(clinicalProfiles.patientId, pid));
+      // Tabla de MiSalud que no está modelada en el schema de esta app.
+      await tx.execute(sql`delete from daily_notes where patient_id = ${pid}`);
+      return tx.delete(patients).where(eq(patients.id, pid)).returning({ id: patients.id });
+    });
+
+    if (!deleted.length) {
+      return NextResponse.json({ error: "Paciente no encontrado" }, { status: 404 });
+    }
+    return NextResponse.json({ ok: true });
+  } catch (err) {
+    console.error("Error eliminando paciente:", err);
+    return NextResponse.json({ error: "No se pudo eliminar" }, { status: 500 });
+  }
 }
