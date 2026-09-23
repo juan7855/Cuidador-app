@@ -13,7 +13,6 @@ import {
   Copy,
   Check,
   Trash2,
-  Lock,
 } from "lucide-react";
 import { Avatar, Card, Chip, Modal } from "@/components/ui";
 import { cn } from "@/lib/utils";
@@ -43,12 +42,6 @@ export default function PatientSelector({
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const router = useRouter();
-
-  const lock = async () => {
-    await fetch("/api/access", { method: "DELETE" }).catch(() => {});
-    router.replace("/acceso");
-    router.refresh();
-  };
 
   const closeDelete = () => {
     if (deleting) return;
@@ -107,14 +100,6 @@ export default function PatientSelector({
             <Chip tone="emerald" icon="ShieldCheck" className="hidden sm:inline-flex">
               Datos confidenciales
             </Chip>
-            <button
-              onClick={lock}
-              aria-label="Bloquear la app"
-              title="Bloquear"
-              className="btn-ghost h-11 w-11 !p-0"
-            >
-              <Lock size={18} />
-            </button>
             <button onClick={() => setAddOpen(true)} className="btn-primary">
               <UserPlus size={17} strokeWidth={2.6} />
               <span className="hidden sm:inline">Nuevo paciente</span>

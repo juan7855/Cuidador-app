@@ -63,10 +63,3 @@ export async function POST(req: Request) {
   });
   return res;
 }
-
-// Cerrar sesión (bloquear la app de nuevo).
-export async function DELETE() {
-  const res = NextResponse.json({ ok: true });
-  res.cookies.set(ACCESS_COOKIE, "", { path: "/", maxAge: 0 });
-  return res;
-}
