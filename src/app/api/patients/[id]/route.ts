@@ -16,6 +16,7 @@ import {
   waterLogs,
   gameScores,
   cognitiveActivities,
+  communityMembers,
 } from "@/db/schema";
 import {
   dayNum,
@@ -116,6 +117,12 @@ export async function GET(
         .where(eq(gameScores.patientId, pid))
         .orderBy(desc(gameScores.playedAt)),
     ]);
+
+  const [communityRow] = await db
+    .select()
+    .from(communityMembers)
+    .where(eq(communityMembers.patientId, pid))
+    .limit(1);
 
   const medLogMap = new Map(medLogRows.map((r) => [`${r.medicationId}|${r.date}`, r]));
   const mealLogMap = new Map(mealLogRows.map((r) => [`${r.mealId}|${r.date}`, r]));
@@ -232,6 +239,10 @@ export async function GET(
     week,
     best,
     recentScores: scoreRows.slice(0, 8),
+    community: {
+      member: Boolean(communityRow),
+      addedAt: communityRow?.createdAt ?? null,
+    },
     totals: {
       medsDone: todayData.medDone,
       medsTotal: todayData.medTotal,
@@ -279,6 +290,11 @@ export async function DELETE(
         .delete(cognitiveActivities)
         .where(eq(cognitiveActivities.patientId, pid));
       await tx.delete(clinicalProfiles).where(eq(clinicalProfiles.patientId, pid));
+      // Solo borra la fila de la lista blanca; community_posts/comments/
+      // messages/reports (contenido que el paciente haya dejado en el foro)
+      // no están modeladas en este schema, así que quedan pendientes de
+      // limpiar aparte si hace falta.
+      await tx.delete(communityMembers).where(eq(communityMembers.patientId, pid));
       // Tabla de MiSalud que no está modelada en el schema de esta app.
       await tx.execute(sql`delete from daily_notes where patient_id = ${pid}`);
       return tx.delete(patients).where(eq(patients.id, pid)).returning({ id: patients.id });

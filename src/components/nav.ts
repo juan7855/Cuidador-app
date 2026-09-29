@@ -6,6 +6,7 @@ import {
   Dumbbell,
   Brain,
   CalendarCheck,
+  MessagesSquare,
   type LucideIcon,
 } from "lucide-react";
 
@@ -16,7 +17,8 @@ export type SectionId =
   | "food"
   | "exercise"
   | "mind"
-  | "routine";
+  | "routine"
+  | "community";
 
 export interface SectionDef {
   id: SectionId;
@@ -108,6 +110,17 @@ export const SECTIONS: SectionDef[] = [
     text: "text-indigo-700",
     solid: "bg-indigo-600",
     hex: "#4f46e5",
+  },
+  {
+    id: "community",
+    label: "Comunidad",
+    short: "Comunidad",
+    description: "Foro y mensajes con otros pacientes en MiSalud",
+    icon: MessagesSquare,
+    soft: "bg-teal-50",
+    text: "text-teal-700",
+    solid: "bg-teal-600",
+    hex: "#0d9488",
   },
 ];
 

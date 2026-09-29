@@ -281,3 +281,122 @@ export const gameScores = pgTable("game_scores", {
   detail: text("detail"),
   playedAt: timestamp("played_at").defaultNow(),
 });
+
+// ---------------------------------------------------------------------------
+// Comunidad: foro y mensajes entre pacientes, en MiSalud (ver
+// INTEGRACION-CUIDADOR.md). Estas tablas ya existían en la base real cuando
+// se agregó esto: se crearon junto con la sección "Comunidad" de MiSalud.
+// ---------------------------------------------------------------------------
+
+// Cuidadores autenticados — tabla real, pensada para Supabase Auth. Esta app
+// usa una sola clave de acceso compartida (ver src/lib/access.ts) y no
+// identifica cuidadores individuales, así que no la llena; se modela solo
+// para poder referenciarla desde community_members.added_by_caregiver_id.
+export const caregivers = pgTable("caregivers", {
+  id: serial("id").primaryKey(), // (real)
+  name: text("name").notNull(), // (real)
+  email: text("email").notNull().unique(), // (real)
+  createdAt: timestamp("created_at").defaultNow(), // (real)
+});
+
+// Relación muchos a muchos paciente-cuidador — tabla real, tampoco usada
+// todavía por esta app (ver nota de "caregivers" arriba).
+export const patientCaregivers = pgTable("patient_caregivers", {
+  id: serial("id").primaryKey(), // (real)
+  patientId: integer("patient_id")
+    .notNull()
+    .references(() => patients.id), // (real)
+  caregiverId: integer("caregiver_id")
+    .notNull()
+    .references(() => caregivers.id), // (real)
+  createdAt: timestamp("created_at").defaultNow(), // (real)
+});
+
+// Lista blanca de la Comunidad — tabla real. Insertar una fila aquí es lo
+// único que activa el foro y los mensajes para ese paciente en MiSalud;
+// borrarla lo vuelve a dejar fuera. added_by_caregiver_id queda en null
+// porque esta app no identifica cuidadores individuales (ver arriba).
+export const communityMembers = pgTable("community_members", {
+  id: serial("id").primaryKey(), // (real)
+  patientId: integer("patient_id")
+    .notNull()
+    .unique()
+    .references(() => patients.id), // (real)
+  addedByCaregiverId: integer("added_by_caregiver_id").references(() => caregivers.id), // (real)
+  createdAt: timestamp("created_at").defaultNow(), // (real)
+});
+
+// Tablas de contenido de Comunidad — no las edita esta app, pero MiSalud sí.
+// Se modelan solo para que drizzle-kit no intente borrarlas. Columnas
+// verificadas contra information_schema de la base real.
+export const communityPosts = pgTable("community_posts", {
+  id: serial("id").primaryKey(), // (real)
+  patientId: integer("patient_id")
+    .notNull()
+    .references(() => patients.id), // (real)
+  content: text("content").notNull(), // (real)
+  createdAt: timestamp("created_at").defaultNow(), // (real)
+  hidden: boolean("hidden").notNull().default(false), // (real)
+});
+
+export const communityComments = pgTable("community_comments", {
+  id: serial("id").primaryKey(), // (real)
+  postId: integer("post_id")
+    .notNull()
+    .references(() => communityPosts.id), // (real)
+  patientId: integer("patient_id")
+    .notNull()
+    .references(() => patients.id), // (real)
+  content: text("content").notNull(), // (real)
+  createdAt: timestamp("created_at").defaultNow(), // (real)
+  hidden: boolean("hidden").notNull().default(false), // (real)
+});
+
+export const communityConversations = pgTable("community_conversations", {
+  id: serial("id").primaryKey(), // (real)
+  patientAId: integer("patient_a_id")
+    .notNull()
+    .references(() => patients.id), // (real)
+  patientBId: integer("patient_b_id")
+    .notNull()
+    .references(() => patients.id), // (real)
+  createdAt: timestamp("created_at").defaultNow(), // (real)
+});
+
+export const communityMessages = pgTable("community_messages", {
+  id: serial("id").primaryKey(), // (real)
+  conversationId: integer("conversation_id")
+    .notNull()
+    .references(() => communityConversations.id), // (real)
+  senderPatientId: integer("sender_patient_id")
+    .notNull()
+    .references(() => patients.id), // (real)
+  content: text("content").notNull(), // (real)
+  createdAt: timestamp("created_at").defaultNow(), // (real)
+  readAt: timestamp("read_at"), // (real)
+});
+
+export const communityReports = pgTable("community_reports", {
+  id: serial("id").primaryKey(), // (real)
+  reporterPatientId: integer("reporter_patient_id")
+    .notNull()
+    .references(() => patients.id), // (real)
+  targetType: text("target_type").notNull(), // (real) "post" | "comment" | "message"
+  targetId: integer("target_id").notNull(), // (real)
+  reason: text("reason"), // (real)
+  createdAt: timestamp("created_at").defaultNow(), // (real)
+  resolved: boolean("resolved").notNull().default(false), // (real)
+  resolvedByCaregiverId: integer("resolved_by_caregiver_id").references(() => caregivers.id), // (real)
+  resolvedAt: timestamp("resolved_at"), // (real)
+});
+
+export const communityBlocks = pgTable("community_blocks", {
+  id: serial("id").primaryKey(), // (real)
+  blockerPatientId: integer("blocker_patient_id")
+    .notNull()
+    .references(() => patients.id), // (real)
+  blockedPatientId: integer("blocked_patient_id")
+    .notNull()
+    .references(() => patients.id), // (real)
+  createdAt: timestamp("created_at").defaultNow(), // (real)
+});

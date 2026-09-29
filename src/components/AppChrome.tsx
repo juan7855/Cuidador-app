@@ -14,6 +14,7 @@ import {
   Brain,
   CalendarCheck,
   LayoutDashboard,
+  MessagesSquare,
   X,
   type LucideIcon,
 } from "lucide-react";
@@ -30,10 +31,11 @@ const ICONS: Record<string, LucideIcon> = {
   exercise: Dumbbell,
   mind: Brain,
   routine: CalendarCheck,
+  community: MessagesSquare,
 };
 
 const MOBILENAV: SectionId[] = ["panel", "meds", "mind", "routine"];
-const SHEET_NAV: SectionId[] = ["perfil", "food", "exercise"];
+const SHEET_NAV: SectionId[] = ["perfil", "food", "exercise", "community"];
 
 export interface Reminder {
   icon: string;

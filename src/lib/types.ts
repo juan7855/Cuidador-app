@@ -76,6 +76,10 @@ export interface DashboardData {
   week: WeekDay[];
   best: Record<string, number>;
   recentScores: GameScore[];
+  community: {
+    member: boolean;
+    addedAt: Date | null;
+  };
   totals: {
     medsDone: number;
     medsTotal: number;

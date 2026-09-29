@@ -14,6 +14,7 @@ import Alimentacion from "@/components/sections/Alimentacion";
 import Ejercicio from "@/components/sections/Ejercicio";
 import MenteActiva from "@/components/sections/MenteActiva";
 import RutinaDiaria from "@/components/sections/RutinaDiaria";
+import Comunidad from "@/components/sections/Comunidad";
 
 const STORAGE_KEY = "vitalcare.patient";
 
@@ -188,7 +189,9 @@ export default function HealthApp({ patients }: { patients: LitePatient[] }) {
     [data, patientId, postLog]
   );
 
-  const addMedication = useCallback(async () => {
+  // Recarga el panel del paciente actual tras un cambio que no se refleja
+  // localmente (alta/edición de medicamentos, alta/baja de la comunidad…).
+  const reload = useCallback(async () => {
     if (patientId) await load(patientId);
   }, [patientId, load]);
 
@@ -271,7 +274,7 @@ export default function HealthApp({ patients }: { patients: LitePatient[] }) {
       )}
       {section === "perfil" && <PerfilClinico data={data} />}
       {section === "meds" && (
-        <Medicamentos data={data} onToggle={markMed} onChanged={addMedication} />
+        <Medicamentos data={data} onToggle={markMed} onChanged={reload} />
       )}
       {section === "food" && (
         <Alimentacion
@@ -289,6 +292,7 @@ export default function HealthApp({ patients }: { patients: LitePatient[] }) {
       {section === "routine" && (
         <RutinaDiaria data={data} onToggle={markRoutine} />
       )}
+      {section === "community" && <Comunidad data={data} onChanged={reload} />}
     </AppChrome>
   );
 }
