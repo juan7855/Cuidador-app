@@ -2,7 +2,9 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { HeartPulse, Lock } from "lucide-react";
+import { Lock } from "lucide-react";
+
+import Mascot from "@/components/Mascot";
 
 const LENGTH = 6;
 
@@ -70,11 +72,9 @@ export default function AccesoPage() {
   return (
     <div className="selector-bg flex min-h-screen items-center justify-center px-5">
       <div className="card w-full max-w-sm p-8 text-center">
-        <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500 to-sky-400 text-white shadow-lg shadow-brand-500/30">
-          <HeartPulse size={26} strokeWidth={2.4} />
-        </span>
+        <Mascot size={64} className="mx-auto" />
         <h1 className="mt-4 text-2xl font-extrabold tracking-tight text-slate-900">
-          VitalCare
+          Panela
         </h1>
         <p className="mt-1 flex items-center justify-center gap-1.5 text-sm font-semibold text-slate-500">
           <Lock size={14} />
@@ -105,7 +105,7 @@ export default function AccesoPage() {
 
         <div className="mt-4 h-9">
           {error ? (
-            <p className="rounded-xl bg-rose-50 px-3.5 py-2 text-xs font-bold text-rose-600">
+            <p className="rounded-xl bg-coral-50 px-3.5 py-2 text-xs font-bold text-coral-600">
               {error}
             </p>
           ) : loading ? (

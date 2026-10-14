@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { HeartPulse } from "lucide-react";
+import Mascot from "@/components/Mascot";
 import PatientSelector, { type LitePatient } from "@/components/PatientSelector";
 import AppChrome, { type Reminder } from "@/components/AppChrome";
 import { type SectionId } from "@/components/nav";
@@ -51,10 +51,8 @@ function applyTodayTotals(d: DashboardData): DashboardData {
 function Splash() {
   return (
     <div className="app-bg flex min-h-screen flex-col items-center justify-center gap-5">
-      <span className="flex h-14 w-14 animate-pop items-center justify-center rounded-3xl bg-gradient-to-br from-brand-500 to-sky-400 text-white shadow-xl shadow-brand-500/30">
-        <HeartPulse size={28} />
-      </span>
-      <p className="text-lg font-extrabold tracking-tight text-slate-800">VitalCare</p>
+      <Mascot size={64} className="animate-pop" />
+      <p className="text-lg font-extrabold tracking-tight text-slate-800">Panela</p>
       <span className="h-5 w-5 animate-spin rounded-full border-[3px] border-brand-200 border-t-brand-600" />
     </div>
   );
@@ -77,6 +75,8 @@ export default function HealthApp({ patients }: { patients: LitePatient[] }) {
     }
   }, []);
 
+  // Lee el paciente guardado tras la hidratación (localStorage no existe en el servidor).
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
@@ -88,6 +88,7 @@ export default function HealthApp({ patients }: { patients: LitePatient[] }) {
     }
     setHydrated(true);
   }, [load, patients]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const select = useCallback(
     (id: number) => {
@@ -226,7 +227,7 @@ export default function HealthApp({ patients }: { patients: LitePatient[] }) {
     if (nextMed) {
       out.push({
         icon: "Pill",
-        tone: "violet",
+        tone: "clay",
         text: `${nextMed.name} ${nextMed.dosage} · ${hourLabel(nextMed.time)}`,
       });
     }
@@ -236,7 +237,7 @@ export default function HealthApp({ patients }: { patients: LitePatient[] }) {
     if (pendingTask) {
       out.push({
         icon: pendingTask.icon,
-        tone: "indigo",
+        tone: "ink",
         text: `${pendingTask.title} · ${hourLabel(pendingTask.time)}`,
       });
     }
@@ -244,7 +245,7 @@ export default function HealthApp({ patients }: { patients: LitePatient[] }) {
     if (data.water < goal) {
       out.push({
         icon: "Droplets",
-        tone: "cyan",
+        tone: "aqua",
         text: `Hidratación: llevas ${data.water} de ${goal} vasos`,
       });
     }

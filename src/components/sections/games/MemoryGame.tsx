@@ -24,14 +24,14 @@ interface CardDef {
 }
 
 const ICONS = [
-  { name: "Heart", tone: "rose" },
-  { name: "Star", tone: "amber" },
-  { name: "Sun", tone: "orange" },
-  { name: "Moon", tone: "indigo" },
-  { name: "Music", tone: "fuchsia" },
-  { name: "Flower2", tone: "emerald" },
-  { name: "Droplets", tone: "cyan" },
-  { name: "Brain", tone: "violet" },
+  { name: "Heart", tone: "coral" },
+  { name: "Star", tone: "sun" },
+  { name: "Sun", tone: "sun" },
+  { name: "Moon", tone: "ink" },
+  { name: "Music", tone: "sun" },
+  { name: "Flower2", tone: "leaf" },
+  { name: "Droplets", tone: "aqua" },
+  { name: "Brain", tone: "clay" },
 ];
 
 function shuffle<T>(arr: T[]): T[] {
@@ -156,7 +156,7 @@ export default function MemoryGame({
                       t.text,
                       done && "opacity-70"
                     )
-                  : "border-brand-100 bg-gradient-to-br from-brand-500 to-sky-400 text-white/85 shadow-md shadow-brand-500/20 hover:brightness-110 active:scale-95"
+                  : "border-brand-100 bg-gradient-to-br from-brand-500 to-aqua-400 text-white/85 shadow-md shadow-brand-500/20 hover:brightness-110 active:scale-95"
               )}
             >
               <MemoIcon name={up ? c.name : "Brain"} size={30} />
@@ -166,8 +166,8 @@ export default function MemoryGame({
       </div>
 
       {result ? (
-        <div className="animate-pop rounded-3xl border border-fuchsia-100 bg-gradient-to-br from-fuchsia-50 to-purple-50 p-6 text-center">
-          <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-3xl bg-fuchsia-500 text-white shadow-lg shadow-fuchsia-500/30">
+        <div className="animate-pop rounded-3xl border border-sun-100 bg-gradient-to-br from-sun-50 to-clay-50 p-6 text-center">
+          <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-3xl bg-sun-500 text-white shadow-lg shadow-sun-500/30">
             <Sparkles size={26} />
           </span>
           <p className="mt-3 text-lg font-extrabold text-slate-900">
@@ -176,7 +176,7 @@ export default function MemoryGame({
           <p className="text-sm font-semibold text-slate-500">
             Has completado el tablero en {moves} movimientos y {seconds} segundos.
           </p>
-          <p className="mt-3 text-4xl font-extrabold text-fuchsia-600">{result.score}</p>
+          <p className="mt-3 text-4xl font-extrabold text-sun-600">{result.score}</p>
           <p className="text-xs font-bold uppercase tracking-wide text-slate-400">
             Mejor marca: {Math.max(result.best, result.score)}
           </p>
@@ -211,7 +211,7 @@ function Metric({
 }) {
   return (
     <div className="rounded-2xl border border-slate-100 bg-white p-3 text-center shadow-sm">
-      <span className="mx-auto mb-1 flex h-7 w-7 items-center justify-center rounded-lg bg-fuchsia-50 text-fuchsia-600">
+      <span className="mx-auto mb-1 flex h-7 w-7 items-center justify-center rounded-lg bg-sun-50 text-sun-600">
         {icon}
       </span>
       <p className="text-base font-extrabold text-slate-800">{value}</p>

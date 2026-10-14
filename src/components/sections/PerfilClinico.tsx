@@ -38,7 +38,7 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
 
       {/* Tarjeta de identificación */}
       <Card className="overflow-hidden p-0">
-        <div className="h-24 bg-gradient-to-r from-cyan-500 via-sky-500 to-brand-500 sm:h-28" />
+        <div className="h-24 bg-gradient-to-r from-aqua-500 via-aqua-500 to-brand-500 sm:h-28" />
         <div className="px-5 pb-6 sm:px-7">
           <div className="-mt-10 flex flex-col gap-4 sm:-mt-12 sm:flex-row sm:items-end sm:justify-between">
             <div className="flex items-end gap-4">
@@ -60,12 +60,12 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
             </div>
             <div className="flex flex-wrap gap-2 sm:pb-1">
               {p.bloodType && (
-                <Chip tone="rose" icon="Droplet">
+                <Chip tone="coral" icon="Droplet">
                   Grupo {p.bloodType}
                 </Chip>
               )}
               {p.conditions.slice(0, 2).map((c) => (
-                <Chip key={c} tone="cyan" icon="HeartPulse">
+                <Chip key={c} tone="aqua" icon="HeartPulse">
                   {c}
                 </Chip>
               ))}
@@ -74,7 +74,7 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
 
           <div className="mt-5 grid gap-3 sm:grid-cols-3">
             <div className="flex items-center gap-3 rounded-2xl bg-slate-50 p-3.5">
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-cyan-600 shadow-sm">
+              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-aqua-600 shadow-sm">
                 <Phone size={17} />
               </span>
               <div className="min-w-0">
@@ -100,7 +100,7 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
               </div>
             </div>
             <div className="flex items-center gap-3 rounded-2xl bg-slate-50 p-3.5">
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-violet-600 shadow-sm">
+              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-clay-600 shadow-sm">
                 <MapPin size={17} />
               </span>
               <div className="min-w-0">
@@ -119,7 +119,7 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
       {/* Datos + salud + contacto */}
       <div className="grid gap-5 sm:gap-6 lg:grid-cols-3">
         <Card className="p-5 sm:p-6">
-          <CardTitle icon="IdCard" tone="cyan" title="Datos personales" />
+          <CardTitle icon="IdCard" tone="aqua" title="Datos personales" />
           <dl className="flex flex-col gap-3">
             <DataRow icon={<Cake size={16} />} label="Fecha de nacimiento" value={birth} />
             <DataRow icon={<Ruler size={16} />} label="Altura" value={`${Math.round(p.heightCm ?? 0)} cm`} />
@@ -133,13 +133,13 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
               label="Grupo sanguíneo"
               value={p.bloodType ?? "—"}
             />
-            <div className="flex items-center justify-between gap-3 rounded-2xl bg-cyan-50/70 px-3.5 py-3">
-              <span className="flex items-center gap-2.5 text-xs font-bold text-cyan-800">
+            <div className="flex items-center justify-between gap-3 rounded-2xl bg-aqua-50/70 px-3.5 py-3">
+              <span className="flex items-center gap-2.5 text-xs font-bold text-aqua-800">
                 <DyIcon name="Calculator" size={16} />
                 IMC
               </span>
               <span className="flex items-center gap-2">
-                <strong className="text-sm font-extrabold text-cyan-900">
+                <strong className="text-sm font-extrabold text-aqua-900">
                   {value ? String(value).replace(".", ",") : "—"}
                 </strong>
                 {cat && (
@@ -159,37 +159,37 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
         </Card>
 
         <Card className="p-5 sm:p-6">
-          <CardTitle icon="Stethoscope" tone="violet" title="Historial de salud" />
+          <CardTitle icon="Stethoscope" tone="clay" title="Historial de salud" />
           <div className="flex flex-col gap-4">
             <InfoGroup
               icon="HeartPulse"
-              tone="rose"
+              tone="coral"
               title="Patologías crónicas"
               items={p.conditions}
               empty="Sin patologías registradas"
             />
             <InfoGroup
               icon="ShieldAlert"
-              tone="amber"
+              tone="sun"
               title="Alergias"
               items={p.allergies}
               empty="Sin alergias conocidas"
             />
             <InfoGroup
               icon="Pill"
-              tone="violet"
+              tone="clay"
               title="Medicación habitual"
               items={p.chronicMeds}
               empty="Sin medicación crónica"
             />
           </div>
           {p.notes && (
-            <div className="mt-4 rounded-2xl bg-amber-50/70 p-3.5">
-              <p className="flex items-center gap-2 text-xs font-extrabold text-amber-800">
+            <div className="mt-4 rounded-2xl bg-sun-50/70 p-3.5">
+              <p className="flex items-center gap-2 text-xs font-extrabold text-sun-800">
                 <FileText size={14} />
                 Observaciones de enfermería
               </p>
-              <p className="mt-1 text-xs font-medium leading-relaxed text-amber-900/80">
+              <p className="mt-1 text-xs font-medium leading-relaxed text-sun-900/80">
                 {p.notes}
               </p>
             </div>
@@ -198,7 +198,7 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
 
         <div className="flex flex-col gap-5 sm:gap-6">
           {emergency && (
-            <Card className="overflow-hidden border-transparent bg-gradient-to-br from-rose-500 to-red-600 p-5 text-white sm:p-6">
+            <Card className="overflow-hidden border-transparent bg-gradient-to-br from-coral-500 to-coral-600 p-5 text-white sm:p-6">
               <div className="flex items-center gap-3">
                 <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/20">
                   <Siren size={22} />
@@ -212,7 +212,7 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
               </div>
               <a
                 href={`tel:${emergency.phone.replace(/\s/g, "")}`}
-                className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-white px-4 py-3 text-sm font-extrabold text-rose-600 shadow-lg transition hover:bg-rose-50 active:scale-[0.98]"
+                className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-white px-4 py-3 text-sm font-extrabold text-coral-600 shadow-lg transition hover:bg-coral-50 active:scale-[0.98]"
               >
                 <PhoneCall size={17} />
                 Llamar · {emergency.phone}
@@ -221,7 +221,7 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
           )}
 
           <Card className="p-5 sm:p-6">
-            <CardTitle icon="Users" tone="blue" title="Equipo médico" />
+            <CardTitle icon="Users" tone="brand" title="Equipo médico" />
             <ul className="flex flex-col gap-3">
               {(p.doctors ?? []).map((d, i) => (
                 <li
@@ -242,7 +242,7 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
                   <a
                     href={`tel:${d.phone.replace(/\s/g, "")}`}
                     aria-label={`Llamar a ${d.name}`}
-                    className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 transition hover:bg-emerald-100"
+                    className="flex h-9 w-9 items-center justify-center rounded-xl bg-leaf-50 text-leaf-600 transition hover:bg-leaf-100"
                   >
                     <Phone size={16} />
                   </a>
@@ -257,7 +257,7 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
       <Card className="p-5 sm:p-6">
         <CardTitle
           icon="ClipboardList"
-          tone="teal"
+          tone="aqua"
           title="Analíticas recientes"
           subtitle="Últimos resultados de laboratorio"
         />
@@ -275,10 +275,10 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
               {(p.labs ?? []).map((l, i) => {
                 const t =
                   l.status === "normal"
-                    ? toneOf("emerald")
+                    ? toneOf("leaf")
                     : l.status === "high"
-                      ? toneOf("rose")
-                      : toneOf("amber");
+                      ? toneOf("coral")
+                      : toneOf("sun");
                 return (
                   <tr key={i} className="border-t border-slate-100">
                     <td className="py-3 pr-4 font-bold text-slate-700">{l.name}</td>
@@ -315,7 +315,7 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
         <div className="grid gap-5 sm:gap-6 lg:grid-cols-3">
           <StatTile
             icon="HeartPulse"
-            tone="rose"
+            tone="coral"
             label="Pulso medio"
             value={Math.round(avg(data.vitals.map((x) => x.heartRate)))}
             unit="lpm"
@@ -325,8 +325,8 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
                 series={[
                   {
                     values: data.vitals.map((x) => x.heartRate ?? 0),
-                    color: "#e11d48",
-                    fill: "#e11d4822",
+                    color: "#b85f59",
+                    fill: "#b85f5922",
                     width: 2,
                   },
                 ]}
@@ -335,7 +335,7 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
           />
           <StatTile
             icon="Activity"
-            tone="blue"
+            tone="brand"
             label="Presión arterial"
             value={`${v?.systolic}/${v?.diastolic}`}
             unit="mmHg"
@@ -343,15 +343,15 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
               <LineChart
                 height={56}
                 series={[
-                  { values: data.vitals.map((x) => x.systolic ?? 0), color: "#2563eb", width: 2 },
-                  { values: data.vitals.map((x) => x.diastolic ?? 0), color: "#38bdf8", width: 2 },
+                  { values: data.vitals.map((x) => x.systolic ?? 0), color: "#31836f", width: 2 },
+                  { values: data.vitals.map((x) => x.diastolic ?? 0), color: "#329caf", width: 2 },
                 ]}
               />
             }
           />
           <StatTile
             icon="Footprints"
-            tone="emerald"
+            tone="leaf"
             label="Pasos hoy"
             value={(v?.steps ?? 0).toLocaleString("es-ES")}
             footer={
@@ -362,7 +362,7 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
                   label: w.weekdayShort[0].toUpperCase(),
                   value: w.steps,
                   highlight: isToday(w.date),
-                  color: "#059669",
+                  color: "#7a9a55",
                 }))}
               />
             }

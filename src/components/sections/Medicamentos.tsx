@@ -27,9 +27,9 @@ import { cn, hourLabel, toneOf } from "@/lib/utils";
 import type { DashboardData, MedicationRow } from "@/lib/types";
 
 const PHASES: { id: string; label: string; icon: string; tone: string }[] = [
-  { id: "Mañana", label: "Mañana", icon: "Sunrise", tone: "amber" },
-  { id: "Tarde", label: "Tarde", icon: "Sun", tone: "orange" },
-  { id: "Noche", label: "Noche", icon: "MoonStar", tone: "indigo" },
+  { id: "Mañana", label: "Mañana", icon: "Sunrise", tone: "sun" },
+  { id: "Tarde", label: "Tarde", icon: "Sun", tone: "sun" },
+  { id: "Noche", label: "Noche", icon: "MoonStar", tone: "ink" },
 ];
 
 const FORM_OPTIONS = ["Tableta", "Comprimido", "Cápsula", "Inhalador", "Inyección", "Jarabe"];
@@ -90,9 +90,9 @@ export default function Medicamentos({
             value={scheduled.length ? (takenToday / scheduled.length) * 100 : 0}
             size={84}
             stroke={9}
-            color="#7c3aed"
+            color="#ad6540"
           >
-            <span className="text-lg font-extrabold text-violet-700">
+            <span className="text-lg font-extrabold text-clay-700">
               {takenToday}/{scheduled.length}
             </span>
           </ProgressRing>
@@ -106,8 +106,8 @@ export default function Medicamentos({
           </div>
         </Card>
         <Card className="flex items-center gap-4 p-5">
-          <ProgressRing value={avgAdherence} size={84} stroke={9} color="#059669">
-            <span className="text-lg font-extrabold text-emerald-600">{avgAdherence}%</span>
+          <ProgressRing value={avgAdherence} size={84} stroke={9} color="#7a9a55">
+            <span className="text-lg font-extrabold text-leaf-600">{avgAdherence}%</span>
           </ProgressRing>
           <div>
             <p className="text-sm font-extrabold text-slate-800">Adherencia 7 días</p>
@@ -120,11 +120,11 @@ export default function Medicamentos({
             </p>
           </div>
         </Card>
-        <Card className={cn("col-span-2 flex items-center gap-4 p-5 lg:col-span-1", lowStock.length && "bg-amber-50/60")}>
+        <Card className={cn("col-span-2 flex items-center gap-4 p-5 lg:col-span-1", lowStock.length && "bg-sun-50/60")}>
           <span
             className={cn(
               "flex h-[68px] w-[68px] shrink-0 items-center justify-center rounded-full",
-              lowStock.length ? "bg-amber-100 text-amber-600" : "bg-emerald-50 text-emerald-600"
+              lowStock.length ? "bg-sun-100 text-sun-600" : "bg-leaf-50 text-leaf-600"
             )}
           >
             {lowStock.length ? <PackageX size={28} /> : <PillIcon size={28} />}
@@ -143,7 +143,7 @@ export default function Medicamentos({
       </div>
 
       {lowStock.length > 0 && (
-        <NoticeCard tone="amber" icon="TriangleAlert" title="Stock bajo — renueva la receta">
+        <NoticeCard tone="sun" icon="TriangleAlert" title="Stock bajo — renueva la receta">
           <ul className="ml-4 list-disc">
             {lowStock.map((m) => (
               <li key={m.id}>
@@ -285,7 +285,7 @@ function MedActions({
         type="button"
         onClick={onDelete}
         disabled={deleting}
-        className="inline-flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 text-xs font-bold text-slate-500 transition hover:bg-rose-50 hover:text-rose-600 disabled:opacity-50"
+        className="inline-flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 text-xs font-bold text-slate-500 transition hover:bg-coral-50 hover:text-coral-600 disabled:opacity-50"
       >
         <Trash2 size={13} strokeWidth={2.4} /> {deleting ? "Eliminando…" : "Eliminar"}
       </button>
@@ -312,7 +312,7 @@ function MedCard({
     <Card
       className={cn(
         "p-5 transition-colors",
-        med.takenToday && "border-emerald-200 bg-emerald-50/40"
+        med.takenToday && "border-leaf-200 bg-leaf-50/40"
       )}
     >
       <div className="flex items-start gap-3.5">
@@ -322,13 +322,13 @@ function MedCard({
             <p
               className={cn(
                 "text-sm font-extrabold",
-                med.takenToday ? "text-slate-500 line-through decoration-emerald-500/60" : "text-slate-800"
+                med.takenToday ? "text-slate-500 line-through decoration-leaf-500/60" : "text-slate-800"
               )}
             >
               {med.name}
             </p>
             {med.withFood && (
-              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600">
+              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-leaf-600">
                 <UtensilsCrossed size={12} /> Con comida
               </span>
             )}
@@ -350,7 +350,7 @@ function MedCard({
           {hourLabel(med.time)}
         </Chip>
         {med.adherence != null && (
-          <Chip tone={med.adherence >= 80 ? "emerald" : med.adherence >= 50 ? "amber" : "rose"}>
+          <Chip tone={med.adherence >= 80 ? "leaf" : med.adherence >= 50 ? "sun" : "coral"}>
             {med.adherence}% cumplimiento
           </Chip>
         )}
@@ -368,13 +368,13 @@ function MedCard({
           <span className="text-slate-400">
             Stock: {med.stock} {med.stockUnit}
           </span>
-          {low && <span className="text-amber-600">Reponer pronto</span>}
+          {low && <span className="text-sun-600">Reponer pronto</span>}
         </div>
         <Bar
           value={med.stock}
           max={Math.max(med.lowStockAt * 3, 30)}
           height={6}
-          barClassName={low ? "bg-amber-500" : "bg-emerald-500"}
+          barClassName={low ? "bg-sun-500" : "bg-leaf-500"}
         />
       </div>
 
@@ -426,10 +426,14 @@ function MedModal({
   const [form, setForm] = useState(EMPTY_MED_FORM);
   const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
-    if (!open) return;
-    setForm(medication ? formFromMedication(medication) : EMPTY_MED_FORM);
-  }, [open, medication]);
+  // Reinicia el formulario al abrir el modal o cambiar de medicamento.
+  const [synced, setSynced] = useState<{ open: boolean; medication?: MedicationRow | null }>({
+    open: false,
+  });
+  if (synced.open !== open || synced.medication !== medication) {
+    setSynced({ open, medication });
+    if (open) setForm(medication ? formFromMedication(medication) : EMPTY_MED_FORM);
+  }
 
   const submit = async () => {
     if (!form.name.trim() || !form.dosage.trim()) return;
@@ -450,7 +454,7 @@ function MedModal({
             withFood: form.withFood,
             stock: Number(form.stock),
             instructions: form.instructions,
-            tone: "blue",
+            tone: "brand",
           }),
         }
       );

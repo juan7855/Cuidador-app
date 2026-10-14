@@ -61,7 +61,7 @@ export default function Comunidad({
           <div className="flex items-center gap-4">
             <span
               className={`flex h-12 w-12 items-center justify-center rounded-2xl ${
-                member ? "bg-teal-50 text-teal-600" : "bg-slate-100 text-slate-400"
+                member ? "bg-aqua-50 text-aqua-600" : "bg-slate-100 text-slate-400"
               }`}
             >
               <MessagesSquare size={22} strokeWidth={2.3} />
@@ -81,7 +81,7 @@ export default function Comunidad({
           </div>
           <div className="flex items-center gap-3">
             {saving && (
-              <span className="h-4 w-4 animate-spin rounded-full border-2 border-teal-200 border-t-teal-600" />
+              <span className="h-4 w-4 animate-spin rounded-full border-2 border-aqua-200 border-t-aqua-600" />
             )}
             <Toggle
               checked={member}
@@ -92,7 +92,7 @@ export default function Comunidad({
         </div>
 
         {error && (
-          <p className="rounded-xl bg-rose-50 px-3.5 py-2.5 text-xs font-bold text-rose-600">
+          <p className="rounded-xl bg-coral-50 px-3.5 py-2.5 text-xs font-bold text-coral-600">
             {error}
           </p>
         )}
@@ -119,12 +119,12 @@ export default function Comunidad({
       </Card>
 
       <div className="grid gap-5 sm:grid-cols-2 sm:gap-6">
-        <NoticeCard tone="blue" icon="Users" title="Quién puede verse">
+        <NoticeCard tone="brand" icon="Users" title="Quién puede verse">
           Solo los pacientes agregados a la comunidad pueden verse entre sí y
           enviarse mensajes directos. Quitar a {firstName} de aquí lo saca de
           esa lista al instante.
         </NoticeCard>
-        <NoticeCard tone="amber" icon="ShieldAlert" title="Moderación pendiente">
+        <NoticeCard tone="sun" icon="ShieldAlert" title="Moderación pendiente">
           Los reportes de contenido del foro se revisan de forma manual y
           todavía no tienen una pantalla en esta app. Por ahora, esta sección
           solo controla quién entra a la comunidad.

@@ -44,9 +44,9 @@ const GAMES: {
       "Encuentra las 8 parejas de iconos. Cuantos menos movimientos y menos tiempo uses, más alta será tu puntuación.",
     duration: "3-5 min",
     icon: Images,
-    gradient: "from-fuchsia-500 to-purple-600",
-    soft: "bg-fuchsia-50",
-    text: "text-fuchsia-700",
+    gradient: "from-sun-500 to-clay-600",
+    soft: "bg-sun-50",
+    text: "text-sun-700",
   },
   {
     id: "math",
@@ -56,9 +56,9 @@ const GAMES: {
       "Responde 10 operaciones seguidas antes de 45 segundos. Los aciertos y la rapidez suman puntos.",
     duration: "1 min",
     icon: Calculator,
-    gradient: "from-sky-500 to-blue-600",
-    soft: "bg-sky-50",
-    text: "text-sky-700",
+    gradient: "from-aqua-500 to-brand-600",
+    soft: "bg-aqua-50",
+    text: "text-aqua-700",
   },
   {
     id: "sequence",
@@ -68,9 +68,9 @@ const GAMES: {
       "Observa la secuencia iluminada y repítela en orden. Cada ronda superada añade un nuevo paso y 100 puntos.",
     duration: "2-4 min",
     icon: Grid2X2,
-    gradient: "from-violet-500 to-fuchsia-600",
-    soft: "bg-violet-50",
-    text: "text-violet-700",
+    gradient: "from-clay-500 to-sun-600",
+    soft: "bg-clay-50",
+    text: "text-clay-700",
   },
 ];
 
@@ -135,7 +135,7 @@ export default function MenteActiva({
       <div
         className="relative overflow-hidden rounded-[28px] p-6 text-white sm:p-8"
         style={{
-          background: "linear-gradient(130deg,#a21caf 0%,#c026d3 45%,#7c3aed 100%)",
+          background: "linear-gradient(130deg,#b8703f 0%,#d58c56 45%,#ad6540 100%)",
         }}
       >
         <div className="pointer-events-none absolute -right-14 -top-16 h-56 w-56 rounded-full bg-white/10" />
@@ -191,7 +191,7 @@ export default function MenteActiva({
                 {g.description}
               </p>
               <div className="mt-4 flex items-center justify-between">
-                <span className="inline-flex items-center gap-1.5 text-xs font-extrabold text-amber-600">
+                <span className="inline-flex items-center gap-1.5 text-xs font-extrabold text-sun-600">
                   <Trophy size={14} />
                   {best ? `${best} pts` : "Sin marca aún"}
                 </span>
@@ -213,7 +213,7 @@ export default function MenteActiva({
       {/* Beneficios + historial */}
       <div className="grid gap-4 sm:gap-5 lg:grid-cols-2">
         <Card className="p-5 sm:p-6">
-          <CardTitle icon="Lightbulb" tone="fuchsia" title="Beneficios del entrenamiento" />
+          <CardTitle icon="Lightbulb" tone="sun" title="Beneficios del entrenamiento" />
           <ul className="flex flex-col gap-3">
             {[
               ["Brain", "Memoria", "Refuerza la memoria de trabajo y la capacidad de reconocer patrones."],
@@ -222,7 +222,7 @@ export default function MenteActiva({
               ["HeartHandshake", "Bienestar", "Las rutinas cortas y diarias reducen la ansiedad y motivan."],
             ].map(([icon, title, text]) => (
               <li key={title} className="flex items-start gap-3">
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-fuchsia-50 text-fuchsia-600">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-sun-50 text-sun-600">
                   <DyIcon name={icon} size={17} />
                 </span>
                 <div>
@@ -235,7 +235,7 @@ export default function MenteActiva({
         </Card>
 
         <Card className="p-5 sm:p-6">
-          <CardTitle icon="History" tone="violet" title="Partidas recientes" />
+          <CardTitle icon="History" tone="clay" title="Partidas recientes" />
           {data.recentScores.length === 0 ? (
             <div className="flex flex-col items-center gap-2 py-8 text-center">
               <Brain size={30} className="text-slate-300" />
@@ -253,7 +253,7 @@ export default function MenteActiva({
                     i !== 0 && "border-t border-slate-100"
                   )}
                 >
-                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-clay-50 text-clay-600">
                     {s.game === "memory" ? (
                       <Images size={16} />
                     ) : s.game === "math" ? (
@@ -278,14 +278,14 @@ export default function MenteActiva({
                         : ""}
                     </p>
                   </div>
-                  <span className="text-sm font-extrabold text-violet-700">
+                  <span className="text-sm font-extrabold text-clay-700">
                     {s.score} pts
                   </span>
                 </li>
               ))}
             </ul>
           )}
-          <div className="mt-3 flex items-center gap-2 rounded-2xl bg-violet-50/70 p-3 text-[11px] font-semibold text-violet-700">
+          <div className="mt-3 flex items-center gap-2 rounded-2xl bg-clay-50/70 p-3 text-[11px] font-semibold text-clay-700">
             <Lightbulb size={14} className="shrink-0" />
             Consejo: juega siempre a la misma hora para convertirlo en hábito.
           </div>

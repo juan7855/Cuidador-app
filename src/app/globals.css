@@ -1,22 +1,109 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, -apple-system,
+  /* Identidad visual Panela: tipografía redondeada, cálida y cercana. */
+  --font-sans: var(--font-nunito), ui-sans-serif, system-ui, -apple-system,
     "Segoe UI", Roboto, sans-serif;
 
-  --color-brand-50: #eef5ff;
-  --color-brand-100: #d9e8ff;
-  --color-brand-200: #bcd7ff;
-  --color-brand-300: #8ebdff;
-  --color-brand-400: #599bff;
-  --color-brand-500: #2f80ed;
-  --color-brand-600: #1f66d6;
-  --color-brand-700: #1a51ac;
-  --color-brand-800: #1b458c;
-  --color-brand-900: #1c3c74;
+  /* Verde principal #31836F: acción primaria y confirmaciones */
+  --color-brand-50: #edf6f3;
+  --color-brand-100: #d7ebe4;
+  --color-brand-200: #b1d6cb;
+  --color-brand-300: #7fb9a8;
+  --color-brand-400: #4f9d88;
+  --color-brand-500: #31836f;
+  --color-brand-600: #2a6f5e;
+  --color-brand-700: #235a4c;
+  --color-brand-800: #1d493e;
+  --color-brand-900: #183b33;
 
-  --shadow-card: 0 10px 30px -12px rgba(31, 73, 125, 0.14);
-  --shadow-pop: 0 20px 45px -15px rgba(31, 73, 125, 0.28);
+  /* Turquesa #329CAF: iconos, indicadores y navegación */
+  --color-aqua-50: #ebf6f8;
+  --color-aqua-100: #d0eaef;
+  --color-aqua-200: #a4d5de;
+  --color-aqua-300: #72bccb;
+  --color-aqua-400: #4aa9bc;
+  --color-aqua-500: #329caf;
+  --color-aqua-600: #28808f;
+  --color-aqua-700: #226774;
+  --color-aqua-800: #1e535d;
+  --color-aqua-900: #1b444c;
+
+  /* Naranja cálido #D58C56: acentos y categorías */
+  --color-sun-50: #fbf3ec;
+  --color-sun-100: #f6e2d1;
+  --color-sun-200: #edc6a4;
+  --color-sun-300: #e3a877;
+  --color-sun-400: #dc9a65;
+  --color-sun-500: #d58c56;
+  --color-sun-600: #b8703f;
+  --color-sun-700: #94562f;
+  --color-sun-800: #77452a;
+  --color-sun-900: #5e3825;
+
+  /* Terracota: variante profunda del naranja para diferenciar secciones */
+  --color-clay-50: #f9f0eb;
+  --color-clay-100: #f1ddd1;
+  --color-clay-200: #e3bba4;
+  --color-clay-300: #d19473;
+  --color-clay-400: #c07a52;
+  --color-clay-500: #ad6540;
+  --color-clay-600: #96532f;
+  --color-clay-700: #7a4327;
+  --color-clay-800: #623722;
+  --color-clay-900: #502f1f;
+
+  /* Verde hoja: variante suave del verde para nutrición y logros */
+  --color-leaf-50: #f3f6ee;
+  --color-leaf-100: #e2ead6;
+  --color-leaf-200: #c8d8b2;
+  --color-leaf-300: #a8c186;
+  --color-leaf-400: #8fac68;
+  --color-leaf-500: #7a9a55;
+  --color-leaf-600: #627f42;
+  --color-leaf-700: #4e6636;
+  --color-leaf-800: #3f522e;
+  --color-leaf-900: #344327;
+
+  /* Azul grisáceo #303F49: texto principal y contraste */
+  --color-ink-50: #eef1f3;
+  --color-ink-100: #dde3e7;
+  --color-ink-200: #bcc7cf;
+  --color-ink-300: #93a3ae;
+  --color-ink-400: #6b7f8c;
+  --color-ink-500: #4d6070;
+  --color-ink-600: #3e505c;
+  --color-ink-700: #303f49;
+  --color-ink-800: #263239;
+  --color-ink-900: #1d262c;
+
+  /* Rojo coral #B85F59: solo alertas y emergencias */
+  --color-coral-50: #fbefee;
+  --color-coral-100: #f5dad8;
+  --color-coral-200: #ebb8b4;
+  --color-coral-300: #dc918b;
+  --color-coral-400: #cb736c;
+  --color-coral-500: #b85f59;
+  --color-coral-600: #9f4c47;
+  --color-coral-700: #83403b;
+  --color-coral-800: #6c3632;
+  --color-coral-900: #5a2f2c;
+
+  /* Neutros cálidos (reemplazan el slate frío): marfil, beige, salvia y texto secundario */
+  --color-slate-50: #faf8f2;
+  --color-slate-100: #f0eadb;
+  --color-slate-200: #e9dfc9;
+  --color-slate-300: #b9c0bd;
+  --color-slate-400: #7d8782;
+  --color-slate-500: #69736f;
+  --color-slate-600: #4f5b60;
+  --color-slate-700: #3d4a52;
+  --color-slate-800: #303f49;
+  --color-slate-900: #263239;
+
+  /* Profundidad discreta: casi sin sombra, se separa por superficie */
+  --shadow-card: 0 1px 2px rgba(48, 63, 73, 0.05);
+  --shadow-pop: 0 14px 34px -14px rgba(48, 63, 73, 0.25);
 }
 
 html {
@@ -30,45 +117,45 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Patrones decorativos del fondo */
+/* Fondos: marfil cálido con un toque muy suave de turquesa y naranja */
 .app-bg {
   background:
-    radial-gradient(1200px 500px at 85% -10%, rgba(47, 128, 237, 0.1), transparent 60%),
-    radial-gradient(900px 420px at -10% 0%, rgba(86, 204, 242, 0.12), transparent 55%),
-    #f1f6fd;
+    radial-gradient(1000px 420px at 90% -10%, rgba(50, 156, 175, 0.08), transparent 60%),
+    radial-gradient(800px 380px at -10% 0%, rgba(213, 140, 86, 0.1), transparent 55%),
+    #f5f1e6;
 }
 
 .selector-bg {
   background:
-    radial-gradient(1000px 600px at 90% -10%, rgba(47, 128, 237, 0.16), transparent 60%),
-    radial-gradient(800px 500px at -10% 20%, rgba(192, 38, 211, 0.08), transparent 55%),
-    linear-gradient(180deg, #f6faff 0%, #eef4fd 100%);
+    radial-gradient(900px 520px at 90% -10%, rgba(49, 131, 111, 0.12), transparent 60%),
+    radial-gradient(700px 440px at -10% 20%, rgba(213, 140, 86, 0.12), transparent 55%),
+    #f5f1e6;
 }
 
 @layer components {
   .card {
-    @apply rounded-3xl border border-white/70 bg-white shadow-[var(--shadow-card)];
+    @apply rounded-3xl border border-slate-200 bg-white shadow-[var(--shadow-card)];
   }
   .card-pad {
-    @apply rounded-3xl border border-white/70 bg-white p-5 shadow-[var(--shadow-card)] sm:p-6;
+    @apply rounded-3xl border border-slate-200 bg-white p-5 shadow-[var(--shadow-card)] sm:p-6;
   }
   .chip {
-    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold;
+    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold;
   }
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-2xl bg-brand-500 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-brand-500/25 transition hover:bg-brand-600 active:scale-[0.98] disabled:opacity-50;
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-brand-500 px-6 py-3 text-sm font-extrabold text-white transition hover:bg-brand-600 active:scale-[0.98] disabled:opacity-50;
   }
   .btn-soft {
-    @apply inline-flex items-center justify-center gap-2 rounded-2xl bg-brand-50 px-4 py-2.5 text-sm font-bold text-brand-700 transition hover:bg-brand-100 active:scale-[0.98];
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-brand-50 px-5 py-2.5 text-sm font-extrabold text-brand-700 transition hover:bg-brand-100 active:scale-[0.98];
   }
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 rounded-2xl px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 active:scale-[0.98];
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold text-slate-600 transition hover:bg-slate-100 active:scale-[0.98];
   }
   .input {
-    @apply w-full rounded-2xl border border-slate-200 bg-slate-50/60 px-4 py-3 text-sm font-medium text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-100;
+    @apply w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-brand-400 focus:ring-4 focus:ring-brand-100;
   }
   .label {
-    @apply mb-1.5 block text-xs font-bold uppercase tracking-wide text-slate-500;
+    @apply mb-1.5 block text-xs font-extrabold uppercase tracking-wide text-slate-500;
   }
 }
 

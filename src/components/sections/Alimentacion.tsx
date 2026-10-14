@@ -70,10 +70,10 @@ export default function Alimentacion({
             value={Math.min(100, (consumed / goalKcal) * 100)}
             size={112}
             stroke={12}
-            color="#059669"
+            color="#7a9a55"
             gradientId="kcal-grad"
           >
-            <Flame size={14} className="text-emerald-500" />
+            <Flame size={14} className="text-leaf-500" />
             <span className="text-lg font-extrabold text-slate-800">{consumed}</span>
             <span className="text-[10px] font-bold text-slate-400">de {goalKcal} kcal</span>
           </ProgressRing>
@@ -85,24 +85,24 @@ export default function Alimentacion({
                 : `Te quedan unas ${Math.max(0, goalKcal - consumed)} kcal para tu objetivo.`}
             </p>
             <div className="mt-3 flex flex-wrap gap-1.5">
-              <Chip tone="emerald">{doneMeals.length} comidas registradas</Chip>
+              <Chip tone="leaf">{doneMeals.length} comidas registradas</Chip>
             </div>
           </div>
         </Card>
 
         <Card className="p-5 sm:p-6">
-          <CardTitle icon="ChartPie" tone="emerald" title="Macronutrientes" />
+          <CardTitle icon="ChartPie" tone="leaf" title="Macronutrientes" />
           <div className="flex flex-col gap-3.5">
-            <MacroRow label="Proteínas" value={protein} goal={MACRO_GOALS.protein} color="#2563eb" unit="g" />
-            <MacroRow label="Carbohidratos" value={carbs} goal={MACRO_GOALS.carbs} color="#d97706" unit="g" />
-            <MacroRow label="Grasas" value={fat} goal={MACRO_GOALS.fat} color="#7c3aed" unit="g" />
+            <MacroRow label="Proteínas" value={protein} goal={MACRO_GOALS.protein} color="#31836f" unit="g" />
+            <MacroRow label="Carbohidratos" value={carbs} goal={MACRO_GOALS.carbs} color="#d58c56" unit="g" />
+            <MacroRow label="Grasas" value={fat} goal={MACRO_GOALS.fat} color="#ad6540" unit="g" />
           </div>
         </Card>
 
         <Card className="flex flex-col p-5 sm:p-6">
           <CardTitle
             icon="GlassWater"
-            tone="cyan"
+            tone="aqua"
             title="Hidratación"
             subtitle={`${data.water * 250} ml de ${waterGoal * 250} ml`}
           />
@@ -115,8 +115,8 @@ export default function Alimentacion({
                 className={cn(
                   "flex h-10 w-8 items-center justify-center rounded-xl border transition active:scale-90",
                   i < data.water
-                    ? "border-cyan-300 bg-cyan-50 text-cyan-500"
-                    : "border-slate-200 bg-slate-50 text-slate-300 hover:border-cyan-200"
+                    ? "border-aqua-300 bg-aqua-50 text-aqua-500"
+                    : "border-slate-200 bg-slate-50 text-slate-300 hover:border-aqua-200"
                 )}
               >
                 <GlassWater size={17} />
@@ -133,7 +133,7 @@ export default function Alimentacion({
             </button>
             <button
               onClick={() => onWater(Math.min(16, data.water + 1))}
-              className="flex h-10 flex-1 items-center justify-center gap-1 rounded-xl bg-cyan-500 text-sm font-bold text-white shadow-lg shadow-cyan-500/25 transition hover:bg-cyan-600 active:scale-95"
+              className="flex h-10 flex-1 items-center justify-center gap-1 rounded-xl bg-aqua-500 text-sm font-bold text-white shadow-lg shadow-aqua-500/25 transition hover:bg-aqua-600 active:scale-95"
               aria-label="Añadir un vaso"
             >
               <Plus size={15} /> Añadir
@@ -145,11 +145,11 @@ export default function Alimentacion({
       {/* Plan de comidas */}
       <div>
         <h3 className="mb-3 flex items-center gap-2 px-1 text-sm font-extrabold uppercase tracking-wide text-slate-500">
-          <Salad size={16} className="text-emerald-600" />
+          <Salad size={16} className="text-leaf-600" />
           Plan de comidas de hoy
         </h3>
         <div className="relative flex flex-col gap-3 sm:gap-4">
-          <span className="absolute bottom-6 left-10 top-6 w-px bg-emerald-100 sm:left-11" aria-hidden />
+          <span className="absolute bottom-6 left-10 top-6 w-px bg-leaf-100 sm:left-11" aria-hidden />
           {data.meals.map((m) => (
             <MealCard key={m.id} meal={m} onToggle={onToggleMeal} />
           ))}
@@ -159,7 +159,7 @@ export default function Alimentacion({
       {/* Semana + consejo */}
       <div className="grid gap-4 sm:gap-5 lg:grid-cols-2">
         <Card className="p-5 sm:p-6">
-          <CardTitle icon="CalendarDays" tone="teal" title="Cumplimiento del plan" subtitle="Comidas registradas · 7 días" />
+          <CardTitle icon="CalendarDays" tone="aqua" title="Cumplimiento del plan" subtitle="Comidas registradas · 7 días" />
           <MiniBars
             max={100}
             unit="%"
@@ -167,16 +167,16 @@ export default function Alimentacion({
               label: w.weekdayShort[0].toUpperCase(),
               value: w.mealTotal ? Math.round((100 * w.mealDone) / w.mealTotal) : 0,
               highlight: isToday(w.date),
-              color: "#0d9488",
+              color: "#329caf",
             }))}
           />
         </Card>
-        <Card className="flex items-start gap-4 border-transparent bg-gradient-to-br from-emerald-50 to-teal-50 p-5 sm:p-6">
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white text-emerald-600 shadow-sm">
+        <Card className="flex items-start gap-4 border-transparent bg-gradient-to-br from-leaf-50 to-aqua-50 p-5 sm:p-6">
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white text-leaf-600 shadow-sm">
             <Lightbulb size={20} />
           </span>
           <div>
-            <p className="text-sm font-extrabold text-emerald-800">Consejo nutricional</p>
+            <p className="text-sm font-extrabold text-leaf-800">Consejo nutricional</p>
             <p className="mt-1 text-sm font-medium leading-relaxed text-slate-600">{tip}</p>
           </div>
         </Card>
@@ -233,7 +233,7 @@ function MealCard({
 }) {
   const t = toneOf(meal.tone);
   return (
-    <Card className={cn("relative flex items-start gap-3.5 p-4 sm:p-5", meal.doneToday && "border-emerald-200 bg-emerald-50/40")}>
+    <Card className={cn("relative flex items-start gap-3.5 p-4 sm:p-5", meal.doneToday && "border-leaf-200 bg-leaf-50/40")}>
       <span
         className={cn(
           "z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ring-4 ring-white",
@@ -250,7 +250,7 @@ function MealCard({
             {hourLabel(meal.time)}
           </Chip>
           {meal.doneToday && (
-            <Chip tone="emerald" icon="Check">
+            <Chip tone="leaf" icon="Check">
               Registrado
             </Chip>
           )}
@@ -265,7 +265,7 @@ function MealCard({
         </p>
         <p className="mt-0.5 text-xs font-medium leading-relaxed text-slate-400">{meal.foods}</p>
         <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] font-bold text-slate-500">
-          <span className="inline-flex items-center gap-1 text-emerald-600">
+          <span className="inline-flex items-center gap-1 text-leaf-600">
             <Flame size={12} /> {meal.calories} kcal
           </span>
           <span>P {Math.round(meal.protein)}g</span>
@@ -277,7 +277,7 @@ function MealCard({
         done={meal.doneToday}
         onClick={() => onToggle(meal.id, !meal.doneToday)}
         label={meal.doneToday ? "Desmarcar comida" : "Marcar comida realizada"}
-        tone="#059669"
+        tone="#7a9a55"
       />
     </Card>
   );

@@ -104,8 +104,8 @@ export default function PanelGeneral({
         title: r.title,
         sub: r.detail,
         icon: r.icon,
-        tone: "indigo",
-        hex: toneOf("indigo").hex,
+        tone: "ink",
+        hex: toneOf("ink").hex,
         kind: "routine" as const,
         id: r.id,
       })),
@@ -137,7 +137,7 @@ export default function PanelGeneral({
         className="relative overflow-hidden rounded-[28px] p-6 text-white sm:p-8"
         style={{
           background:
-            "linear-gradient(130deg,#1f66d6 0%,#2f80ed 48%,#45b4ef 100%)",
+            "linear-gradient(130deg,#2a6f5e 0%,#31836f 48%,#329caf 100%)",
         }}
       >
         <div className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 rounded-full bg-white/10" />
@@ -197,7 +197,7 @@ export default function PanelGeneral({
       <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-5">
         <StatTile
           icon="HeartPulse"
-          tone="rose"
+          tone="coral"
           label="Pulso"
           value={v?.heartRate ?? "—"}
           unit="lpm"
@@ -205,7 +205,7 @@ export default function PanelGeneral({
         />
         <StatTile
           icon="Activity"
-          tone="blue"
+          tone="brand"
           label="Presión arterial"
           value={
             v?.systolic ? (
@@ -222,7 +222,7 @@ export default function PanelGeneral({
         />
         <StatTile
           icon="Footprints"
-          tone="emerald"
+          tone="leaf"
           label="Pasos"
           value={(v?.steps ?? 0).toLocaleString("es-ES")}
           sub={
@@ -234,14 +234,14 @@ export default function PanelGeneral({
             <Bar
               value={v?.steps ?? 0}
               max={goals?.steps ?? 6000}
-              barClassName="bg-emerald-500"
+              barClassName="bg-leaf-500"
               height={6}
             />
           }
         />
         <StatTile
           icon="MoonStar"
-          tone="indigo"
+          tone="ink"
           label="Sueño"
           value={fmt1(v?.sleepHours)}
           unit="h"
@@ -253,13 +253,13 @@ export default function PanelGeneral({
         />
         <StatTile
           icon="Wind"
-          tone="teal"
+          tone="aqua"
           label="Oxígeno"
           value={v?.oxygen ?? "—"}
           unit="%"
           className="col-span-2 sm:col-span-1"
           sub={
-            <span className="chip bg-emerald-50 px-2 py-0.5 text-[10px] text-emerald-700">
+            <span className="chip bg-leaf-50 px-2 py-0.5 text-[10px] text-leaf-700">
               Normal
             </span>
           }
@@ -271,7 +271,7 @@ export default function PanelGeneral({
         <Card className="p-5 sm:p-6 lg:col-span-2">
           <CardTitle
             icon="ListChecks"
-            tone="blue"
+            tone="brand"
             title="Próximas acciones"
             subtitle="Las tareas pendientes se ordenan por hora"
             action={
@@ -282,13 +282,13 @@ export default function PanelGeneral({
             }
           />
           {actions.length === 0 ? (
-            <div className="flex flex-col items-center gap-3 rounded-3xl bg-emerald-50/70 py-10 text-center">
-              <CheckCircle2 size={40} className="text-emerald-500" />
+            <div className="flex flex-col items-center gap-3 rounded-3xl bg-leaf-50/70 py-10 text-center">
+              <CheckCircle2 size={40} className="text-leaf-500" />
               <div>
-                <p className="text-sm font-extrabold text-emerald-800">
+                <p className="text-sm font-extrabold text-leaf-800">
                   Día completado
                 </p>
-                <p className="text-xs font-medium text-emerald-700/80">
+                <p className="text-xs font-medium text-leaf-700/80">
                   Todas las actividades de hoy están registradas.
                 </p>
               </div>
@@ -341,7 +341,7 @@ export default function PanelGeneral({
 
         <div className="flex flex-col gap-5 sm:gap-6">
           <Card className="p-5 sm:p-6">
-            <CardTitle icon="CalendarCheck" tone="indigo" title="Adherencia semanal" />
+            <CardTitle icon="CalendarCheck" tone="ink" title="Adherencia semanal" />
             <MiniBars
               max={100}
               unit="%"
@@ -349,28 +349,28 @@ export default function PanelGeneral({
                 label: cap(w.weekdayShort),
                 value: dayPct(w),
                 highlight: isToday(w.date),
-                color: "#4f46e5",
+                color: "#303f49",
               }))}
             />
-            <div className="mt-4 flex items-center justify-between rounded-2xl bg-indigo-50 px-4 py-3">
-              <span className="text-xs font-bold text-indigo-700">
+            <div className="mt-4 flex items-center justify-between rounded-2xl bg-ink-50 px-4 py-3">
+              <span className="text-xs font-bold text-ink-700">
                 Media de los últimos 7 días
               </span>
-              <span className="text-lg font-extrabold text-indigo-700">
+              <span className="text-lg font-extrabold text-ink-700">
                 {data.totals.adherence7}%
               </span>
             </div>
           </Card>
 
           {lowStock.length > 0 && (
-            <NoticeCard tone="amber" icon="TriangleAlert" title="Stock de medicación bajo">
+            <NoticeCard tone="sun" icon="TriangleAlert" title="Stock de medicación bajo">
               Quedan pocas unidades de{" "}
               <strong>{lowStock.map((m) => m.name).join(", ")}</strong>. Pide
               cita o renueva la receta para no interrumpir el tratamiento.
             </NoticeCard>
           )}
           {p.allergies.length > 0 && (
-            <NoticeCard tone="rose" icon="ShieldAlert" title="Alergias registradas">
+            <NoticeCard tone="coral" icon="ShieldAlert" title="Alergias registradas">
               {p.allergies.join(", ")}. El equipo médico debe verificarlo antes
               de recetar cualquier nuevo medicamento.
             </NoticeCard>
@@ -379,7 +379,7 @@ export default function PanelGeneral({
       </div>
 
       {/* Consejo de salud */}
-      <Card className="flex items-start gap-4 overflow-hidden border-transparent bg-gradient-to-r from-brand-50 to-sky-50 p-5 sm:p-6">
+      <Card className="flex items-start gap-4 overflow-hidden border-transparent bg-gradient-to-r from-brand-50 to-aqua-50 p-5 sm:p-6">
         <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white text-brand-600 shadow-sm">
           <Sparkles size={20} />
         </span>
@@ -421,8 +421,8 @@ function DeltaTag({
     value === 0
       ? "text-slate-400"
       : value > 0
-        ? "text-rose-500"
-        : "text-emerald-600";
+        ? "text-coral-500"
+        : "text-leaf-600";
   return (
     <span className={cn("inline-flex items-center gap-0.5 text-[11px] font-bold", tone)}>
       <Icon size={13} />

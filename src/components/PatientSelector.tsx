@@ -1,9 +1,9 @@
 "use client";
 
+import Mascot from "@/components/Mascot";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  HeartPulse,
   ChevronRight,
   ShieldCheck,
   Users,
@@ -84,12 +84,10 @@ export default function PatientSelector({
         {/* Marca */}
         <header className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500 to-sky-400 text-white shadow-lg shadow-brand-500/30">
-              <HeartPulse size={22} strokeWidth={2.4} />
-            </span>
+            <Mascot size={48} />
             <div>
               <p className="text-lg font-extrabold tracking-tight text-slate-900">
-                VitalCare
+                Panela
               </p>
               <p className="-mt-0.5 text-[11px] font-semibold text-slate-500">
                 Plataforma de cuidado integral
@@ -97,7 +95,7 @@ export default function PatientSelector({
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Chip tone="emerald" icon="ShieldCheck" className="hidden sm:inline-flex">
+            <Chip tone="leaf" icon="ShieldCheck" className="hidden sm:inline-flex">
               Datos confidenciales
             </Chip>
             <button onClick={() => setAddOpen(true)} className="btn-primary">
@@ -116,7 +114,7 @@ export default function PatientSelector({
           </span>
           <h1 className="mt-4 text-3xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-5xl">
             ¿A quién cuidamos{" "}
-            <span className="bg-gradient-to-r from-brand-600 to-sky-500 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-brand-600 to-aqua-500 bg-clip-text text-transparent">
               hoy?
             </span>
           </h1>
@@ -180,12 +178,12 @@ export default function PatientSelector({
                 <div className="relative mt-4 flex flex-wrap gap-1.5">
                   {p.conditions.length ? (
                     p.conditions.slice(0, 2).map((c) => (
-                      <Chip key={c} tone="blue">
+                      <Chip key={c} tone="brand">
                         {c}
                       </Chip>
                     ))
                   ) : (
-                    <Chip tone="emerald" icon="Heart">
+                    <Chip tone="leaf" icon="Heart">
                       Sin patologías crónicas
                     </Chip>
                   )}
@@ -211,7 +209,7 @@ export default function PatientSelector({
                 onClick={() => setToDelete(p)}
                 aria-label={`Eliminar a ${p.name}`}
                 title="Eliminar paciente"
-                className="absolute bottom-5 right-14 z-10 flex h-8 w-8 items-center justify-center rounded-full text-slate-300 transition hover:bg-rose-50 hover:text-rose-600"
+                className="absolute bottom-5 right-14 z-10 flex h-8 w-8 items-center justify-center rounded-full text-slate-300 transition hover:bg-coral-50 hover:text-coral-600"
               >
                 <Trash2 size={16} />
               </button>
@@ -222,7 +220,7 @@ export default function PatientSelector({
         {/* Pie */}
         <footer className="mt-auto pt-12">
           <div className="flex flex-col items-start gap-3 rounded-3xl border border-white/80 bg-white/70 p-5 backdrop-blur sm:flex-row sm:items-center">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-leaf-50 text-leaf-600">
               <ShieldCheck size={20} />
             </span>
             <p className="text-xs leading-relaxed text-slate-500 sm:text-sm">
@@ -249,7 +247,7 @@ export default function PatientSelector({
             deshacer.
           </p>
           {deleteError && (
-            <p className="rounded-xl bg-rose-50 px-3.5 py-2.5 text-xs font-bold text-rose-600">
+            <p className="rounded-xl bg-coral-50 px-3.5 py-2.5 text-xs font-bold text-coral-600">
               {deleteError}
             </p>
           )}
@@ -260,7 +258,7 @@ export default function PatientSelector({
             <button
               onClick={confirmDelete}
               disabled={deleting}
-              className="flex-1 rounded-2xl bg-rose-600 px-4 py-3 text-sm font-bold text-white transition hover:bg-rose-700 active:scale-[0.98] disabled:opacity-60"
+              className="flex-1 rounded-full bg-coral-600 px-4 py-3 text-sm font-bold text-white transition hover:bg-coral-700 active:scale-[0.98] disabled:opacity-60"
             >
               {deleting ? "Eliminando…" : "Sí, eliminar"}
             </button>
@@ -380,7 +378,7 @@ function NewPatientModal({
     return (
       <Modal open={open} onClose={close} title="Paciente creado">
         <div className="flex flex-col items-center gap-4 py-2 text-center">
-          <span className="flex h-14 w-14 items-center justify-center rounded-3xl bg-emerald-50 text-emerald-600">
+          <span className="flex h-14 w-14 items-center justify-center rounded-3xl bg-leaf-50 text-leaf-600">
             <UserPlus size={26} />
           </span>
           <p className="text-sm font-semibold text-slate-600">
@@ -396,7 +394,7 @@ function NewPatientModal({
               {created.pin}
             </span>
             {copied ? (
-              <Check size={18} className="text-emerald-600" />
+              <Check size={18} className="text-leaf-600" />
             ) : (
               <Copy size={18} className="text-brand-500" />
             )}
@@ -526,7 +524,7 @@ function NewPatientModal({
         </div>
 
         {error && (
-          <p className="rounded-xl bg-rose-50 px-3.5 py-2.5 text-xs font-bold text-rose-600">
+          <p className="rounded-xl bg-coral-50 px-3.5 py-2.5 text-xs font-bold text-coral-600">
             {error}
           </p>
         )}

@@ -117,8 +117,8 @@ export default function MathGame({
 
   if (phase === "intro") {
     return (
-      <div className="flex flex-col items-center gap-5 rounded-3xl bg-gradient-to-br from-fuchsia-50 to-purple-50 p-8 text-center">
-        <span className="flex h-16 w-16 items-center justify-center rounded-3xl bg-fuchsia-500 text-white shadow-lg shadow-fuchsia-500/30">
+      <div className="flex flex-col items-center gap-5 rounded-3xl bg-gradient-to-br from-sun-50 to-clay-50 p-8 text-center">
+        <span className="flex h-16 w-16 items-center justify-center rounded-3xl bg-sun-500 text-white shadow-lg shadow-sun-500/30">
           <span className="text-2xl font-extrabold">∑</span>
         </span>
         <div>
@@ -130,7 +130,7 @@ export default function MathGame({
           </p>
         </div>
         {best != null && best > 0 && (
-          <span className="chip bg-white text-fuchsia-700 shadow-sm">
+          <span className="chip bg-white text-sun-700 shadow-sm">
             <Trophy size={13} /> Mejor marca: {best}
           </span>
         )}
@@ -143,8 +143,8 @@ export default function MathGame({
 
   if (phase === "done" && result) {
     return (
-      <div className="animate-pop flex flex-col items-center gap-4 rounded-3xl border border-fuchsia-100 bg-gradient-to-br from-fuchsia-50 to-purple-50 p-8 text-center">
-        <span className="flex h-14 w-14 items-center justify-center rounded-3xl bg-fuchsia-500 text-white shadow-lg shadow-fuchsia-500/30">
+      <div className="animate-pop flex flex-col items-center gap-4 rounded-3xl border border-sun-100 bg-gradient-to-br from-sun-50 to-clay-50 p-8 text-center">
+        <span className="flex h-14 w-14 items-center justify-center rounded-3xl bg-sun-500 text-white shadow-lg shadow-sun-500/30">
           <Sparkles size={26} />
         </span>
         <p className="text-lg font-extrabold text-slate-900">
@@ -153,7 +153,7 @@ export default function MathGame({
         <p className="text-sm font-semibold text-slate-500">
           Has acertado {correct} de {TOTAL_Q} operaciones.
         </p>
-        <p className="text-4xl font-extrabold text-fuchsia-600">{result.score}</p>
+        <p className="text-4xl font-extrabold text-sun-600">{result.score}</p>
         <p className="text-xs font-bold uppercase tracking-wide text-slate-400">
           Mejor marca: {Math.max(result.best, result.score)}
         </p>
@@ -178,7 +178,7 @@ export default function MathGame({
           </div>
           <div className="h-2.5 w-full overflow-hidden rounded-full bg-slate-100">
             <div
-              className="h-full rounded-full bg-fuchsia-500 transition-all duration-300"
+              className="h-full rounded-full bg-sun-500 transition-all duration-300"
               style={{ width: `${((index + (picked !== null ? 1 : 0)) / TOTAL_Q) * 100}%` }}
             />
           </div>
@@ -186,7 +186,7 @@ export default function MathGame({
         <span
           className={cn(
             "inline-flex items-center gap-1 rounded-2xl px-3 py-2 text-sm font-extrabold tabular-nums",
-            timeLeft <= 10 ? "bg-rose-50 text-rose-600" : "bg-slate-100 text-slate-600"
+            timeLeft <= 10 ? "bg-coral-50 text-coral-600" : "bg-slate-100 text-slate-600"
           )}
         >
           <Timer size={15} /> {timeLeft}s
@@ -195,7 +195,7 @@ export default function MathGame({
 
       <div className="rounded-3xl bg-gradient-to-br from-slate-900 to-slate-700 p-8 text-center sm:p-10">
         <p className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
-          {q.text} <span className="text-fuchsia-300">= ?</span>
+          {q.text} <span className="text-sun-300">= ?</span>
         </p>
       </div>
 
@@ -212,9 +212,9 @@ export default function MathGame({
               className={cn(
                 "flex items-center justify-center gap-2 rounded-2xl border-2 py-5 text-2xl font-extrabold transition active:scale-95",
                 !reveal &&
-                  "border-slate-100 bg-white text-slate-800 shadow-sm hover:border-fuchsia-300 hover:bg-fuchsia-50",
-                reveal && isCorrect && "border-emerald-500 bg-emerald-50 text-emerald-700",
-                reveal && isPicked && !isCorrect && "border-rose-500 bg-rose-50 text-rose-700",
+                  "border-slate-100 bg-white text-slate-800 shadow-sm hover:border-sun-300 hover:bg-sun-50",
+                reveal && isCorrect && "border-leaf-500 bg-leaf-50 text-leaf-700",
+                reveal && isPicked && !isCorrect && "border-coral-500 bg-coral-50 text-coral-700",
                 reveal && !isCorrect && !isPicked && "border-slate-100 bg-white text-slate-300"
               )}
             >

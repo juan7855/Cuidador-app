@@ -103,10 +103,10 @@ export function bmi(weightKg?: number | null, heightCm?: number | null) {
 }
 
 export function bmiCategory(v: number) {
-  if (v < 18.5) return { label: "Bajo peso", tone: "amber" };
-  if (v < 25) return { label: "Peso normal", tone: "emerald" };
-  if (v < 30) return { label: "Sobrepeso", tone: "amber" };
-  return { label: "Obesidad", tone: "rose" };
+  if (v < 18.5) return { label: "Bajo peso", tone: "sun" };
+  if (v < 25) return { label: "Peso normal", tone: "leaf" };
+  if (v < 30) return { label: "Sobrepeso", tone: "sun" };
+  return { label: "Obesidad", tone: "coral" };
 }
 
 export function pct(part: number, total: number): number {
@@ -122,88 +122,53 @@ export interface Tone {
   hex: string;
 }
 
+// Clases literales para que Tailwind las detecte.
+const BRAND: Tone = { soft: "bg-brand-50", text: "text-brand-700", solid: "bg-brand-500", ring: "ring-brand-200", hex: "#31836f" };
+const AQUA: Tone = { soft: "bg-aqua-50", text: "text-aqua-700", solid: "bg-aqua-500", ring: "ring-aqua-200", hex: "#329caf" };
+const SUN: Tone = { soft: "bg-sun-50", text: "text-sun-700", solid: "bg-sun-500", ring: "ring-sun-200", hex: "#d58c56" };
+const CLAY: Tone = { soft: "bg-clay-50", text: "text-clay-700", solid: "bg-clay-500", ring: "ring-clay-200", hex: "#ad6540" };
+const LEAF: Tone = { soft: "bg-leaf-50", text: "text-leaf-700", solid: "bg-leaf-500", ring: "ring-leaf-200", hex: "#7a9a55" };
+const INK: Tone = { soft: "bg-ink-50", text: "text-ink-700", solid: "bg-ink-500", ring: "ring-ink-200", hex: "#303f49" };
+const CORAL: Tone = { soft: "bg-coral-50", text: "text-coral-700", solid: "bg-coral-500", ring: "ring-coral-200", hex: "#b85f59" };
+
+/**
+ * Los tonos se guardan en la base compartida con MiSalud con los nombres
+ * antiguos (blue, emerald, violet…), así que siguen siendo válidos y se
+ * traducen a la paleta Panela.
+ */
 export const TONES: Record<string, Tone> = {
-  blue: {
-    soft: "bg-blue-50",
-    text: "text-blue-700",
-    solid: "bg-blue-500",
-    ring: "ring-blue-200",
-    hex: "#2563eb",
-  },
-  violet: {
-    soft: "bg-violet-50",
-    text: "text-violet-700",
-    solid: "bg-violet-500",
-    ring: "ring-violet-200",
-    hex: "#7c3aed",
-  },
-  emerald: {
-    soft: "bg-emerald-50",
-    text: "text-emerald-700",
-    solid: "bg-emerald-500",
-    ring: "ring-emerald-200",
-    hex: "#059669",
-  },
-  amber: {
-    soft: "bg-amber-50",
-    text: "text-amber-700",
-    solid: "bg-amber-500",
-    ring: "ring-amber-200",
-    hex: "#d97706",
-  },
-  rose: {
-    soft: "bg-rose-50",
-    text: "text-rose-700",
-    solid: "bg-rose-500",
-    ring: "ring-rose-200",
-    hex: "#e11d48",
-  },
-  teal: {
-    soft: "bg-teal-50",
-    text: "text-teal-700",
-    solid: "bg-teal-500",
-    ring: "ring-teal-200",
-    hex: "#0d9488",
-  },
-  indigo: {
-    soft: "bg-indigo-50",
-    text: "text-indigo-700",
-    solid: "bg-indigo-500",
-    ring: "ring-indigo-200",
-    hex: "#4f46e5",
-  },
-  fuchsia: {
-    soft: "bg-fuchsia-50",
-    text: "text-fuchsia-700",
-    solid: "bg-fuchsia-500",
-    ring: "ring-fuchsia-200",
-    hex: "#c026d3",
-  },
-  cyan: {
-    soft: "bg-cyan-50",
-    text: "text-cyan-700",
-    solid: "bg-cyan-500",
-    ring: "ring-cyan-200",
-    hex: "#0891b2",
-  },
-  orange: {
-    soft: "bg-orange-50",
-    text: "text-orange-700",
-    solid: "bg-orange-500",
-    ring: "ring-orange-200",
-    hex: "#ea580c",
-  },
+  brand: BRAND,
+  aqua: AQUA,
+  sun: SUN,
+  clay: CLAY,
+  leaf: LEAF,
+  ink: INK,
+  coral: CORAL,
+  // alias heredados
+  blue: BRAND,
+  sky: AQUA,
+  cyan: AQUA,
+  teal: AQUA,
+  violet: CLAY,
+  purple: CLAY,
+  indigo: INK,
+  fuchsia: SUN,
+  orange: SUN,
+  amber: SUN,
+  emerald: LEAF,
+  rose: CORAL,
+  red: CORAL,
   slate: {
     soft: "bg-slate-100",
     text: "text-slate-600",
     solid: "bg-slate-500",
     ring: "ring-slate-200",
-    hex: "#64748b",
+    hex: "#69736f",
   },
 };
 
 export function toneOf(name: string): Tone {
-  return TONES[name] ?? TONES.blue;
+  return TONES[name] ?? TONES.brand;
 }
 
 export function periodFromHour(time: string): string {

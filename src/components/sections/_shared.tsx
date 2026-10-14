@@ -45,7 +45,7 @@ export function SectionHeader({
 /* Mini estadística */
 export function StatTile({
   icon,
-  tone = "blue",
+  tone = "brand",
   label,
   value,
   unit,
@@ -125,7 +125,7 @@ export function ShortcutTile({
 
 /* Banner de alerta / consejo */
 export function NoticeCard({
-  tone = "amber",
+  tone = "sun",
   icon,
   title,
   children,

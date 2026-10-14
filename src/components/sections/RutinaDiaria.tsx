@@ -8,11 +8,11 @@ import { cn, hourLabel, isToday, normalizePhase, toneOf } from "@/lib/utils";
 import type { DashboardData, RoutineRow } from "@/lib/types";
 
 const PHASES: { id: string; label: string; icon: string; tone: string }[] = [
-  { id: "Amanecer", label: "Amanecer", icon: "Sunrise", tone: "amber" },
-  { id: "Mañana", label: "Mañana", icon: "Sun", tone: "sky" },
-  { id: "Mediodía", label: "Mediodía", icon: "SunMedium", tone: "emerald" },
-  { id: "Tarde", label: "Tarde", icon: "CloudSun", tone: "orange" },
-  { id: "Noche", label: "Noche", icon: "MoonStar", tone: "indigo" },
+  { id: "Amanecer", label: "Amanecer", icon: "Sunrise", tone: "sun" },
+  { id: "Mañana", label: "Mañana", icon: "Sun", tone: "aqua" },
+  { id: "Mediodía", label: "Mediodía", icon: "SunMedium", tone: "leaf" },
+  { id: "Tarde", label: "Tarde", icon: "CloudSun", tone: "sun" },
+  { id: "Noche", label: "Noche", icon: "MoonStar", tone: "ink" },
 ];
 
 export default function RutinaDiaria({
@@ -37,8 +37,8 @@ export default function RutinaDiaria({
       {/* Resumen */}
       <div className="grid gap-4 sm:gap-5 lg:grid-cols-3">
         <Card className="flex items-center gap-5 p-5 sm:p-6">
-          <ProgressRing value={routinePct} size={104} stroke={11} color="#4f46e5">
-            <span className="text-2xl font-extrabold text-indigo-700">
+          <ProgressRing value={routinePct} size={104} stroke={11} color="#303f49">
+            <span className="text-2xl font-extrabold text-ink-700">
               {t.routineDone}/{t.routineTotal}
             </span>
             <span className="text-[10px] font-bold uppercase tracking-wide text-slate-400">
@@ -53,7 +53,7 @@ export default function RutinaDiaria({
                 : `Te faltan ${t.routineTotal - t.routineDone} hábitos para terminar el día.`}
             </p>
             {allDone && (
-              <Chip tone="emerald" icon="PartyPopper" className="mt-2">
+              <Chip tone="leaf" icon="PartyPopper" className="mt-2">
                 Día perfecto
               </Chip>
             )}
@@ -61,7 +61,7 @@ export default function RutinaDiaria({
         </Card>
 
         <Card className="p-5 sm:p-6 lg:col-span-2">
-          <CardTitle icon="CalendarCheck" tone="indigo" title="Cumplimiento por día" subtitle="Porcentaje de hábitos · últimos 7 días" />
+          <CardTitle icon="CalendarCheck" tone="ink" title="Cumplimiento por día" subtitle="Porcentaje de hábitos · últimos 7 días" />
           <MiniBars
             max={100}
             unit="%"
@@ -69,7 +69,7 @@ export default function RutinaDiaria({
               label: w.weekdayShort[0].toUpperCase(),
               value: w.routineTotal ? Math.round((100 * w.routineDone) / w.routineTotal) : 0,
               highlight: isToday(w.date),
-              color: "#4f46e5",
+              color: "#303f49",
             }))}
           />
         </Card>
@@ -128,12 +128,12 @@ export default function RutinaDiaria({
       </div>
 
       {allDone && (
-        <Card className="flex items-center gap-4 border-transparent bg-gradient-to-r from-indigo-50 to-fuchsia-50 p-5 sm:p-6">
-          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white text-indigo-600 shadow-sm">
+        <Card className="flex items-center gap-4 border-transparent bg-gradient-to-r from-ink-50 to-sun-50 p-5 sm:p-6">
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white text-ink-600 shadow-sm">
             <PartyPopper size={22} />
           </span>
           <div>
-            <p className="text-sm font-extrabold text-indigo-900">
+            <p className="text-sm font-extrabold text-ink-900">
               {data.patient.name.split(" ")[0]} ha completado toda la rutina
             </p>
             <p className="text-xs font-medium text-slate-500">
@@ -192,7 +192,7 @@ function TaskRow({
         done={task.doneToday}
         onClick={onToggle}
         label={task.doneToday ? "Desmarcar hábito" : "Marcar hábito"}
-        tone="#4f46e5"
+        tone="#303f49"
         size={40}
       />
     </li>

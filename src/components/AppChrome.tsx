@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import {
-  HeartPulse,
   Bell,
   SwitchCamera,
   LayoutGrid,
@@ -18,6 +17,7 @@ import {
   X,
   type LucideIcon,
 } from "lucide-react";
+import Mascot from "@/components/Mascot";
 import { SECTIONS, type SectionId, type SectionDef } from "@/components/nav";
 import { Avatar, DyIcon } from "@/components/ui";
 import { cn, greeting, toneOf } from "@/lib/utils";
@@ -59,7 +59,7 @@ function NavRow({
     <button
       onClick={onClick}
       className={cn(
-        "group flex w-full items-center gap-3 rounded-2xl text-left font-bold transition-all",
+        "group flex w-full items-center gap-3 rounded-full text-left font-bold transition-all",
         compact ? "px-3.5 py-3 text-sm" : "px-4 py-3 text-sm",
         active
           ? cn("text-white shadow-lg", section.solid)
@@ -105,12 +105,10 @@ export default function AppChrome({
       {/* ------------------------------------------------ Sidebar escritorio */}
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-[284px] flex-col border-r border-slate-200/70 bg-white/80 px-5 py-7 backdrop-blur-xl lg:flex">
         <div className="flex items-center gap-3 px-2">
-          <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500 to-sky-400 text-white shadow-lg shadow-brand-500/30">
-            <HeartPulse size={20} strokeWidth={2.4} />
-          </span>
+          <Mascot size={42} />
           <div>
             <p className="text-base font-extrabold tracking-tight text-slate-900">
-              VitalCare
+              Panela
             </p>
             <p className="-mt-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
               Salud integral
@@ -162,7 +160,7 @@ export default function AppChrome({
       </aside>
 
       {/* ------------------------------------------------ Cabecera móvil */}
-      <header className="pb-safe sticky top-0 z-30 border-b border-slate-200/60 bg-[#f1f6fd]/85 backdrop-blur-xl lg:hidden">
+      <header className="pb-safe sticky top-0 z-30 border-b border-slate-200/60 bg-[#f5f1e6]/85 backdrop-blur-xl lg:hidden">
         <div className="flex items-center justify-between gap-3 px-4 py-3">
           <button onClick={onSwitch} className="flex min-w-0 items-center gap-3 text-left">
             {patient && (
@@ -178,7 +176,7 @@ export default function AppChrome({
                 {greeting()}
               </span>
               <span className="block truncate text-sm font-extrabold text-slate-900">
-                {patient?.name ?? "VitalCare"}
+                {patient?.name ?? "Panela"}
               </span>
             </span>
           </button>
@@ -190,7 +188,7 @@ export default function AppChrome({
             >
               <Bell size={18} />
               {reminders.length > 0 && (
-                <span className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full bg-rose-500 ring-2 ring-white" />
+                <span className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full bg-coral-500 ring-2 ring-white" />
               )}
             </button>
             {bellOpen && (
@@ -255,10 +253,10 @@ export default function AppChrome({
             className={cn(
               "flex -translate-y-3 flex-col items-center gap-1 rounded-3xl px-4 py-2 text-white shadow-lg transition active:scale-95",
               section === "mind"
-                ? "bg-gradient-to-br from-fuchsia-500 to-purple-600"
-                : "bg-gradient-to-br from-fuchsia-500 to-purple-600"
+                ? "bg-gradient-to-br from-sun-500 to-clay-600"
+                : "bg-gradient-to-br from-sun-500 to-clay-600"
             )}
-            style={{ boxShadow: "0 14px 26px -10px rgba(192,38,211,.6)" }}
+            style={{ boxShadow: "0 14px 26px -10px rgba(184,112,63,.55)" }}
           >
             <Brain size={24} strokeWidth={2.3} />
             <span className="text-[10px] font-extrabold">Mente</span>

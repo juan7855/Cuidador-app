@@ -34,7 +34,7 @@ export function CardTitle({
   title,
   subtitle,
   action,
-  tone = "blue",
+  tone = "brand",
 }: {
   icon?: string;
   title: string;
@@ -115,8 +115,8 @@ export function ProgressRing({
   value,
   size = 128,
   stroke = 12,
-  color = "#2f80ed",
-  track = "#e6eef9",
+  color = "#31836f",
+  track = "#e9dfc9",
   children,
   gradientId,
 }: {
@@ -138,7 +138,7 @@ export function ProgressRing({
           <defs>
             <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stopColor={color} />
-              <stop offset="100%" stopColor="#56ccf2" />
+              <stop offset="100%" stopColor="#329caf" />
             </linearGradient>
           </defs>
         )}
@@ -201,7 +201,7 @@ export function CheckButton({
   onClick,
   label,
   size = 44,
-  tone = "#2f80ed",
+  tone = "#31836f",
 }: {
   done: boolean;
   onClick: () => void;
@@ -236,7 +236,7 @@ export function CheckButton({
 /* ------------------------------------------------------------------ */
 export function Chip({
   children,
-  tone = "blue",
+  tone = "brand",
   icon,
   className,
 }: {
@@ -379,7 +379,7 @@ export function LineChart({
               points={`${pad},${H - pad} ${points(series[0].values)} ${W - pad},${H - pad}`}
               fill={series[0].fill ?? `${series[0].color}1f`}
             />
-            <line x1={pad} x2={W - pad} y1={H - pad} y2={H - pad} stroke="#e2e8f0" strokeWidth={1} />
+            <line x1={pad} x2={W - pad} y1={H - pad} y2={H - pad} stroke="#e4dcc6" strokeWidth={1} />
           </>
         )}
         {series.map((s, i) => (
@@ -444,7 +444,7 @@ export function MiniBars({
                 )}
                 style={{
                   height: h,
-                  backgroundColor: it.color ?? "#2f80ed",
+                  backgroundColor: it.color ?? "#31836f",
                 }}
                 title={`${it.label}: ${it.value}`}
               />

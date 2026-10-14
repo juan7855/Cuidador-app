@@ -87,32 +87,32 @@ export default function Ejercicio({
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
         <StatTile
           icon="Timer"
-          tone="orange"
+          tone="sun"
           label="Minutos esta semana"
           value={weekMinutes}
           unit={`/ ${goal * 7} min`}
-          footer={<Bar value={weekMinutes} max={goal * 7} height={6} barClassName="bg-orange-500" />}
+          footer={<Bar value={weekMinutes} max={goal * 7} height={6} barClassName="bg-sun-500" />}
         />
         <StatTile
           icon="Flame"
-          tone="rose"
+          tone="coral"
           label="Calorías quemadas"
           value={weekKcal}
           unit="kcal"
           sub={
-            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-600">
+            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-leaf-600">
               <CalendarDays size={12} /> {activeDays} días activos
             </span>
           }
         />
         <StatTile
           icon="Footprints"
-          tone="emerald"
+          tone="leaf"
           label="Sesión de hoy"
           value={todayPlan ? `${todayMinutes || 0} min` : "Descanso"}
           sub={
             todayPlan ? (
-              <Chip tone={todayPlan.doneToday ? "emerald" : "orange"}>
+              <Chip tone={todayPlan.doneToday ? "leaf" : "sun"}>
                 {todayPlan.doneToday ? "Completado" : todayPlan.intensity}
               </Chip>
             ) : undefined
@@ -133,9 +133,9 @@ export default function Ejercicio({
                 className={cn(
                   "flex flex-col items-center gap-1 rounded-2xl border py-2.5 transition active:scale-95",
                   active
-                    ? "border-orange-500 bg-orange-500 text-white shadow-lg shadow-orange-500/25"
+                    ? "border-sun-500 bg-sun-500 text-white shadow-lg shadow-sun-500/25"
                     : isToday(d.key)
-                      ? "border-orange-300 bg-orange-50 text-orange-700"
+                      ? "border-sun-300 bg-sun-50 text-sun-700"
                       : "border-slate-100 bg-slate-50/60 text-slate-500 hover:border-slate-200"
                 )}
               >
@@ -148,7 +148,7 @@ export default function Ejercicio({
                     <span
                       className={cn(
                         "flex h-5 w-5 items-center justify-center rounded-full",
-                        active ? "bg-white/25 text-white" : "bg-emerald-500 text-white"
+                        active ? "bg-white/25 text-white" : "bg-leaf-500 text-white"
                       )}
                     >
                       <Check size={12} strokeWidth={3} />
@@ -157,7 +157,7 @@ export default function Ejercicio({
                     <DyIcon
                       name={rest ? "Coffee" : d.plan.icon}
                       size={14}
-                      className={active ? "text-white" : rest ? "text-slate-400" : "text-orange-500"}
+                      className={active ? "text-white" : rest ? "text-slate-400" : "text-sun-500"}
                     />
                   )
                 ) : (
@@ -171,13 +171,13 @@ export default function Ejercicio({
 
       {/* Detalle de la sesión */}
       {plan ? (
-        <Card className={cn("overflow-hidden p-0", plan.doneToday && isTodaySel && "border-emerald-200")}>
+        <Card className={cn("overflow-hidden p-0", plan.doneToday && isTodaySel && "border-leaf-200")}>
           <div
             className={cn(
               "flex flex-col gap-5 p-6 sm:p-7 sm:flex-row sm:items-center",
               plan.intensity === "Descanso"
                 ? "bg-gradient-to-r from-slate-100 to-slate-50"
-                : "bg-gradient-to-r from-orange-500 to-amber-400 text-white"
+                : "bg-gradient-to-r from-sun-500 to-sun-400 text-white"
             )}
           >
             <span
@@ -233,7 +233,7 @@ export default function Ejercicio({
                   "inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl px-6 py-3.5 text-sm font-extrabold shadow-lg transition active:scale-95",
                   plan.doneToday
                     ? "bg-white/20 text-white hover:bg-white/30"
-                    : "bg-white text-orange-600 hover:bg-orange-50"
+                    : "bg-white text-sun-600 hover:bg-sun-50"
                 )}
               >
                 {plan.doneToday ? (
@@ -252,14 +252,14 @@ export default function Ejercicio({
           <div className="p-5 sm:p-6">
             {plan.items && plan.items.length > 0 ? (
               <>
-                <CardTitle icon="ListOrdered" tone="orange" title="Desarrollo de la sesión" />
+                <CardTitle icon="ListOrdered" tone="sun" title="Desarrollo de la sesión" />
                 <ol className="grid gap-2.5 sm:grid-cols-2">
                   {plan.items.map((it, i) => (
                     <li
                       key={i}
                       className="flex items-center gap-3 rounded-2xl border border-slate-100 bg-slate-50/60 p-3"
                     >
-                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-orange-100 text-sm font-extrabold text-orange-700">
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-sun-100 text-sm font-extrabold text-sun-700">
                         {i + 1}
                       </span>
                       <div className="min-w-0">
@@ -278,7 +278,7 @@ export default function Ejercicio({
 
             <div className="mt-4">
               {past && (
-                <Chip tone={selected.done ? "emerald" : "rose"}>
+                <Chip tone={selected.done ? "leaf" : "coral"}>
                   {selected.done
                     ? "Sesión completada"
                     : "Sesión no registrada"}
@@ -300,7 +300,7 @@ export default function Ejercicio({
 
       {/* Minutos por día */}
       <Card className="p-5 sm:p-6">
-        <CardTitle icon="BarChart3" tone="orange" title="Minutos de actividad" subtitle="Objetivo diario marcado en sombra" />
+        <CardTitle icon="BarChart3" tone="sun" title="Minutos de actividad" subtitle="Objetivo diario marcado en sombra" />
         <MiniBars
           max={Math.max(goal, ...days.map((d) => d.plan?.durationMin ?? 0))}
           unit="m"
@@ -308,36 +308,36 @@ export default function Ejercicio({
             label: weekdayShort(d.key).slice(0, 2),
             value: d.done ? d.plan?.durationMin ?? 0 : 0,
             highlight: isToday(d.key),
-            color: "#ea580c",
+            color: "#d58c56",
           }))}
         />
       </Card>
 
       {/* Seguridad */}
-      <Card className="border-transparent bg-gradient-to-br from-orange-50 to-amber-50 p-5 sm:p-6">
+      <Card className="border-transparent bg-gradient-to-br from-sun-50 to-sun-50 p-5 sm:p-6">
         <div className="flex items-start gap-4">
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white text-orange-600 shadow-sm">
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white text-sun-600 shadow-sm">
             <ShieldCheck size={22} />
           </span>
           <div>
-            <p className="text-sm font-extrabold text-orange-800">
+            <p className="text-sm font-extrabold text-sun-800">
               Recomendaciones de seguridad
             </p>
             <ul className="mt-2 grid gap-1.5 text-sm font-medium leading-relaxed text-slate-600 sm:grid-cols-2">
               <li className="flex gap-2">
-                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-orange-400" />
+                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-sun-400" />
                 Zona de esfuerzo suave: {Math.round(maxHr * 0.5)}–{Math.round(maxHr * 0.7)} lpm.
               </li>
               <li className="flex gap-2">
-                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-orange-400" />
+                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-sun-400" />
                 Detente si aparecen mareos, dolor en el pecho o falta de aire.
               </li>
               <li className="flex gap-2">
-                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-orange-400" />
+                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-sun-400" />
                 Bebe agua antes, durante y después de moverte.
               </li>
               <li className="flex gap-2">
-                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-orange-400" />
+                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-sun-400" />
                 {asthma
                   ? "Lleva el inhalador de rescate siempre encima durante el ejercicio."
                   : "Calienta 5 minutos antes y estira al finalizar."}

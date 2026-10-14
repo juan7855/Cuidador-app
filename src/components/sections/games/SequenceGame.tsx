@@ -5,13 +5,15 @@ import { Play, RotateCcw, Trophy, Sparkles, Eye, Hand } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const PADS = [
-  { base: "bg-sky-500", soft: "bg-sky-100 text-sky-700", glow: "shadow-sky-400/60", label: "Azul" },
-  { base: "bg-emerald-500", soft: "bg-emerald-100 text-emerald-700", glow: "shadow-emerald-400/60", label: "Verde" },
-  { base: "bg-amber-500", soft: "bg-amber-100 text-amber-700", glow: "shadow-amber-400/60", label: "Ámbar" },
-  { base: "bg-fuchsia-500", soft: "bg-fuchsia-100 text-fuchsia-700", glow: "shadow-fuchsia-400/60", label: "Magenta" },
+  { base: "bg-aqua-500", soft: "bg-aqua-100 text-aqua-700", glow: "shadow-aqua-400/60", label: "Azul" },
+  { base: "bg-leaf-500", soft: "bg-leaf-100 text-leaf-700", glow: "shadow-leaf-400/60", label: "Verde" },
+  { base: "bg-sun-500", soft: "bg-sun-100 text-sun-700", glow: "shadow-sun-400/60", label: "Ámbar" },
+  { base: "bg-sun-500", soft: "bg-sun-100 text-sun-700", glow: "shadow-sun-400/60", label: "Magenta" },
 ];
 
 type Phase = "intro" | "showing" | "input" | "over";
+
+const randomPad = () => Math.floor(Math.random() * 4);
 
 export default function SequenceGame({
   best,
@@ -58,7 +60,7 @@ export default function SequenceGame({
 
   const start = useCallback(() => {
     clearTimers();
-    const first = [Math.floor(Math.random() * 4)];
+    const first = [randomPad()];
     setSeq(first);
     setResult(null);
     setWrong(null);
@@ -74,7 +76,7 @@ export default function SequenceGame({
       if (userIdx + 1 === seq.length) {
         // Ronda superada
         setPhase("showing");
-        const extended = [...seq, Math.floor(Math.random() * 4)];
+        const extended = [...seq, randomPad()];
         timers.current.push(
           setTimeout(() => {
             setSeq(extended);
@@ -112,8 +114,8 @@ export default function SequenceGame({
       </div>
 
       {phase === "intro" && (
-        <div className="flex flex-col items-center gap-5 rounded-3xl bg-gradient-to-br from-fuchsia-50 to-purple-50 p-8 text-center">
-          <span className="flex h-16 w-16 items-center justify-center rounded-3xl bg-fuchsia-500 text-white shadow-lg shadow-fuchsia-500/30">
+        <div className="flex flex-col items-center gap-5 rounded-3xl bg-gradient-to-br from-sun-50 to-clay-50 p-8 text-center">
+          <span className="flex h-16 w-16 items-center justify-center rounded-3xl bg-sun-500 text-white shadow-lg shadow-sun-500/30">
             <Sparkles size={28} />
           </span>
           <div>
@@ -125,7 +127,7 @@ export default function SequenceGame({
             </p>
           </div>
           {best != null && best > 0 && (
-            <span className="chip bg-white text-fuchsia-700 shadow-sm">
+            <span className="chip bg-white text-sun-700 shadow-sm">
               <Trophy size={13} /> Mejor marca: {best}
             </span>
           )}
@@ -158,7 +160,7 @@ export default function SequenceGame({
                     isLit
                       ? cn("scale-[1.03] brightness-110 shadow-2xl", pad.glow)
                       : "brightness-[0.55] saturate-50",
-                    isWrong && "!bg-rose-600 brightness-100",
+                    isWrong && "!bg-coral-600 brightness-100",
                     phase === "input" && "cursor-pointer hover:brightness-90 active:scale-95"
                   )}
                 >
@@ -172,17 +174,17 @@ export default function SequenceGame({
             <p className="text-sm font-bold text-slate-500">
               {phase === "showing" && (
                 <span className="inline-flex items-center gap-2">
-                  <Eye size={16} className="text-fuchsia-500" /> Observa con atención…
+                  <Eye size={16} className="text-sun-500" /> Observa con atención…
                 </span>
               )}
               {phase === "input" && (
                 <span className="inline-flex items-center gap-2">
-                  <Hand size={16} className="text-emerald-500" />
+                  <Hand size={16} className="text-leaf-500" />
                   Repite la secuencia ({userIdx}/{seq.length})
                 </span>
               )}
               {phase === "over" && (
-                <span className="inline-flex items-center gap-2 text-rose-600">
+                <span className="inline-flex items-center gap-2 text-coral-600">
                   ¡Oh! Fallaste en el nivel {seq.length}
                 </span>
               )}
@@ -199,11 +201,11 @@ export default function SequenceGame({
           </div>
 
           {phase === "over" && result && (
-            <div className="animate-pop rounded-3xl border border-fuchsia-100 bg-gradient-to-br from-fuchsia-50 to-purple-50 p-6 text-center">
+            <div className="animate-pop rounded-3xl border border-sun-100 bg-gradient-to-br from-sun-50 to-clay-50 p-6 text-center">
               <p className="text-sm font-bold text-slate-500">
                 {result.record ? "¡Nuevo récord!" : "Puntuación obtenida"}
               </p>
-              <p className="mt-1 text-4xl font-extrabold text-fuchsia-600">
+              <p className="mt-1 text-4xl font-extrabold text-sun-600">
                 {result.score}
               </p>
               <p className="mt-1 text-xs font-bold uppercase tracking-wide text-slate-400">
