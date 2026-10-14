@@ -105,7 +105,7 @@ export default function AppChrome({
       {/* ------------------------------------------------ Sidebar escritorio */}
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-[284px] flex-col border-r border-slate-200/70 bg-white/80 px-5 py-7 backdrop-blur-xl lg:flex">
         <div className="flex items-center gap-3 px-2">
-          <Mascot size={42} />
+          <Mascot size={56} />
           <div>
             <p className="text-base font-extrabold tracking-tight text-slate-900">
               Panela

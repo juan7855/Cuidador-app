@@ -84,7 +84,7 @@ export default function PatientSelector({
         {/* Marca */}
         <header className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Mascot size={48} />
+            <Mascot size={56} />
             <div>
               <p className="text-lg font-extrabold tracking-tight text-slate-900">
                 Panela

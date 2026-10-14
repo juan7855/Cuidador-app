@@ -72,7 +72,7 @@ export default function AccesoPage() {
   return (
     <div className="selector-bg flex min-h-screen items-center justify-center px-5">
       <div className="card w-full max-w-sm p-8 text-center">
-        <Mascot size={64} className="mx-auto" />
+        <Mascot size={104} className="mx-auto" />
         <h1 className="mt-4 text-2xl font-extrabold tracking-tight text-slate-900">
           Panela
         </h1>
