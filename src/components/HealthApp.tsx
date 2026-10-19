@@ -282,6 +282,7 @@ export default function HealthApp({ patients }: { patients: LitePatient[] }) {
           data={data}
           onToggleMeal={markMeal}
           onWater={setWater}
+          onChanged={reload}
         />
       )}
       {section === "exercise" && (

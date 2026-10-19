@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import {
   Plus,
   Minus,
@@ -8,6 +9,8 @@ import {
   Flame,
   Salad,
   Lightbulb,
+  Pencil,
+  Trash2,
 } from "lucide-react";
 import {
   Card,
@@ -17,6 +20,7 @@ import {
   ProgressRing,
   MiniBars,
   DyIcon,
+  Modal,
 } from "@/components/ui";
 import { SectionHeader } from "@/components/sections/_shared";
 import { sectionById } from "@/components/nav";
@@ -31,21 +35,28 @@ const SLOT_ICON: Record<string, string> = {
   Cena: "MoonStar",
 };
 
+const MEAL_SLOTS = ["Desayuno", "Media mañana", "Almuerzo", "Merienda", "Cena"];
 const MACRO_GOALS = { protein: 90, carbs: 210, fat: 65 };
 
 export default function Alimentacion({
   data,
   onToggleMeal,
   onWater,
+  onChanged,
 }: {
   data: DashboardData;
   onToggleMeal: (id: number, done: boolean) => void;
   onWater: (glasses: number) => void;
+  onChanged: () => Promise<void>;
 }) {
   const def = sectionById("food");
   const p = data.patient;
   const goalKcal = p.goals?.calories ?? 1800;
   const waterGoal = p.goals?.waterGlasses ?? 8;
+
+  const [open, setOpen] = useState(false);
+  const [editing, setEditing] = useState<MealRow | null>(null);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
 
   const doneMeals = data.meals.filter((m) => m.doneToday);
   const consumed = doneMeals.reduce((a, m) => a + m.calories, 0);
@@ -58,6 +69,19 @@ export default function Alimentacion({
     : p.conditions.some((c) => c.toLowerCase().includes("hipertensión"))
       ? "Cocina con hierbas aromáticas y limón en lugar de sal. Las verduras frescas aportan potasio y ayudan a controlar la tensión."
       : "Incluye verdura en dos comidas al día y una ración de pescado azul dos veces por semana para una dieta mediterránea equilibrada.";
+
+  const handleDelete = async (meal: MealRow) => {
+    if (!window.confirm(`¿Eliminar ${meal.slot}? Se borrará también su historial.`)) {
+      return;
+    }
+    setDeletingId(meal.id);
+    try {
+      const res = await fetch(`/api/meals/${meal.id}`, { method: "DELETE" });
+      if (res.ok) await onChanged();
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   return (
     <div className="stagger flex flex-col gap-5 sm:gap-6">
@@ -144,14 +168,27 @@ export default function Alimentacion({
 
       {/* Plan de comidas */}
       <div>
-        <h3 className="mb-3 flex items-center gap-2 px-1 text-sm font-extrabold uppercase tracking-wide text-slate-500">
-          <Salad size={16} className="text-leaf-600" />
-          Plan de comidas de hoy
-        </h3>
+        <div className="mb-3 flex items-center justify-between px-1">
+          <h3 className="flex items-center gap-2 text-sm font-extrabold uppercase tracking-wide text-slate-500">
+            <Salad size={16} className="text-leaf-600" />
+            Plan de comidas de hoy
+          </h3>
+          <button onClick={() => setOpen(true)} className="btn-primary-sm">
+            <Plus size={16} strokeWidth={2.6} />
+            <span className="hidden sm:inline">Añadir</span>
+          </button>
+        </div>
         <div className="relative flex flex-col gap-3 sm:gap-4">
           <span className="absolute bottom-6 left-10 top-6 w-px bg-leaf-100 sm:left-11" aria-hidden />
           {data.meals.map((m) => (
-            <MealCard key={m.id} meal={m} onToggle={onToggleMeal} />
+            <MealCard
+              key={m.id}
+              meal={m}
+              onToggle={onToggleMeal}
+              onEdit={() => setEditing(m)}
+              onDelete={() => handleDelete(m)}
+              deleting={deletingId === m.id}
+            />
           ))}
         </div>
       </div>
@@ -181,6 +218,30 @@ export default function Alimentacion({
           </div>
         </Card>
       </div>
+
+      <MealModal
+        open={open}
+        onClose={() => setOpen(false)}
+        patientId={data.patient.id}
+        meal={editing}
+        onSaved={async () => {
+          setEditing(null);
+          setOpen(false);
+          await onChanged();
+        }}
+      />
+      {editing && (
+        <MealModal
+          open={Boolean(editing)}
+          onClose={() => setEditing(null)}
+          patientId={data.patient.id}
+          meal={editing}
+          onSaved={async () => {
+            setEditing(null);
+            await onChanged();
+          }}
+        />
+      )}
     </div>
   );
 }
@@ -224,12 +285,224 @@ function ColorBar({ value, goal, color }: { value: number; goal: number; color: 
   );
 }
 
+const EMPTY_MEAL_FORM = {
+  slot: "Desayuno",
+  time: "08:00",
+  title: "",
+  foods: "",
+  calories: 0,
+  protein: 0,
+  carbs: 0,
+  fat: 0,
+};
+
+function formFromMeal(meal: MealRow): typeof EMPTY_MEAL_FORM {
+  return {
+    slot: meal.slot,
+    time: meal.time,
+    title: meal.title,
+    foods: meal.foods,
+    calories: meal.calories,
+    protein: meal.protein,
+    carbs: meal.carbs,
+    fat: meal.fat,
+  };
+}
+
+function MealModal({
+  open,
+  onClose,
+  patientId,
+  meal,
+  onSaved,
+}: {
+  open: boolean;
+  onClose: () => void;
+  patientId: number;
+  meal?: MealRow | null;
+  onSaved: () => Promise<void>;
+}) {
+  const isEdit = Boolean(meal);
+  const [form, setForm] = useState(EMPTY_MEAL_FORM);
+  const [saving, setSaving] = useState(false);
+
+  const [synced, setSynced] = useState<{ open: boolean; meal?: MealRow | null }>({
+    open: false,
+  });
+  if (synced.open !== open || synced.meal !== meal) {
+    setSynced({ open, meal });
+    if (open) setForm(meal ? formFromMeal(meal) : EMPTY_MEAL_FORM);
+  }
+
+  const submit = async () => {
+    if (!form.title.trim()) return;
+    setSaving(true);
+    try {
+      const res = await fetch(
+        isEdit ? `/api/meals/${meal!.id}` : "/api/meals",
+        {
+          method: isEdit ? "PATCH" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            patientId,
+            slot: form.slot,
+            time: form.time,
+            title: form.title,
+            foods: form.foods,
+            calories: Number(form.calories),
+            protein: Number(form.protein),
+            carbs: Number(form.carbs),
+            fat: Number(form.fat),
+            tone: "emerald",
+          }),
+        }
+      );
+      if (res.ok) {
+        await onSaved();
+        onClose();
+      }
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <Modal open={open} onClose={onClose} title={isEdit ? "Editar comida" : "Añadir comida"}>
+      <div className="flex max-h-[70vh] flex-col gap-4 overflow-y-auto pr-1">
+        <div>
+          <label className="label">Tipo de comida *</label>
+          <select
+            className="input"
+            value={form.slot}
+            onChange={(e) => setForm({ ...form, slot: e.target.value })}
+          >
+            {MEAL_SLOTS.map((s) => (
+              <option key={s}>{s}</option>
+            ))}
+          </select>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="label">Hora</label>
+            <input
+              type="time"
+              className="input"
+              value={form.time}
+              onChange={(e) => setForm({ ...form, time: e.target.value })}
+            />
+          </div>
+          <div>
+            <label className="label">Comidas registradas</label>
+            <input
+              type="number"
+              min={0}
+              max={16}
+              className="input"
+              disabled
+              value="1"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="label">Nombre de la comida *</label>
+          <input
+            className="input"
+            placeholder="Ej. Ensalada de pollo"
+            value={form.title}
+            onChange={(e) => setForm({ ...form, title: e.target.value })}
+          />
+        </div>
+
+        <div>
+          <label className="label">Alimentos</label>
+          <textarea
+            className="input min-h-16 resize-none"
+            placeholder="Ej. Pechuga de pollo, lechuga, tomate, aceite de oliva"
+            value={form.foods}
+            onChange={(e) => setForm({ ...form, foods: e.target.value })}
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="label">Calorías</label>
+            <input
+              type="number"
+              min={0}
+              className="input"
+              value={form.calories}
+              onChange={(e) => setForm({ ...form, calories: Number(e.target.value) })}
+            />
+          </div>
+          <div>
+            <label className="label">Proteínas (g)</label>
+            <input
+              type="number"
+              min={0}
+              step="0.1"
+              className="input"
+              value={form.protein}
+              onChange={(e) => setForm({ ...form, protein: Number(e.target.value) })}
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="label">Carbohidratos (g)</label>
+            <input
+              type="number"
+              min={0}
+              step="0.1"
+              className="input"
+              value={form.carbs}
+              onChange={(e) => setForm({ ...form, carbs: Number(e.target.value) })}
+            />
+          </div>
+          <div>
+            <label className="label">Grasas (g)</label>
+            <input
+              type="number"
+              min={0}
+              step="0.1"
+              className="input"
+              value={form.fat}
+              onChange={(e) => setForm({ ...form, fat: Number(e.target.value) })}
+            />
+          </div>
+        </div>
+
+        <div className="flex gap-3 pt-1">
+          <button onClick={onClose} className="btn-ghost flex-1">
+            Cancelar
+          </button>
+          <button
+            onClick={submit}
+            disabled={saving || !form.title.trim()}
+            className="btn-primary flex-1"
+          >
+            {saving ? "Guardando…" : "Guardar"}
+          </button>
+        </div>
+      </div>
+    </Modal>
+  );
+}
+
 function MealCard({
   meal,
   onToggle,
+  onEdit,
+  onDelete,
+  deleting,
 }: {
   meal: MealRow;
   onToggle: (id: number, done: boolean) => void;
+  onEdit: () => void;
+  onDelete: () => void;
+  deleting: boolean;
 }) {
   const t = toneOf(meal.tone);
   return (
@@ -271,6 +544,23 @@ function MealCard({
           <span>P {Math.round(meal.protein)}g</span>
           <span>C {Math.round(meal.carbs)}g</span>
           <span>G {Math.round(meal.fat)}g</span>
+        </div>
+        <div className="mt-3 flex items-center gap-1 border-t border-slate-100 pt-3">
+          <button
+            type="button"
+            onClick={onEdit}
+            className="inline-flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 text-xs font-bold text-slate-500 transition hover:bg-slate-100"
+          >
+            <Pencil size={13} strokeWidth={2.4} /> Editar
+          </button>
+          <button
+            type="button"
+            onClick={onDelete}
+            disabled={deleting}
+            className="inline-flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 text-xs font-bold text-slate-500 transition hover:bg-coral-50 hover:text-coral-600 disabled:opacity-50"
+          >
+            <Trash2 size={13} strokeWidth={2.4} /> {deleting ? "Eliminando…" : "Eliminar"}
+          </button>
         </div>
       </div>
       <CheckButton
