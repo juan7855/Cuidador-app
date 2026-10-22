@@ -30,6 +30,7 @@ ALTER TABLE clinical_profiles ADD COLUMN IF NOT EXISTS chronic_meds text[] NOT N
 ALTER TABLE clinical_profiles ADD COLUMN IF NOT EXISTS doctors jsonb;
 ALTER TABLE clinical_profiles ADD COLUMN IF NOT EXISTS labs jsonb;
 ALTER TABLE clinical_profiles ADD COLUMN IF NOT EXISTS goals jsonb;
+ALTER TABLE clinical_profiles ADD COLUMN IF NOT EXISTS assessment jsonb;
 
 -- ---------------------------------------------------------------------------
 -- medications: ya existía (name/dose/time/image_emoji/color)

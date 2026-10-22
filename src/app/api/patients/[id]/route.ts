@@ -76,6 +76,7 @@ export async function GET(
     doctors: clinicalRow?.doctors ?? [],
     labs: clinicalRow?.labs ?? [],
     goals: clinicalRow?.goals ?? null,
+    assessment: clinicalRow?.assessment ?? null,
     notes: clinicalRow?.notes ?? null,
   };
 

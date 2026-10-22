@@ -18,7 +18,7 @@ import { Card, CardTitle, Chip, Avatar, DyIcon, LineChart, MiniBars } from "@/co
 import { SectionHeader, StatTile } from "@/components/sections/_shared";
 import { sectionById } from "@/components/nav";
 import { bmi, bmiCategory, cn, isToday, toneOf } from "@/lib/utils";
-import type { DashboardData } from "@/lib/types";
+import type { Assessment, DashboardData } from "@/lib/types";
 
 export default function PerfilClinico({ data }: { data: DashboardData }) {
   const def = sectionById("perfil");
@@ -253,6 +253,8 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
         </div>
       </div>
 
+      {p.assessment && <AssessmentCard a={p.assessment} />}
+
       {/* Analíticas */}
       <Card className="p-5 sm:p-6">
         <CardTitle
@@ -433,4 +435,101 @@ function InfoGroup({
 function avg(xs: (number | null | undefined)[]) {
   const vals = xs.filter((x): x is number => x != null);
   return vals.reduce((a, b) => a + b, 0) / Math.max(1, vals.length);
+}
+
+const LABELS = {
+  exerciseBpTest: { normal: "Respuesta normal", hypertensive: "Respuesta hipertensiva", not_done: "No realizado" },
+  mood: { good: "Animado", low: "Decaído / triste", anxious: "Ansioso" },
+  cognition: { normal: "Normal", mild: "Deterioro leve", moderate: "Deterioro moderado", severe: "Deterioro severo" },
+  nutritionStatus: {
+    normal: "Normal",
+    malnutrition_risk: "Riesgo de desnutrición",
+    malnutrition: "Desnutrición",
+    overweight: "Sobrepeso",
+    obesity: "Obesidad",
+  },
+  appetite: { good: "Bueno", regular: "Regular", poor: "Malo" },
+  mobilityAid: { none: "Ninguna", cane: "Bastón", walker: "Andador", wheelchair: "Silla de ruedas" },
+  independence: { independent: "Independiente", partial: "Ayuda parcial", dependent: "Dependiente" },
+} as const;
+
+function AssessmentCard({ a }: { a: Assessment }) {
+  const pick = <K extends keyof typeof LABELS>(k: K, v: string | undefined) =>
+    v ? ((LABELS[k] as Record<string, string>)[v] ?? v) : undefined;
+  const unit = (v: number | undefined, u: string) => (v != null ? `${v} ${u}` : undefined);
+
+  const groups: { title: string; rows: [string, string | undefined][] }[] = [
+    {
+      title: "Prueba física",
+      rows: [
+        ["Perímetro abdominal", unit(a.abdominalPerimeterCm, "cm")],
+        ["Pliegue tricipital", unit(a.skinfoldTricipital, "mm")],
+        ["Pliegue suprailíaco", unit(a.skinfoldSuprailiac, "mm")],
+        ["Pliegue muslo", unit(a.skinfoldThigh, "mm")],
+        ["TUG", unit(a.tugSeconds, "s")],
+        ["Sentarse y pararse (30 s)", unit(a.chairStandReps, "rep.")],
+        ["Test de HTA por ejercicio", pick("exerciseBpTest", a.exerciseBpTest)],
+        ["PA máxima en esfuerzo", a.exerciseBpPeak],
+        ["Glicemia pre-ejercicio", unit(a.preExerciseGlucose, "mg/dL")],
+        ["Notas", a.fitnessNotes],
+      ],
+    },
+    {
+      title: "Bienestar y cognición",
+      rows: [
+        ["Bienestar subjetivo", a.wellbeing != null ? `${a.wellbeing} / 5` : undefined],
+        ["Estado de ánimo", pick("mood", a.mood)],
+        ["Cognición", pick("cognition", a.cognition)],
+        ["Puntaje", a.cognitionScore],
+        ["Sueño", unit(a.sleepHours, "h")],
+      ],
+    },
+    {
+      title: "Nutrición y funcionalidad",
+      rows: [
+        ["Estado nutricional", pick("nutritionStatus", a.nutritionStatus)],
+        ["Apetito", pick("appetite", a.appetite)],
+        ["Estreñimiento crónico", a.chronicConstipation ? "Sí" : undefined],
+        ["Notas de nutrición", a.nutritionNotes],
+        ["Caídas último año", a.fallsLastYear != null ? String(a.fallsLastYear) : undefined],
+        ["Ayuda para caminar", pick("mobilityAid", a.mobilityAid)],
+        ["Independencia", pick("independence", a.independence)],
+      ],
+    },
+  ];
+
+  return (
+    <Card className="p-5 sm:p-6">
+      <CardTitle
+        icon="ClipboardList"
+        tone="brand"
+        title="Valoración inicial"
+        subtitle={a.date ? `Registrada el ${a.date.split("-").reverse().join("/")}` : undefined}
+      />
+      <div className="grid gap-5 lg:grid-cols-3">
+        {groups.map((g) => {
+          const rows = g.rows.filter((r): r is [string, string] => Boolean(r[1]));
+          return (
+            <div key={g.title}>
+              <p className="mb-2 text-xs font-extrabold uppercase tracking-wide text-slate-400">
+                {g.title}
+              </p>
+              {rows.length ? (
+                <dl className="flex flex-col gap-2">
+                  {rows.map(([k, v]) => (
+                    <div key={k} className="flex items-start justify-between gap-3 text-xs">
+                      <dt className="font-bold text-slate-500">{k}</dt>
+                      <dd className="text-right font-extrabold text-slate-800">{v}</dd>
+                    </div>
+                  ))}
+                </dl>
+              ) : (
+                <p className="text-xs font-medium text-slate-400">Sin datos registrados</p>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </Card>
+  );
 }

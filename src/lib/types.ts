@@ -15,7 +15,42 @@ import type {
 // `conditions`/`allergies` son nullable, pero la API siempre los normaliza a
 // `[]`/`null` al construir este objeto (ver patients/route.ts y
 // patients/[id]/route.ts), así que el UI no necesita revisar null.
+// Valoración inicial (cuestionario de personalización del adulto mayor).
+// Se guarda como jsonb en clinical_profiles.assessment; todo es opcional.
+export interface Assessment {
+  date?: string;
+  // Prueba física
+  skinfoldTricipital?: number; // mm
+  skinfoldSuprailiac?: number; // mm
+  skinfoldThigh?: number; // mm
+  abdominalPerimeterCm?: number;
+  tugSeconds?: number; // Timed Up and Go
+  chairStandReps?: number; // levantarse de la silla en 30 s
+  fitnessNotes?: string;
+  // Test de hipertensión por el ejercicio
+  exerciseBpTest?: "normal" | "hypertensive" | "not_done";
+  exerciseBpPeak?: string; // ej. "190/95"
+  // En diabéticos: glicemia antes de iniciar ejercicio (mg/dL)
+  preExerciseGlucose?: number;
+  // Bienestar y cognición
+  wellbeing?: number; // 1 (muy mal) a 5 (muy bien)
+  mood?: "good" | "low" | "anxious";
+  cognition?: "normal" | "mild" | "moderate" | "severe";
+  cognitionScore?: string; // MMSE / MoCA
+  // Evaluación nutricional
+  nutritionStatus?: "normal" | "malnutrition_risk" | "malnutrition" | "overweight" | "obesity";
+  chronicConstipation?: boolean;
+  appetite?: "good" | "regular" | "poor";
+  nutritionNotes?: string;
+  // Funcionalidad y seguridad
+  fallsLastYear?: number;
+  mobilityAid?: "none" | "cane" | "walker" | "wheelchair";
+  independence?: "independent" | "partial" | "dependent";
+  sleepHours?: number;
+}
+
 export type Patient = Omit<typeof patients.$inferSelect, "pin"> & {
+  assessment: Assessment | null;
   conditions: string[];
   allergies: string[];
   chronicMeds: string[];

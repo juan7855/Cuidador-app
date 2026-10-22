@@ -8,7 +8,10 @@ import {
   exercises,
   cognitiveActivities,
   meals,
+  dailyVitals,
 } from "@/db/schema";
+import { todayKey } from "@/lib/utils";
+import type { Assessment } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
@@ -42,6 +45,13 @@ interface CreateBody {
   age?: number;
   birthDate?: string;
   bloodType?: string;
+  heightCm?: number;
+  weightKg?: number;
+  heartRate?: number;
+  systolic?: number;
+  diastolic?: number;
+  oxygen?: number;
+  assessment?: Assessment;
   phone?: string;
   insurance?: string;
   address?: string;
@@ -256,6 +266,8 @@ export async function POST(req: Request) {
         age: body.age ?? 0,
         birthDate: body.birthDate || "",
         bloodType: body.bloodType?.trim() || null,
+        heightCm: body.heightCm || null,
+        weightKg: body.weightKg || null,
         avatarFrom: body.avatarFrom || palette[0],
         avatarTo: body.avatarTo || palette[1],
         phone: body.phone?.trim() || null,
@@ -270,8 +282,24 @@ export async function POST(req: Request) {
       conditions: body.conditions?.length ? body.conditions : null,
       allergies: body.allergies?.length ? body.allergies : null,
       chronicMeds: body.chronicMeds ?? [],
+      assessment: body.assessment ? { ...body.assessment, date: todayKey() } : null,
       notes: body.notes?.trim() || null,
     });
+
+    // PA, FC y peso de la valoración inicial se guardan también como primer
+    // registro de signos vitales para que las gráficas arranquen con datos.
+    if (body.heartRate || body.systolic || body.diastolic || body.oxygen || body.weightKg) {
+      await db.insert(dailyVitals).values({
+        patientId: patient.id,
+        date: todayKey(),
+        heartRate: body.heartRate || null,
+        systolic: body.systolic || null,
+        diastolic: body.diastolic || null,
+        oxygen: body.oxygen || null,
+        weightKg: body.weightKg || null,
+        sleepHours: body.assessment?.sleepHours ?? null,
+      });
+    }
 
     await seedStarterContent(patient.id);
 

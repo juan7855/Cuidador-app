@@ -10,6 +10,7 @@ import {
   jsonb,
   uniqueIndex,
 } from "drizzle-orm/pg-core";
+import type { Assessment } from "@/lib/types";
 
 // ---------------------------------------------------------------------------
 // Este schema convive con una base de datos ya usada por otra app.
@@ -77,6 +78,7 @@ export const clinicalProfiles = pgTable("clinical_profiles", {
     exerciseMin: number;
     steps: number;
   }>(), // (nueva)
+  assessment: jsonb("assessment").$type<Assessment>(), // (nueva)
   notes: text("notes"), // (real)
   updatedAt: timestamp("updated_at").defaultNow(), // (real)
 });
