@@ -185,52 +185,8 @@ export default function PanelGeneral({
         </div>
       </div>
 
-      {/* Constantes */}
-      <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-5">
-        <StatTile
-          icon="HeartPulse"
-          tone="coral"
-          label="Pulso"
-          value={v?.heartRate ?? "—"}
-          unit="lpm"
-          sub={<DeltaTag value={hrDelta} suffix=" lpm" goodWhen="down" />}
-        />
-        <StatTile
-          icon="Activity"
-          tone="brand"
-          label="Presión arterial"
-          value={
-            v?.systolic ? (
-              <>
-                {v.systolic}
-                <span className="text-slate-300">/</span>
-                {v.diastolic}
-              </>
-            ) : (
-              "—"
-            )
-          }
-          unit="mmHg"
-        />
-        <StatTile
-          icon="Footprints"
-          tone="leaf"
-          label="Pasos"
-          value={(v?.steps ?? 0).toLocaleString("es-ES")}
-          sub={
-            <span className="text-[11px] font-bold text-slate-400">
-              meta {(goals?.steps ?? 6000).toLocaleString("es-ES")}
-            </span>
-          }
-          footer={
-            <Bar
-              value={v?.steps ?? 0}
-              max={goals?.steps ?? 6000}
-              barClassName="bg-leaf-500"
-              height={6}
-            />
-          }
-        />
+      {/* Sueño */}
+      <div className="grid grid-cols-1 gap-3 sm:max-w-xs sm:gap-4">
         <StatTile
           icon="MoonStar"
           tone="ink"
@@ -240,19 +196,6 @@ export default function PanelGeneral({
           sub={
             <span className="text-[11px] font-bold text-slate-400">
               {v?.mood ?? ""}
-            </span>
-          }
-        />
-        <StatTile
-          icon="Wind"
-          tone="aqua"
-          label="Oxígeno"
-          value={v?.oxygen ?? "—"}
-          unit="%"
-          className="col-span-2 sm:col-span-1"
-          sub={
-            <span className="chip bg-leaf-50 px-2 py-0.5 text-[10px] text-leaf-700">
-              Normal
             </span>
           }
         />
