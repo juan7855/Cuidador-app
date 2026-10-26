@@ -71,7 +71,7 @@ export default function AccesoPage() {
   return (
     <div className="selector-bg grid min-h-screen lg:grid-cols-2">
       {/* Panel de marca */}
-      <div className="flex flex-col justify-between bg-slate-100 px-8 py-8 sm:px-14 sm:py-12">
+      <div className="aurora flex flex-col justify-between bg-slate-100 px-8 py-8 sm:px-14 sm:py-12">
         <div className="flex items-center gap-2.5">
           <Mascot size={34} />
           <span className="text-2xl font-extrabold tracking-tight text-slate-900">
@@ -92,7 +92,7 @@ export default function AccesoPage() {
 
       {/* Formulario */}
       <div className="flex items-center justify-center px-6 py-12">
-        <div className="w-full max-w-sm">
+        <div className="animate-fade-up w-full max-w-sm">
           <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">
             Entrar
           </h1>

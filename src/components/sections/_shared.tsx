@@ -1,7 +1,7 @@
 "use client";
 
 import type { LucideIcon } from "lucide-react";
-import { Card, DyIcon } from "@/components/ui";
+import { AnimatedNumber, Card, DyIcon } from "@/components/ui";
 import { cn, toneOf, type Tone } from "@/lib/utils";
 import type { SectionDef } from "@/components/nav";
 
@@ -63,7 +63,7 @@ export function StatTile({
         {label}
       </p>
       <p className="mt-0.5 text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
-        {value}
+        {typeof value === "number" ? <AnimatedNumber value={value} /> : value}
         {unit && <span className="ml-1 text-xs font-bold text-slate-400">{unit}</span>}
       </p>
       {footer && <div className="mt-2">{footer}</div>}
@@ -83,7 +83,7 @@ export function ShortcutTile({
   return (
     <button
       onClick={onClick}
-      className="card group flex items-center gap-3.5 p-4 text-left transition-colors hover:border-brand-300 hover:bg-brand-50/40"
+      className="card group flex items-center gap-3.5 p-4 text-left lift"
     >
       <span
         className={cn(

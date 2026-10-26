@@ -57,13 +57,13 @@ function NavRow({
     <button
       onClick={onClick}
       className={cn(
-        "flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-left text-sm font-bold transition-colors",
+        "group flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-left text-sm font-bold transition-[background-color,color,transform] duration-200 active:scale-[0.98]",
         active
           ? "bg-brand-100 text-brand-700"
           : "text-slate-600 hover:bg-slate-100"
       )}
     >
-      <Icon size={18} strokeWidth={2.2} className="shrink-0" />
+      <Icon size={18} strokeWidth={2.2} className="shrink-0 transition-transform duration-300 ease-[var(--ease-spring)] group-hover:scale-110" />
       <span className="flex-1 truncate">{section.label}</span>
     </button>
   );
@@ -100,7 +100,7 @@ export default function AppChrome({
       {/* ------------------------------------------------ Sidebar escritorio */}
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-[248px] flex-col border-r border-slate-200 bg-white px-4 py-6 lg:flex">
         <div className="flex items-center gap-2.5 px-2">
-          <Mascot size={36} />
+          <Mascot size={36} className="wiggle-hover cursor-pointer" />
           <p className="text-xl font-extrabold tracking-tight text-slate-900">
             Panela
           </p>
@@ -178,7 +178,7 @@ export default function AppChrome({
             >
               <Bell size={18} />
               {reminders.length > 0 && (
-                <span className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full bg-coral-500 ring-2 ring-white" />
+                <span className="ping-dot absolute right-2.5 top-2.5 h-2 w-2 rounded-full bg-coral-500 ring-2 ring-white" />
               )}
             </button>
             {bellOpen && (

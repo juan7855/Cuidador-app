@@ -9,7 +9,7 @@ import {
   Pill,
   Target,
 } from "lucide-react";
-import { Card, CardTitle, ProgressRing, Bar, MiniBars, CheckButton, DyIcon } from "@/components/ui";
+import { AnimatedNumber, Card, CardTitle, ProgressRing, Bar, MiniBars, CheckButton, DyIcon } from "@/components/ui";
 import { SectionHeader, StatTile, ShortcutTile, NoticeCard } from "@/components/sections/_shared";
 import { SECTIONS, sectionById, type SectionId } from "@/components/nav";
 import {
@@ -133,7 +133,7 @@ export default function PanelGeneral({
       <SectionHeader def={def} subtitle={cap(formatLongDate(data.today))} />
 
       {/* Hero */}
-      <div className="relative overflow-hidden rounded-2xl border border-brand-200 bg-brand-100 p-6 text-slate-900 sm:p-8">
+      <div className="sheen rounded-2xl border border-brand-200 bg-brand-100 p-6 text-slate-900 sm:p-8">
         <div className="relative flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-w-0">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1 text-[11px] font-bold text-brand-700">
@@ -177,7 +177,9 @@ export default function PanelGeneral({
             color="#009a74"
             track="#ffffff"
           >
-            <span className="text-3xl font-bold">{data.totals.overall}%</span>
+            <span className="text-3xl font-bold">
+              <AnimatedNumber value={data.totals.overall} />%
+            </span>
             <span className="text-[11px] font-bold text-slate-500">
               completado
             </span>

@@ -1,8 +1,77 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { Check, X, icons, type LucideProps } from "lucide-react";
 import { cn, initials, toneOf, type Tone } from "@/lib/utils";
+
+/* ------------------------------------------------------------------ */
+/* Movimiento: hooks base                                              */
+/* ------------------------------------------------------------------ */
+const REDUCED_QUERY = "(prefers-reduced-motion: reduce)";
+
+export function useReducedMotion(): boolean {
+  return useSyncExternalStore(
+    (cb) => {
+      const mq = window.matchMedia(REDUCED_QUERY);
+      mq.addEventListener("change", cb);
+      return () => mq.removeEventListener("change", cb);
+    },
+    () => window.matchMedia(REDUCED_QUERY).matches,
+    () => false
+  );
+}
+
+/** false en el primer render y true en el siguiente frame: permite animar desde 0. */
+function useEntered(): boolean {
+  const reduced = useReducedMotion();
+  const [entered, setEntered] = useState(false);
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setEntered(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
+  return reduced || entered;
+}
+
+/** Número que cuenta hasta su valor (ease-out cúbico) y reanima desde el valor previo. */
+export function AnimatedNumber({
+  value,
+  duration = 900,
+  decimals = 0,
+}: {
+  value: number;
+  duration?: number;
+  decimals?: number;
+}) {
+  const reduced = useReducedMotion();
+  const [shown, setShown] = useState(0);
+  const from = useRef(0);
+
+  useEffect(() => {
+    if (reduced) return;
+    const start = performance.now();
+    const origin = from.current;
+    let raf = 0;
+    const tick = (now: number) => {
+      const t = Math.min(1, (now - start) / duration);
+      const next = origin + (value - origin) * (1 - Math.pow(1 - t, 3));
+      from.current = next;
+      setShown(next);
+      if (t < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [value, duration, reduced]);
+
+  const out = reduced ? value : shown;
+  return (
+    <>
+      {out.toLocaleString("es-ES", {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals,
+      })}
+    </>
+  );
+}
 
 /* ------------------------------------------------------------------ */
 /* Iconos dinámicos por nombre (lucide)                                */
@@ -128,7 +197,8 @@ export function ProgressRing({
   children?: React.ReactNode;
   gradientId?: string;
 }) {
-  const pct = Math.max(0, Math.min(100, value));
+  const entered = useEntered();
+  const pct = entered ? Math.max(0, Math.min(100, value)) : 0;
   const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;
   return (
@@ -153,7 +223,7 @@ export function ProgressRing({
           strokeLinecap="round"
           strokeDasharray={c}
           strokeDashoffset={c - (c * pct) / 100}
-          className="transition-[stroke-dashoffset] duration-700 ease-out"
+          className="transition-[stroke-dashoffset] duration-[1100ms] ease-[var(--ease-out)]"
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
@@ -179,14 +249,15 @@ export function Bar({
   barClassName?: string;
   height?: number;
 }) {
-  const p = max ? Math.min(100, Math.round((value / max) * 100)) : 0;
+  const entered = useEntered();
+  const p = entered && max ? Math.min(100, Math.round((value / max) * 100)) : 0;
   return (
     <div
       className={cn("w-full overflow-hidden rounded-full bg-slate-100", className)}
       style={{ height }}
     >
       <div
-        className={cn("h-full rounded-full transition-[width] duration-700 ease-out", barClassName ?? "bg-brand-500")}
+        className={cn("h-full rounded-full transition-[width] duration-[900ms] ease-[var(--ease-out)]", barClassName ?? "bg-brand-500")}
         style={{ width: `${p}%` }}
       />
     </div>
@@ -378,6 +449,7 @@ export function LineChart({
             <polygon
               points={`${pad},${H - pad} ${points(series[0].values)} ${W - pad},${H - pad}`}
               fill={series[0].fill ?? `${series[0].color}1f`}
+              className="fade-fill"
             />
             <line x1={pad} x2={W - pad} y1={H - pad} y2={H - pad} stroke="#e0dbd3" strokeWidth={1} />
           </>
@@ -386,6 +458,8 @@ export function LineChart({
           <polyline
             key={i}
             points={points(s.values)}
+            pathLength={1}
+            className="draw-line"
             fill="none"
             stroke={s.color}
             strokeWidth={s.width ?? 2.5}
@@ -439,12 +513,13 @@ export function MiniBars({
             <div className="flex w-full flex-1 items-end">
               <div
                 className={cn(
-                  "w-full rounded-t-md transition-all duration-500",
+                  "bar-grow w-full rounded-t-md",
                   it.highlight ? "" : "opacity-45"
                 )}
                 style={{
                   height: h,
                   backgroundColor: it.color ?? "#009a74",
+                  animationDelay: `${i * 45}ms`,
                 }}
                 title={`${it.label}: ${it.value}`}
               />
