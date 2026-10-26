@@ -123,12 +123,12 @@ export interface Tone {
 }
 
 // Clases literales para que Tailwind las detecte.
-const BRAND: Tone = { soft: "bg-brand-50", text: "text-brand-700", solid: "bg-brand-500", ring: "ring-brand-200", hex: "#31836f" };
-const AQUA: Tone = { soft: "bg-aqua-50", text: "text-aqua-700", solid: "bg-aqua-500", ring: "ring-aqua-200", hex: "#329caf" };
-const SUN: Tone = { soft: "bg-sun-50", text: "text-sun-700", solid: "bg-sun-500", ring: "ring-sun-200", hex: "#d58c56" };
-const CLAY: Tone = { soft: "bg-clay-50", text: "text-clay-700", solid: "bg-clay-500", ring: "ring-clay-200", hex: "#ad6540" };
-const LEAF: Tone = { soft: "bg-leaf-50", text: "text-leaf-700", solid: "bg-leaf-500", ring: "ring-leaf-200", hex: "#7a9a55" };
-const INK: Tone = { soft: "bg-ink-50", text: "text-ink-700", solid: "bg-ink-500", ring: "ring-ink-200", hex: "#303f49" };
+const BRAND: Tone = { soft: "bg-brand-50", text: "text-brand-700", solid: "bg-brand-500", ring: "ring-brand-200", hex: "#009a74" };
+const AQUA: Tone = { soft: "bg-aqua-50", text: "text-aqua-700", solid: "bg-aqua-500", ring: "ring-aqua-200", hex: "#4399b2" };
+const SUN: Tone = { soft: "bg-sun-50", text: "text-sun-700", solid: "bg-sun-500", ring: "ring-sun-200", hex: "#e09339" };
+const CLAY: Tone = { soft: "bg-clay-50", text: "text-clay-700", solid: "bg-clay-500", ring: "ring-clay-200", hex: "#cb7e2e" };
+const LEAF: Tone = { soft: "bg-leaf-50", text: "text-leaf-700", solid: "bg-leaf-500", ring: "ring-leaf-200", hex: "#009a74" };
+const INK: Tone = { soft: "bg-ink-50", text: "text-ink-700", solid: "bg-ink-500", ring: "ring-ink-200", hex: "#1e2b28" };
 const CORAL: Tone = { soft: "bg-coral-50", text: "text-coral-700", solid: "bg-coral-500", ring: "ring-coral-200", hex: "#b85f59" };
 
 /**
@@ -163,7 +163,7 @@ export const TONES: Record<string, Tone> = {
     text: "text-slate-600",
     solid: "bg-slate-500",
     ring: "ring-slate-200",
-    hex: "#69736f",
+    hex: "#6f7773",
   },
 };
 

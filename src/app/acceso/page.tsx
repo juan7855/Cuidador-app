@@ -70,47 +70,69 @@ export default function AccesoPage() {
   };
 
   return (
-    <div className="selector-bg flex min-h-screen items-center justify-center px-5">
-      <div className="card w-full max-w-sm p-8 text-center">
-        <Mascot size={104} className="mx-auto" />
-        <h1 className="mt-4 text-2xl font-extrabold tracking-tight text-slate-900">
-          Panela
-        </h1>
-        <p className="mt-1 flex items-center justify-center gap-1.5 text-sm font-semibold text-slate-500">
-          <Lock size={14} />
-          Ingresa tu clave de acceso
-        </p>
-
-        <div className="mt-6 flex justify-center gap-2">
-          {digits.map((d, i) => (
-            <input
-              key={i}
-              ref={(el) => {
-                refs.current[i] = el;
-              }}
-              type="password"
-              inputMode="numeric"
-              autoComplete="one-time-code"
-              autoFocus={i === 0}
-              disabled={loading}
-              aria-label={`Dígito ${i + 1}`}
-              value={d}
-              onChange={(e) => fill(i, e.target.value)}
-              onKeyDown={(e) => onKeyDown(i, e)}
-              onFocus={(e) => e.target.select()}
-              className="input h-14 w-11 px-0 text-center text-xl font-extrabold"
-            />
-          ))}
+    <div className="selector-bg grid min-h-screen lg:grid-cols-2">
+      {/* Panel de marca */}
+      <div className="flex flex-col justify-between bg-slate-100 px-8 py-8 sm:px-14 sm:py-12">
+        <div className="flex items-center gap-2.5">
+          <Mascot size={34} />
+          <span className="text-2xl font-extrabold tracking-tight text-slate-900">
+            Panela
+          </span>
         </div>
+        <div className="my-8 flex flex-col items-center text-center lg:items-start lg:text-left">
+          <Mascot size={200} className="animate-floaty" />
+          <h2 className="mt-8 max-w-sm text-3xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-4xl">
+            Acompañe a su familiar desde el computador o el celular.
+          </h2>
+          <p className="mt-3 max-w-sm text-sm font-medium text-slate-500">
+            Vea cómo va su día y reciba un aviso si algo cambia.
+          </p>
+        </div>
+        <span />
+      </div>
 
-        <div className="mt-4 h-9">
-          {error ? (
-            <p className="rounded-xl bg-coral-50 px-3.5 py-2 text-xs font-bold text-coral-600">
-              {error}
-            </p>
-          ) : loading ? (
-            <p className="text-xs font-semibold text-slate-400">Verificando…</p>
-          ) : null}
+      {/* Formulario */}
+      <div className="flex items-center justify-center px-6 py-12">
+        <div className="w-full max-w-sm">
+          <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">
+            Entrar
+          </h1>
+          <p className="mt-1 flex items-center gap-1.5 text-sm font-medium text-slate-500">
+            <Lock size={14} />
+            Ingrese su clave de acceso de 6 dígitos.
+          </p>
+
+          <div className="mt-6 flex gap-2">
+            {digits.map((d, i) => (
+              <input
+                key={i}
+                ref={(el) => {
+                  refs.current[i] = el;
+                }}
+                type="password"
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                autoFocus={i === 0}
+                disabled={loading}
+                aria-label={`Dígito ${i + 1}`}
+                value={d}
+                onChange={(e) => fill(i, e.target.value)}
+                onKeyDown={(e) => onKeyDown(i, e)}
+                onFocus={(e) => e.target.select()}
+                className="input h-14 w-full min-w-0 px-0 text-center text-xl font-bold"
+              />
+            ))}
+          </div>
+
+          <div className="mt-4 h-10">
+            {error ? (
+              <p className="rounded-xl bg-coral-50 px-3.5 py-2 text-xs font-bold text-coral-600">
+                {error}
+              </p>
+            ) : loading ? (
+              <p className="text-xs font-semibold text-slate-400">Verificando…</p>
+            ) : null}
+          </div>
         </div>
       </div>
     </div>

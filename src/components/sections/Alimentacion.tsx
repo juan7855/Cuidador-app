@@ -94,15 +94,15 @@ export default function Alimentacion({
             value={Math.min(100, (consumed / goalKcal) * 100)}
             size={112}
             stroke={12}
-            color="#7a9a55"
+            color="#009a74"
             gradientId="kcal-grad"
           >
             <Flame size={14} className="text-leaf-500" />
-            <span className="text-lg font-extrabold text-slate-800">{consumed}</span>
+            <span className="text-lg font-bold text-slate-800">{consumed}</span>
             <span className="text-[10px] font-bold text-slate-400">de {goalKcal} kcal</span>
           </ProgressRing>
           <div className="flex-1">
-            <p className="text-sm font-extrabold text-slate-800">Energía consumida</p>
+            <p className="text-sm font-bold text-slate-800">Energía consumida</p>
             <p className="mt-1 text-xs font-medium leading-relaxed text-slate-400">
               {consumed >= goalKcal
                 ? "Has alcanzado el objetivo calórico de hoy."
@@ -117,9 +117,9 @@ export default function Alimentacion({
         <Card className="p-5 sm:p-6">
           <CardTitle icon="ChartPie" tone="leaf" title="Macronutrientes" />
           <div className="flex flex-col gap-3.5">
-            <MacroRow label="Proteínas" value={protein} goal={MACRO_GOALS.protein} color="#31836f" unit="g" />
-            <MacroRow label="Carbohidratos" value={carbs} goal={MACRO_GOALS.carbs} color="#d58c56" unit="g" />
-            <MacroRow label="Grasas" value={fat} goal={MACRO_GOALS.fat} color="#ad6540" unit="g" />
+            <MacroRow label="Proteínas" value={protein} goal={MACRO_GOALS.protein} color="#009a74" unit="g" />
+            <MacroRow label="Carbohidratos" value={carbs} goal={MACRO_GOALS.carbs} color="#e09339" unit="g" />
+            <MacroRow label="Grasas" value={fat} goal={MACRO_GOALS.fat} color="#cb7e2e" unit="g" />
           </div>
         </Card>
 
@@ -169,7 +169,7 @@ export default function Alimentacion({
       {/* Plan de comidas */}
       <div>
         <div className="mb-3 flex items-center justify-between px-1">
-          <h3 className="flex items-center gap-2 text-sm font-extrabold uppercase tracking-wide text-slate-500">
+          <h3 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-slate-500">
             <Salad size={16} className="text-leaf-600" />
             Plan de comidas de hoy
           </h3>
@@ -204,16 +204,16 @@ export default function Alimentacion({
               label: w.weekdayShort[0].toUpperCase(),
               value: w.mealTotal ? Math.round((100 * w.mealDone) / w.mealTotal) : 0,
               highlight: isToday(w.date),
-              color: "#329caf",
+              color: "#4399b2",
             }))}
           />
         </Card>
-        <Card className="flex items-start gap-4 border-transparent bg-gradient-to-br from-leaf-50 to-aqua-50 p-5 sm:p-6">
+        <Card className="flex items-start gap-4 border-transparent bg-gradient-to-br from-brand-50 to-brand-100 p-5 sm:p-6">
           <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white text-leaf-600 shadow-sm">
             <Lightbulb size={20} />
           </span>
           <div>
-            <p className="text-sm font-extrabold text-leaf-800">Consejo nutricional</p>
+            <p className="text-sm font-bold text-leaf-800">Consejo nutricional</p>
             <p className="mt-1 text-sm font-medium leading-relaxed text-slate-600">{tip}</p>
           </div>
         </Card>
@@ -518,7 +518,7 @@ function MealCard({
       </span>
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2">
-          <p className="text-sm font-extrabold text-slate-800">{meal.slot}</p>
+          <p className="text-sm font-bold text-slate-800">{meal.slot}</p>
           <Chip tone="slate" className="bg-slate-100 text-slate-500" icon="Clock">
             {hourLabel(meal.time)}
           </Chip>
@@ -567,7 +567,7 @@ function MealCard({
         done={meal.doneToday}
         onClick={() => onToggle(meal.id, !meal.doneToday)}
         label={meal.doneToday ? "Desmarcar comida" : "Marcar comida realizada"}
-        tone="#7a9a55"
+        tone="#009a74"
       />
     </Card>
   );

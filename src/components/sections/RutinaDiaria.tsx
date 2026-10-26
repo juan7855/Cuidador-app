@@ -37,8 +37,8 @@ export default function RutinaDiaria({
       {/* Resumen */}
       <div className="grid gap-4 sm:gap-5 lg:grid-cols-3">
         <Card className="flex items-center gap-5 p-5 sm:p-6">
-          <ProgressRing value={routinePct} size={104} stroke={11} color="#303f49">
-            <span className="text-2xl font-extrabold text-ink-700">
+          <ProgressRing value={routinePct} size={104} stroke={11} color="#1e2b28">
+            <span className="text-2xl font-bold text-ink-700">
               {t.routineDone}/{t.routineTotal}
             </span>
             <span className="text-[10px] font-bold uppercase tracking-wide text-slate-400">
@@ -46,7 +46,7 @@ export default function RutinaDiaria({
             </span>
           </ProgressRing>
           <div className="flex-1">
-            <p className="text-sm font-extrabold text-slate-800">Rutina de hoy</p>
+            <p className="text-sm font-bold text-slate-800">Rutina de hoy</p>
             <p className="mt-1 text-xs font-medium leading-relaxed text-slate-400">
               {allDone
                 ? "Jornada completada. ¡Excelente trabajo!"
@@ -69,7 +69,7 @@ export default function RutinaDiaria({
               label: w.weekdayShort[0].toUpperCase(),
               value: w.routineTotal ? Math.round((100 * w.routineDone) / w.routineTotal) : 0,
               highlight: isToday(w.date),
-              color: "#303f49",
+              color: "#1e2b28",
             }))}
           />
         </Card>
@@ -92,7 +92,7 @@ export default function RutinaDiaria({
                     <DyIcon name={phase.icon} size={20} strokeWidth={2.3} />
                   </span>
                   <div>
-                    <h3 className="text-sm font-extrabold text-slate-800 sm:text-base">
+                    <h3 className="text-sm font-bold text-slate-800 sm:text-base">
                       {phase.label}
                     </h3>
                     <p className="text-[11px] font-bold text-slate-500">
@@ -133,7 +133,7 @@ export default function RutinaDiaria({
             <PartyPopper size={22} />
           </span>
           <div>
-            <p className="text-sm font-extrabold text-ink-900">
+            <p className="text-sm font-bold text-ink-900">
               {data.patient.name.split(" ")[0]} ha completado toda la rutina
             </p>
             <p className="text-xs font-medium text-slate-500">
@@ -170,7 +170,7 @@ function TaskRow({
       <div className="min-w-0 flex-1">
         <p
           className={cn(
-            "text-sm font-extrabold",
+            "text-sm font-bold",
             task.doneToday ? "text-slate-400 line-through decoration-slate-300" : "text-slate-800"
           )}
         >
@@ -185,14 +185,14 @@ function TaskRow({
           {task.detail}
         </p>
       </div>
-      <span className="hidden w-16 shrink-0 text-right text-xs font-extrabold tabular-nums text-slate-400 sm:block">
+      <span className="hidden w-16 shrink-0 text-right text-xs font-bold tabular-nums text-slate-400 sm:block">
         {hourLabel(task.time)}
       </span>
       <CheckButton
         done={task.doneToday}
         onClick={onToggle}
         label={task.doneToday ? "Desmarcar hábito" : "Marcar hábito"}
-        tone="#303f49"
+        tone="#1e2b28"
         size={40}
       />
     </li>

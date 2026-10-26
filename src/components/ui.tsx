@@ -49,7 +49,7 @@ export function CardTitle({
         {icon && (
           <span
             className={cn(
-              "flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl",
+              "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl",
               t.soft,
               t.text
             )}
@@ -58,7 +58,7 @@ export function CardTitle({
           </span>
         )}
         <div className="min-w-0">
-          <h2 className="truncate text-base font-extrabold tracking-tight text-slate-900">
+          <h2 className="truncate text-base font-bold tracking-tight text-slate-900">
             {title}
           </h2>
           {subtitle && (
@@ -92,7 +92,7 @@ export function Avatar({
   return (
     <span
       className={cn(
-        "flex shrink-0 items-center justify-center rounded-full font-extrabold text-white shadow-inner ring-2 ring-white/70",
+        "flex shrink-0 items-center justify-center rounded-full font-bold text-white",
         className
       )}
       style={{
@@ -115,8 +115,8 @@ export function ProgressRing({
   value,
   size = 128,
   stroke = 12,
-  color = "#31836f",
-  track = "#e9dfc9",
+  color = "#009a74",
+  track = "#f4eadb",
   children,
   gradientId,
 }: {
@@ -138,7 +138,7 @@ export function ProgressRing({
           <defs>
             <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stopColor={color} />
-              <stop offset="100%" stopColor="#329caf" />
+              <stop offset="100%" stopColor="#4399b2" />
             </linearGradient>
           </defs>
         )}
@@ -201,7 +201,7 @@ export function CheckButton({
   onClick,
   label,
   size = 44,
-  tone = "#31836f",
+  tone = "#009a74",
 }: {
   done: boolean;
   onClick: () => void;
@@ -286,9 +286,9 @@ export function Modal({
         className="absolute inset-0 bg-slate-900/45 backdrop-blur-[2px] animate-fade-in"
         onClick={onClose}
       />
-      <div className="relative z-10 w-full max-w-lg animate-sheet rounded-t-3xl bg-white p-6 shadow-[var(--shadow-pop)] sm:rounded-3xl sm:animate-pop">
+      <div className="relative z-10 w-full max-w-lg animate-sheet rounded-t-2xl bg-white p-6 shadow-[var(--shadow-pop)] sm:rounded-2xl sm:animate-pop">
         <div className="mb-5 flex items-center justify-between">
-          <h3 className="text-lg font-extrabold tracking-tight text-slate-900">
+          <h3 className="text-lg font-bold tracking-tight text-slate-900">
             {title}
           </h3>
           <button
@@ -379,7 +379,7 @@ export function LineChart({
               points={`${pad},${H - pad} ${points(series[0].values)} ${W - pad},${H - pad}`}
               fill={series[0].fill ?? `${series[0].color}1f`}
             />
-            <line x1={pad} x2={W - pad} y1={H - pad} y2={H - pad} stroke="#e4dcc6" strokeWidth={1} />
+            <line x1={pad} x2={W - pad} y1={H - pad} y2={H - pad} stroke="#e0dbd3" strokeWidth={1} />
           </>
         )}
         {series.map((s, i) => (
@@ -439,12 +439,12 @@ export function MiniBars({
             <div className="flex w-full flex-1 items-end">
               <div
                 className={cn(
-                  "w-full rounded-full transition-all duration-500",
+                  "w-full rounded-t-md transition-all duration-500",
                   it.highlight ? "" : "opacity-45"
                 )}
                 style={{
                   height: h,
-                  backgroundColor: it.color ?? "#31836f",
+                  backgroundColor: it.color ?? "#009a74",
                 }}
                 title={`${it.label}: ${it.value}`}
               />
@@ -477,16 +477,16 @@ export function Segmented({
   onChange: (v: string) => void;
 }) {
   return (
-    <div className="inline-flex rounded-2xl bg-slate-100 p-1">
+    <div className="inline-flex rounded-full border border-slate-200 bg-white p-1">
       {options.map((o) => (
         <button
           key={o.value}
           onClick={() => onChange(o.value)}
           className={cn(
-            "rounded-xl px-4 py-2 text-xs font-bold transition",
+            "rounded-full px-4 py-1.5 text-xs font-bold transition",
             value === o.value
-              ? "bg-white text-brand-700 shadow-sm"
-              : "text-slate-500 hover:text-slate-700"
+              ? "bg-ink-800 text-white"
+              : "text-slate-500 hover:text-slate-800"
           )}
         >
           {o.label}

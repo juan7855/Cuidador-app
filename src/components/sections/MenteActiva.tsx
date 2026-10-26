@@ -103,7 +103,7 @@ export default function MenteActiva({
             <ArrowLeft size={18} />
           </button>
           <div>
-            <h1 className="text-lg font-extrabold tracking-tight text-slate-900 sm:text-xl">
+            <h1 className="text-lg font-bold tracking-tight text-slate-900 sm:text-xl">
               {meta.title}
             </h1>
             <p className="text-xs font-medium text-slate-500">{meta.tagline}</p>
@@ -132,32 +132,25 @@ export default function MenteActiva({
       <SectionHeader def={def} subtitle="Entrenamiento cognitivo diario" />
 
       {/* Hero */}
-      <div
-        className="relative overflow-hidden rounded-[28px] p-6 text-white sm:p-8"
-        style={{
-          background: "linear-gradient(130deg,#b8703f 0%,#d58c56 45%,#ad6540 100%)",
-        }}
-      >
-        <div className="pointer-events-none absolute -right-14 -top-16 h-56 w-56 rounded-full bg-white/10" />
-        <div className="pointer-events-none absolute -bottom-20 right-28 h-48 w-48 rounded-full bg-white/[0.07]" />
+      <div className="relative overflow-hidden rounded-2xl border border-sun-200 bg-sun-100 p-6 text-slate-900 sm:p-8">
         <div className="relative flex flex-col items-start gap-5 sm:flex-row sm:items-center">
-          <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-3xl bg-white/18 backdrop-blur">
+          <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-white text-sun-700">
             <Brain size={32} />
           </span>
           <div className="flex-1">
-            <h2 className="text-xl font-extrabold tracking-tight sm:text-2xl">
+            <h2 className="text-xl font-bold tracking-tight sm:text-2xl">
               Entrena tu mente, 10 minutos al día
             </h2>
-            <p className="mt-1 max-w-xl text-sm font-medium leading-relaxed text-white/85">
+            <p className="mt-1 max-w-xl text-sm font-medium leading-relaxed text-slate-600">
               Juegos sencillos diseñados para ejercitar la memoria, la atención y
               el cálculo mental. La constancia ayuda a mantener una mente ágil.
             </p>
           </div>
           <div className="flex gap-2">
-            <span className="rounded-2xl bg-white/15 px-3 py-2 text-xs font-bold backdrop-blur">
+            <span className="rounded-xl bg-white px-3 py-2 text-xs font-bold text-slate-700">
               {data.recentScores.length} partidas
             </span>
-            <span className="rounded-2xl bg-white/15 px-3 py-2 text-xs font-bold backdrop-blur">
+            <span className="rounded-xl bg-white px-3 py-2 text-xs font-bold text-slate-700">
               <Trophy size={12} className="mr-1 inline" />
               Récord {Math.max(0, ...Object.values(data.best))}
             </span>
@@ -186,19 +179,19 @@ export default function MenteActiva({
                   {g.duration}
                 </Chip>
               </div>
-              <h3 className="mt-4 text-base font-extrabold text-slate-900">{g.title}</h3>
+              <h3 className="mt-4 text-base font-bold text-slate-900">{g.title}</h3>
               <p className="mt-1 flex-1 text-xs font-medium leading-relaxed text-slate-500">
                 {g.description}
               </p>
               <div className="mt-4 flex items-center justify-between">
-                <span className="inline-flex items-center gap-1.5 text-xs font-extrabold text-sun-600">
+                <span className="inline-flex items-center gap-1.5 text-xs font-bold text-sun-600">
                   <Trophy size={14} />
                   {best ? `${best} pts` : "Sin marca aún"}
                 </span>
                 <button
                   onClick={() => setActive(g.id)}
                   className={cn(
-                    "inline-flex items-center gap-1.5 rounded-2xl bg-gradient-to-br px-4 py-2.5 text-xs font-extrabold text-white shadow-lg transition hover:brightness-110 active:scale-95",
+                    "inline-flex items-center gap-1.5 rounded-2xl bg-gradient-to-br px-4 py-2.5 text-xs font-bold text-white shadow-lg transition hover:brightness-110 active:scale-95",
                     g.gradient
                   )}
                 >
@@ -226,7 +219,7 @@ export default function MenteActiva({
                   <DyIcon name={icon} size={17} />
                 </span>
                 <div>
-                  <p className="text-sm font-extrabold text-slate-800">{title}</p>
+                  <p className="text-sm font-bold text-slate-800">{title}</p>
                   <p className="text-xs font-medium leading-relaxed text-slate-500">{text}</p>
                 </div>
               </li>
@@ -263,7 +256,7 @@ export default function MenteActiva({
                     )}
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-extrabold text-slate-800">
+                    <p className="text-sm font-bold text-slate-800">
                       {GAME_LABEL[s.game] ?? s.game}
                     </p>
                     <p className="truncate text-[11px] font-medium text-slate-400">
@@ -278,7 +271,7 @@ export default function MenteActiva({
                         : ""}
                     </p>
                   </div>
-                  <span className="text-sm font-extrabold text-clay-700">
+                  <span className="text-sm font-bold text-clay-700">
                     {s.score} pts
                   </span>
                 </li>
@@ -298,7 +291,7 @@ export default function MenteActiva({
           <Lock size={19} />
         </span>
         <div className="flex-1">
-          <p className="text-sm font-extrabold text-slate-600">Sopa de letras · Próximamente</p>
+          <p className="text-sm font-bold text-slate-600">Sopa de letras · Próximamente</p>
           <p className="text-xs font-medium text-slate-400">
             Estamos preparando nuevos juegos para seguir estimulando la mente.
           </p>

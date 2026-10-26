@@ -133,25 +133,17 @@ export default function PanelGeneral({
       <SectionHeader def={def} subtitle={cap(formatLongDate(data.today))} />
 
       {/* Hero */}
-      <div
-        className="relative overflow-hidden rounded-[28px] p-6 text-white sm:p-8"
-        style={{
-          background:
-            "linear-gradient(130deg,#2a6f5e 0%,#31836f 48%,#329caf 100%)",
-        }}
-      >
-        <div className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 rounded-full bg-white/10" />
-        <div className="pointer-events-none absolute -bottom-24 right-24 h-56 w-56 rounded-full bg-white/[0.07]" />
+      <div className="relative overflow-hidden rounded-2xl border border-brand-200 bg-brand-100 p-6 text-slate-900 sm:p-8">
         <div className="relative flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-w-0">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-[11px] font-bold backdrop-blur">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1 text-[11px] font-bold text-brand-700">
               <Sparkles size={12} />
               Plan de hoy
             </span>
-            <h2 className="mt-3 text-2xl font-extrabold tracking-tight sm:text-3xl">
+            <h2 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl">
               {greeting()}, {firstName}
             </h2>
-            <p className="mt-1.5 max-w-md text-sm font-medium leading-relaxed text-white/85">
+            <p className="mt-1.5 max-w-md text-sm font-medium leading-relaxed text-slate-600">
               Llevas {data.totals.medsDone + data.totals.mealsDone + data.totals.routineDone + (data.totals.exerciseDone ? 1 : 0)}{" "}
               de{" "}
               {data.totals.medsTotal +
@@ -162,17 +154,17 @@ export default function PanelGeneral({
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
               {nextMed ? (
-                <span className="inline-flex items-center gap-2 rounded-2xl bg-white/15 px-3 py-2 text-xs font-bold backdrop-blur">
+                <span className="inline-flex items-center gap-2 rounded-xl bg-white px-3 py-2 text-xs font-bold text-slate-700">
                   <Pill size={14} />
                   Próxima toma: {nextMed.name} · {hourLabel(nextMed.time)}
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-2 rounded-2xl bg-white/15 px-3 py-2 text-xs font-bold backdrop-blur">
+                <span className="inline-flex items-center gap-2 rounded-xl bg-white px-3 py-2 text-xs font-bold text-slate-700">
                   <CheckCircle2 size={14} />
                   Medicación del día completada
                 </span>
               )}
-              <span className="inline-flex items-center gap-2 rounded-2xl bg-white/15 px-3 py-2 text-xs font-bold backdrop-blur">
+              <span className="inline-flex items-center gap-2 rounded-xl bg-white px-3 py-2 text-xs font-bold text-slate-700">
                 <DyIcon name="Droplets" size={14} />
                 {data.water} de {goals?.waterGlasses ?? 8} vasos de agua
               </span>
@@ -182,11 +174,11 @@ export default function PanelGeneral({
             value={data.totals.overall}
             size={132}
             stroke={13}
-            color="#ffffff"
-            track="rgba(255,255,255,0.22)"
+            color="#009a74"
+            track="#ffffff"
           >
-            <span className="text-3xl font-extrabold">{data.totals.overall}%</span>
-            <span className="text-[11px] font-bold uppercase tracking-wide text-white/80">
+            <span className="text-3xl font-bold">{data.totals.overall}%</span>
+            <span className="text-[11px] font-bold text-slate-500">
               completado
             </span>
           </ProgressRing>
@@ -282,10 +274,10 @@ export default function PanelGeneral({
             }
           />
           {actions.length === 0 ? (
-            <div className="flex flex-col items-center gap-3 rounded-3xl bg-leaf-50/70 py-10 text-center">
+            <div className="flex flex-col items-center gap-3 rounded-2xl bg-leaf-50/70 py-10 text-center">
               <CheckCircle2 size={40} className="text-leaf-500" />
               <div>
-                <p className="text-sm font-extrabold text-leaf-800">
+                <p className="text-sm font-bold text-leaf-800">
                   Día completado
                 </p>
                 <p className="text-xs font-medium text-leaf-700/80">
@@ -305,7 +297,7 @@ export default function PanelGeneral({
                       i !== 0 && "border-t border-slate-100"
                     )}
                   >
-                    <span className="w-12 shrink-0 text-xs font-extrabold tabular-nums text-slate-400">
+                    <span className="w-12 shrink-0 text-xs font-bold tabular-nums text-slate-400">
                       {hourLabel(a.time)}
                     </span>
                     <span
@@ -318,7 +310,7 @@ export default function PanelGeneral({
                       <DyIcon name={a.icon} size={18} strokeWidth={2.3} />
                     </span>
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-extrabold text-slate-800">
+                      <p className="truncate text-sm font-bold text-slate-800">
                         {a.title}
                       </p>
                       <p className="truncate text-xs font-medium text-slate-400">
@@ -349,14 +341,14 @@ export default function PanelGeneral({
                 label: cap(w.weekdayShort),
                 value: dayPct(w),
                 highlight: isToday(w.date),
-                color: "#303f49",
+                color: "#1e2b28",
               }))}
             />
             <div className="mt-4 flex items-center justify-between rounded-2xl bg-ink-50 px-4 py-3">
               <span className="text-xs font-bold text-ink-700">
                 Media de los últimos 7 días
               </span>
-              <span className="text-lg font-extrabold text-ink-700">
+              <span className="text-lg font-bold text-ink-700">
                 {data.totals.adherence7}%
               </span>
             </div>
@@ -384,7 +376,7 @@ export default function PanelGeneral({
           <Sparkles size={20} />
         </span>
         <div>
-          <p className="text-sm font-extrabold text-brand-800">
+          <p className="text-sm font-bold text-brand-800">
             Consejo de hoy para {firstName}
           </p>
           <p className="mt-0.5 text-sm font-medium leading-relaxed text-slate-600">
@@ -395,7 +387,7 @@ export default function PanelGeneral({
 
       {/* Accesos rápidos */}
       <div>
-        <h3 className="mb-3 px-1 text-sm font-extrabold uppercase tracking-wide text-slate-400">
+        <h3 className="mb-3 px-1 text-sm font-bold uppercase tracking-wide text-slate-400">
           Accesos rápidos
         </h3>
         <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">

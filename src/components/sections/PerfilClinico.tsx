@@ -50,7 +50,7 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
                 className="ring-4 ring-white"
               />
               <div className="pb-1">
-                <h2 className="text-xl font-extrabold tracking-tight text-slate-900 sm:text-2xl">
+                <h2 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
                   {p.name}
                 </h2>
                 <p className="text-sm font-semibold text-slate-500">
@@ -81,7 +81,7 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
                 <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400">
                   Teléfono
                 </p>
-                <p className="truncate text-sm font-extrabold text-slate-700">
+                <p className="truncate text-sm font-bold text-slate-700">
                   {p.phone ?? "—"}
                 </p>
               </div>
@@ -94,7 +94,7 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
                 <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400">
                   Seguro médico
                 </p>
-                <p className="truncate text-sm font-extrabold text-slate-700">
+                <p className="truncate text-sm font-bold text-slate-700">
                   {p.insurance ?? "—"}
                 </p>
               </div>
@@ -107,7 +107,7 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
                 <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400">
                   Domicilio
                 </p>
-                <p className="truncate text-sm font-extrabold text-slate-700">
+                <p className="truncate text-sm font-bold text-slate-700">
                   {p.address ?? "—"}
                 </p>
               </div>
@@ -139,7 +139,7 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
                 IMC
               </span>
               <span className="flex items-center gap-2">
-                <strong className="text-sm font-extrabold text-aqua-900">
+                <strong className="text-sm font-bold text-aqua-900">
                   {value ? String(value).replace(".", ",") : "—"}
                 </strong>
                 {cat && (
@@ -185,7 +185,7 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
           </div>
           {p.notes && (
             <div className="mt-4 rounded-2xl bg-sun-50/70 p-3.5">
-              <p className="flex items-center gap-2 text-xs font-extrabold text-sun-800">
+              <p className="flex items-center gap-2 text-xs font-bold text-sun-800">
                 <FileText size={14} />
                 Observaciones de enfermería
               </p>
@@ -207,12 +207,12 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
                   <p className="text-[11px] font-bold uppercase tracking-wider text-white/80">
                     Contacto de emergencia
                   </p>
-                  <p className="text-base font-extrabold">{emergency.name}</p>
+                  <p className="text-base font-bold">{emergency.name}</p>
                 </div>
               </div>
               <a
                 href={`tel:${emergency.phone.replace(/\s/g, "")}`}
-                className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-white px-4 py-3 text-sm font-extrabold text-coral-600 shadow-lg transition hover:bg-coral-50 active:scale-[0.98]"
+                className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-white px-4 py-3 text-sm font-bold text-coral-600 shadow-lg transition hover:bg-coral-50 active:scale-[0.98]"
               >
                 <PhoneCall size={17} />
                 Llamar · {emergency.phone}
@@ -232,7 +232,7 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
                     <Stethoscope size={18} />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-extrabold text-slate-800">
+                    <p className="truncate text-sm font-bold text-slate-800">
                       {d.name}
                     </p>
                     <p className="truncate text-xs font-medium text-slate-400">
@@ -266,7 +266,7 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
         <div className="overflow-x-auto">
           <table className="w-full min-w-[520px] border-collapse text-sm">
             <thead>
-              <tr className="text-left text-[11px] font-extrabold uppercase tracking-wide text-slate-400">
+              <tr className="text-left text-[11px] font-bold uppercase tracking-wide text-slate-400">
                 <th className="pb-3 pr-4">Parámetro</th>
                 <th className="pb-3 pr-4">Resultado</th>
                 <th className="pb-3 pr-4">Estado</th>
@@ -284,7 +284,7 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
                 return (
                   <tr key={i} className="border-t border-slate-100">
                     <td className="py-3 pr-4 font-bold text-slate-700">{l.name}</td>
-                    <td className="py-3 pr-4 font-extrabold text-slate-900">{l.value}</td>
+                    <td className="py-3 pr-4 font-bold text-slate-900">{l.value}</td>
                     <td className="py-3 pr-4">
                       <span className={cn("chip", t.soft, t.text)}>
                         <DyIcon
@@ -311,7 +311,7 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
 
       {/* Evolción */}
       <div>
-        <h3 className="mb-3 px-1 text-sm font-extrabold uppercase tracking-wide text-slate-400">
+        <h3 className="mb-3 px-1 text-sm font-bold uppercase tracking-wide text-slate-400">
           Evolción · últimos 7 días
         </h3>
         <div className="grid gap-5 sm:gap-6 lg:grid-cols-3">
@@ -345,8 +345,8 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
               <LineChart
                 height={56}
                 series={[
-                  { values: data.vitals.map((x) => x.systolic ?? 0), color: "#31836f", width: 2 },
-                  { values: data.vitals.map((x) => x.diastolic ?? 0), color: "#329caf", width: 2 },
+                  { values: data.vitals.map((x) => x.systolic ?? 0), color: "#009a74", width: 2 },
+                  { values: data.vitals.map((x) => x.diastolic ?? 0), color: "#4399b2", width: 2 },
                 ]}
               />
             }
@@ -364,7 +364,7 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
                   label: w.weekdayShort[0].toUpperCase(),
                   value: w.steps,
                   highlight: isToday(w.date),
-                  color: "#7a9a55",
+                  color: "#009a74",
                 }))}
               />
             }
@@ -390,7 +390,7 @@ function DataRow({
         <span className="text-slate-400">{icon}</span>
         {label}
       </span>
-      <strong className="text-sm font-extrabold text-slate-800">{value}</strong>
+      <strong className="text-sm font-bold text-slate-800">{value}</strong>
     </div>
   );
 }
@@ -411,7 +411,7 @@ function InfoGroup({
   const t = toneOf(tone);
   return (
     <div>
-      <p className="mb-2 flex items-center gap-2 text-xs font-extrabold uppercase tracking-wide text-slate-400">
+      <p className="mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-slate-400">
         <span className={cn("flex h-6 w-6 items-center justify-center rounded-lg", t.soft, t.text)}>
           <DyIcon name={icon} size={13} />
         </span>
@@ -511,7 +511,7 @@ function AssessmentCard({ a }: { a: Assessment }) {
           const rows = g.rows.filter((r): r is [string, string] => Boolean(r[1]));
           return (
             <div key={g.title}>
-              <p className="mb-2 text-xs font-extrabold uppercase tracking-wide text-slate-400">
+              <p className="mb-2 text-xs font-bold uppercase tracking-wide text-slate-400">
                 {g.title}
               </p>
               {rows.length ? (
@@ -519,7 +519,7 @@ function AssessmentCard({ a }: { a: Assessment }) {
                   {rows.map(([k, v]) => (
                     <div key={k} className="flex items-start justify-between gap-3 text-xs">
                       <dt className="font-bold text-slate-500">{k}</dt>
-                      <dd className="text-right font-extrabold text-slate-800">{v}</dd>
+                      <dd className="text-right font-bold text-slate-800">{v}</dd>
                     </div>
                   ))}
                 </dl>

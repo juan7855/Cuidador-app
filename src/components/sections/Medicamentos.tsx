@@ -90,14 +90,14 @@ export default function Medicamentos({
             value={scheduled.length ? (takenToday / scheduled.length) * 100 : 0}
             size={84}
             stroke={9}
-            color="#ad6540"
+            color="#cb7e2e"
           >
-            <span className="text-lg font-extrabold text-clay-700">
+            <span className="text-lg font-bold text-clay-700">
               {takenToday}/{scheduled.length}
             </span>
           </ProgressRing>
           <div>
-            <p className="text-sm font-extrabold text-slate-800">Dosis de hoy</p>
+            <p className="text-sm font-bold text-slate-800">Dosis de hoy</p>
             <p className="text-xs font-medium text-slate-400">
               {takenToday === scheduled.length
                 ? "Todas completadas"
@@ -106,11 +106,11 @@ export default function Medicamentos({
           </div>
         </Card>
         <Card className="flex items-center gap-4 p-5">
-          <ProgressRing value={avgAdherence} size={84} stroke={9} color="#7a9a55">
-            <span className="text-lg font-extrabold text-leaf-600">{avgAdherence}%</span>
+          <ProgressRing value={avgAdherence} size={84} stroke={9} color="#009a74">
+            <span className="text-lg font-bold text-leaf-600">{avgAdherence}%</span>
           </ProgressRing>
           <div>
-            <p className="text-sm font-extrabold text-slate-800">Adherencia 7 días</p>
+            <p className="text-sm font-bold text-slate-800">Adherencia 7 días</p>
             <p className="text-xs font-medium text-slate-400">
               {avgAdherence >= 90
                 ? "Cumplimiento excelente"
@@ -130,7 +130,7 @@ export default function Medicamentos({
             {lowStock.length ? <PackageX size={28} /> : <PillIcon size={28} />}
           </span>
           <div>
-            <p className="text-sm font-extrabold text-slate-800">
+            <p className="text-sm font-bold text-slate-800">
               {lowStock.length ? "Revisar stock" : "Stock correcto"}
             </p>
             <p className="text-xs font-medium text-slate-400">
@@ -167,7 +167,7 @@ export default function Medicamentos({
               <span className={cn("flex h-8 w-8 items-center justify-center rounded-xl", pt.soft, pt.text)}>
                 <DyIcon name={phase.icon} size={16} strokeWidth={2.4} />
               </span>
-              <h3 className="text-sm font-extrabold uppercase tracking-wide text-slate-600">
+              <h3 className="text-sm font-bold uppercase tracking-wide text-slate-600">
                 {phase.label}
               </h3>
               <span className="text-xs font-bold text-slate-400">
@@ -198,7 +198,7 @@ export default function Medicamentos({
             <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-100 text-slate-500">
               <Clock size={16} strokeWidth={2.4} />
             </span>
-            <h3 className="text-sm font-extrabold uppercase tracking-wide text-slate-600">
+            <h3 className="text-sm font-bold uppercase tracking-wide text-slate-600">
               Según necesidad
             </h3>
             <div className="ml-2 h-px flex-1 bg-slate-200/70" />
@@ -210,7 +210,7 @@ export default function Medicamentos({
                   <MedIcon med={m} />
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
-                      <p className="text-sm font-extrabold text-slate-800">{m.name}</p>
+                      <p className="text-sm font-bold text-slate-800">{m.name}</p>
                       <Chip tone="slate" className="bg-slate-100 text-slate-500">
                         Rescate
                       </Chip>
@@ -321,7 +321,7 @@ function MedCard({
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
             <p
               className={cn(
-                "text-sm font-extrabold",
+                "text-sm font-bold",
                 med.takenToday ? "text-slate-500 line-through decoration-leaf-500/60" : "text-slate-800"
               )}
             >

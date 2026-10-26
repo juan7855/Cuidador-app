@@ -67,7 +67,7 @@ export default function Comunidad({
               <MessagesSquare size={22} strokeWidth={2.3} />
             </span>
             <div>
-              <p className="text-sm font-extrabold text-slate-900">
+              <p className="text-sm font-bold text-slate-900">
                 {member ? "En la comunidad" : "Fuera de la comunidad"}
               </p>
               <p className="text-xs font-medium text-slate-500">

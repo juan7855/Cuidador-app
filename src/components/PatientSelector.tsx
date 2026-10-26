@@ -87,7 +87,7 @@ export default function PatientSelector({
           <div className="flex items-center gap-3">
             <Mascot size={56} />
             <div>
-              <p className="text-lg font-extrabold tracking-tight text-slate-900">
+              <p className="text-lg font-bold tracking-tight text-slate-900">
                 Panela
               </p>
               <p className="-mt-0.5 text-[11px] font-semibold text-slate-500">
@@ -113,9 +113,9 @@ export default function PatientSelector({
             <Users size={13} strokeWidth={2.6} />
             Modo cuidador
           </span>
-          <h1 className="mt-4 text-3xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-5xl">
+          <h1 className="mt-4 text-3xl font-bold leading-tight tracking-tight text-slate-900 sm:text-5xl">
             ¿A quién cuidamos{" "}
-            <span className="bg-gradient-to-r from-brand-600 to-aqua-500 bg-clip-text text-transparent">
+            <span className="text-brand-500">
               hoy?
             </span>
           </h1>
@@ -159,7 +159,7 @@ export default function PatientSelector({
                   </span>
                 </div>
 
-                <h2 className="relative mt-4 text-xl font-extrabold tracking-tight text-slate-900">
+                <h2 className="relative mt-4 text-xl font-bold tracking-tight text-slate-900">
                   {p.name}
                 </h2>
 
@@ -220,7 +220,7 @@ export default function PatientSelector({
 
         {/* Pie */}
         <footer className="mt-auto pt-12">
-          <div className="flex flex-col items-start gap-3 rounded-3xl border border-white/80 bg-white/70 p-5 backdrop-blur sm:flex-row sm:items-center">
+          <div className="flex flex-col items-start gap-3 rounded-2xl border border-white/80 bg-white/70 p-5 backdrop-blur sm:flex-row sm:items-center">
             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-leaf-50 text-leaf-600">
               <ShieldCheck size={20} />
             </span>
@@ -454,7 +454,7 @@ function NewPatientModal({
     return (
       <Modal open={open} onClose={close} title="Paciente creado">
         <div className="flex flex-col items-center gap-4 py-2 text-center">
-          <span className="flex h-14 w-14 items-center justify-center rounded-3xl bg-leaf-50 text-leaf-600">
+          <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-leaf-50 text-leaf-600">
             <UserPlus size={26} />
           </span>
           <p className="text-sm font-semibold text-slate-600">
@@ -466,7 +466,7 @@ function NewPatientModal({
             onClick={copyPin}
             className="flex items-center gap-3 rounded-2xl border-2 border-dashed border-brand-200 bg-brand-50 px-6 py-4 transition hover:bg-brand-100 active:scale-[0.98]"
           >
-            <span className="text-3xl font-extrabold tracking-[0.3em] text-brand-700">
+            <span className="text-3xl font-bold tracking-[0.3em] text-brand-700">
               {created.pin}
             </span>
             {copied ? (
@@ -630,7 +630,7 @@ function NewPatientModal({
                 onChange={(e) => setForm({ ...form, heightCm: e.target.value })} />
             </Field>
             <Field label="IMC (automático)">
-              <div className="input flex items-center bg-slate-50 font-extrabold text-slate-700">
+              <div className="input flex items-center bg-slate-50 font-bold text-slate-700">
                 {bmiValue ? String(bmiValue).replace(".", ",") : "—"}
                 {bmiCat && (
                   <span className="ml-2 text-[10px] font-bold text-slate-400">{bmiCat.label}</span>
@@ -874,7 +874,7 @@ const CONDITION_PRESETS = [
 function FormSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <fieldset className="flex flex-col gap-3 rounded-2xl border border-slate-100 bg-slate-50/50 p-3.5">
-      <legend className="px-1.5 text-[11px] font-extrabold uppercase tracking-wide text-brand-600">
+      <legend className="px-1.5 text-[11px] font-bold uppercase tracking-wide text-brand-600">
         {title}
       </legend>
       {children}

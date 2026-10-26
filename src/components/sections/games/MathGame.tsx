@@ -117,12 +117,12 @@ export default function MathGame({
 
   if (phase === "intro") {
     return (
-      <div className="flex flex-col items-center gap-5 rounded-3xl bg-gradient-to-br from-sun-50 to-clay-50 p-8 text-center">
-        <span className="flex h-16 w-16 items-center justify-center rounded-3xl bg-sun-500 text-white shadow-lg shadow-sun-500/30">
-          <span className="text-2xl font-extrabold">∑</span>
+      <div className="flex flex-col items-center gap-5 rounded-2xl bg-gradient-to-br from-sun-50 to-clay-50 p-8 text-center">
+        <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-sun-500 text-white shadow-lg shadow-sun-500/30">
+          <span className="text-2xl font-bold">∑</span>
         </span>
         <div>
-          <p className="text-lg font-extrabold text-slate-900">Cálculo mental exprés</p>
+          <p className="text-lg font-bold text-slate-900">Cálculo mental exprés</p>
           <p className="mx-auto mt-1 max-w-sm text-sm font-medium leading-relaxed text-slate-500">
             Responde {TOTAL_Q} operaciones en {TIME_LIMIT} segundos. Cada acierto
             suma 10 puntos y el tiempo restante, al terminar todas, da puntos
@@ -143,17 +143,17 @@ export default function MathGame({
 
   if (phase === "done" && result) {
     return (
-      <div className="animate-pop flex flex-col items-center gap-4 rounded-3xl border border-sun-100 bg-gradient-to-br from-sun-50 to-clay-50 p-8 text-center">
-        <span className="flex h-14 w-14 items-center justify-center rounded-3xl bg-sun-500 text-white shadow-lg shadow-sun-500/30">
+      <div className="animate-pop flex flex-col items-center gap-4 rounded-2xl border border-sun-100 bg-gradient-to-br from-sun-50 to-clay-50 p-8 text-center">
+        <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-sun-500 text-white shadow-lg shadow-sun-500/30">
           <Sparkles size={26} />
         </span>
-        <p className="text-lg font-extrabold text-slate-900">
+        <p className="text-lg font-bold text-slate-900">
           {result.record ? "¡Nuevo récord!" : "¡Buen trabajo!"}
         </p>
         <p className="text-sm font-semibold text-slate-500">
           Has acertado {correct} de {TOTAL_Q} operaciones.
         </p>
-        <p className="text-4xl font-extrabold text-sun-600">{result.score}</p>
+        <p className="text-4xl font-bold text-sun-600">{result.score}</p>
         <p className="text-xs font-bold uppercase tracking-wide text-slate-400">
           Mejor marca: {Math.max(result.best, result.score)}
         </p>
@@ -170,7 +170,7 @@ export default function MathGame({
     <div className="flex flex-col gap-5">
       <div className="flex items-center gap-3">
         <div className="flex-1">
-          <div className="mb-1.5 flex justify-between text-[11px] font-extrabold text-slate-500">
+          <div className="mb-1.5 flex justify-between text-[11px] font-bold text-slate-500">
             <span>
               Pregunta {index + 1}/{TOTAL_Q}
             </span>
@@ -185,7 +185,7 @@ export default function MathGame({
         </div>
         <span
           className={cn(
-            "inline-flex items-center gap-1 rounded-2xl px-3 py-2 text-sm font-extrabold tabular-nums",
+            "inline-flex items-center gap-1 rounded-2xl px-3 py-2 text-sm font-bold tabular-nums",
             timeLeft <= 10 ? "bg-coral-50 text-coral-600" : "bg-slate-100 text-slate-600"
           )}
         >
@@ -193,8 +193,8 @@ export default function MathGame({
         </span>
       </div>
 
-      <div className="rounded-3xl bg-gradient-to-br from-slate-900 to-slate-700 p-8 text-center sm:p-10">
-        <p className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
+      <div className="rounded-2xl bg-gradient-to-br from-slate-900 to-slate-700 p-8 text-center sm:p-10">
+        <p className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
           {q.text} <span className="text-sun-300">= ?</span>
         </p>
       </div>
@@ -210,7 +210,7 @@ export default function MathGame({
               onClick={() => choose(opt)}
               disabled={reveal}
               className={cn(
-                "flex items-center justify-center gap-2 rounded-2xl border-2 py-5 text-2xl font-extrabold transition active:scale-95",
+                "flex items-center justify-center gap-2 rounded-2xl border-2 py-5 text-2xl font-bold transition active:scale-95",
                 !reveal &&
                   "border-slate-100 bg-white text-slate-800 shadow-sm hover:border-sun-300 hover:bg-sun-50",
                 reveal && isCorrect && "border-leaf-500 bg-leaf-50 text-leaf-700",

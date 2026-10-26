@@ -65,11 +65,11 @@ interface CreateBody {
 }
 
 const AVATAR_PALETTE: [string, string][] = [
-  ["#31836F", "#329CAF"],
-  ["#329CAF", "#31836F"],
-  ["#D58C56", "#B85F59"],
-  ["#D58C56", "#E3A877"],
-  ["#7A9A55", "#31836F"],
+  ["#009a74", "#4399b2"],
+  ["#4399b2", "#009a74"],
+  ["#e09339", "#b85f59"],
+  ["#e09339", "#eeb878"],
+  ["#009a74", "#009a74"],
 ];
 
 async function generateUniquePin(): Promise<string> {

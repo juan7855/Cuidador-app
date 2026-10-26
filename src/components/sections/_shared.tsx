@@ -15,27 +15,15 @@ export function SectionHeader({
   subtitle?: string;
   actions?: React.ReactNode;
 }) {
-  const Icon = def.icon;
   return (
     <div className="mb-5 flex flex-wrap items-center justify-between gap-3 sm:mb-6">
-      <div className="flex items-center gap-4">
-        <span
-          className={cn(
-            "flex h-12 w-12 items-center justify-center rounded-2xl shadow-sm sm:h-13 sm:w-13",
-            def.soft,
-            def.text
-          )}
-        >
-          <Icon size={23} strokeWidth={2.3} />
-        </span>
-        <div>
-          <h1 className="text-xl font-extrabold tracking-tight text-slate-900 sm:text-2xl">
-            {def.label}
-          </h1>
-          <p className="text-xs font-medium text-slate-500 sm:text-sm">
-            {subtitle ?? def.description}
-          </p>
-        </div>
+      <div>
+        <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 sm:text-[28px]">
+          {def.label}
+        </h1>
+        <p className="mt-0.5 text-sm font-medium text-slate-500">
+          {subtitle ?? def.description}
+        </p>
       </div>
       {actions}
     </div>
@@ -71,10 +59,10 @@ export function StatTile({
         </span>
         {sub}
       </div>
-      <p className="mt-3 text-xs font-bold uppercase tracking-wide text-slate-400">
+      <p className="mt-3 text-xs font-bold text-slate-500">
         {label}
       </p>
-      <p className="mt-0.5 text-xl font-extrabold tracking-tight text-slate-900 sm:text-2xl">
+      <p className="mt-0.5 text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
         {value}
         {unit && <span className="ml-1 text-xs font-bold text-slate-400">{unit}</span>}
       </p>
@@ -95,7 +83,7 @@ export function ShortcutTile({
   return (
     <button
       onClick={onClick}
-      className="card group flex items-center gap-3.5 p-4 text-left transition-all hover:-translate-y-0.5 hover:shadow-[var(--shadow-pop)]"
+      className="card group flex items-center gap-3.5 p-4 text-left transition-colors hover:border-brand-300 hover:bg-brand-50/40"
     >
       <span
         className={cn(
@@ -107,7 +95,7 @@ export function ShortcutTile({
         <Icon size={20} strokeWidth={2.3} />
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block truncate text-sm font-extrabold text-slate-800">
+        <span className="block truncate text-sm font-bold text-slate-800">
           {def.label}
         </span>
         <span className="block truncate text-[11px] font-medium text-slate-400">
@@ -142,7 +130,7 @@ export function NoticeCard({
         <DyIcon name={icon} size={19} strokeWidth={2.3} />
       </span>
       <div className="min-w-0">
-        <p className={cn("text-sm font-extrabold", t.text)}>{title}</p>
+        <p className={cn("text-sm font-bold", t.text)}>{title}</p>
         <div className="mt-0.5 text-xs font-medium leading-relaxed text-slate-600">
           {children}
         </div>

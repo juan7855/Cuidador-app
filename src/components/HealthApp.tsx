@@ -52,7 +52,7 @@ function Splash() {
   return (
     <div className="app-bg flex min-h-screen flex-col items-center justify-center gap-5">
       <Mascot size={104} className="animate-pop" />
-      <p className="text-lg font-extrabold tracking-tight text-slate-800">Panela</p>
+      <p className="text-lg font-bold tracking-tight text-slate-800">Panela</p>
       <span className="h-5 w-5 animate-spin rounded-full border-[3px] border-brand-200 border-t-brand-600" />
     </div>
   );

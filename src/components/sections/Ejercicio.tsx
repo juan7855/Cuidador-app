@@ -139,10 +139,10 @@ export default function Ejercicio({
                       : "border-slate-100 bg-slate-50/60 text-slate-500 hover:border-slate-200"
                 )}
               >
-                <span className="text-[10px] font-extrabold uppercase">
+                <span className="text-[10px] font-bold uppercase">
                   {weekdayShort(d.key).slice(0, 2)}
                 </span>
-                <span className="text-sm font-extrabold">{dayNum(d.key)}</span>
+                <span className="text-sm font-bold">{dayNum(d.key)}</span>
                 {d.plan ? (
                   d.done ? (
                     <span
@@ -182,7 +182,7 @@ export default function Ejercicio({
           >
             <span
               className={cn(
-                "flex h-16 w-16 shrink-0 items-center justify-center rounded-3xl",
+                "flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl",
                 plan.intensity === "Descanso"
                   ? "bg-white text-slate-500 shadow-sm"
                   : "bg-white/20 text-white backdrop-blur"
@@ -192,7 +192,7 @@ export default function Ejercicio({
             </span>
             <div className="flex-1">
               <div className="flex flex-wrap items-center gap-2">
-                <h2 className="text-xl font-extrabold tracking-tight">{plan.title}</h2>
+                <h2 className="text-xl font-bold tracking-tight">{plan.title}</h2>
                 <span
                   className={cn(
                             "chip",
@@ -230,7 +230,7 @@ export default function Ejercicio({
               <button
                 onClick={() => onToggle(plan.id, !plan.doneToday, plan.durationMin)}
                 className={cn(
-                  "inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl px-6 py-3.5 text-sm font-extrabold shadow-lg transition active:scale-95",
+                  "inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl px-6 py-3.5 text-sm font-bold shadow-lg transition active:scale-95",
                   plan.doneToday
                     ? "bg-white/20 text-white hover:bg-white/30"
                     : "bg-white text-sun-600 hover:bg-sun-50"
@@ -259,11 +259,11 @@ export default function Ejercicio({
                       key={i}
                       className="flex items-center gap-3 rounded-2xl border border-slate-100 bg-slate-50/60 p-3"
                     >
-                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-sun-100 text-sm font-extrabold text-sun-700">
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-sun-100 text-sm font-bold text-sun-700">
                         {i + 1}
                       </span>
                       <div className="min-w-0">
-                        <p className="truncate text-sm font-extrabold text-slate-800">{it.name}</p>
+                        <p className="truncate text-sm font-bold text-slate-800">{it.name}</p>
                         <p className="truncate text-xs font-medium text-slate-400">{it.detail}</p>
                       </div>
                     </li>
@@ -308,7 +308,7 @@ export default function Ejercicio({
             label: weekdayShort(d.key).slice(0, 2),
             value: d.done ? d.plan?.durationMin ?? 0 : 0,
             highlight: isToday(d.key),
-            color: "#d58c56",
+            color: "#e09339",
           }))}
         />
       </Card>
@@ -320,7 +320,7 @@ export default function Ejercicio({
             <ShieldCheck size={22} />
           </span>
           <div>
-            <p className="text-sm font-extrabold text-sun-800">
+            <p className="text-sm font-bold text-sun-800">
               Recomendaciones de seguridad
             </p>
             <ul className="mt-2 grid gap-1.5 text-sm font-medium leading-relaxed text-slate-600 sm:grid-cols-2">

@@ -114,12 +114,12 @@ export default function SequenceGame({
       </div>
 
       {phase === "intro" && (
-        <div className="flex flex-col items-center gap-5 rounded-3xl bg-gradient-to-br from-sun-50 to-clay-50 p-8 text-center">
-          <span className="flex h-16 w-16 items-center justify-center rounded-3xl bg-sun-500 text-white shadow-lg shadow-sun-500/30">
+        <div className="flex flex-col items-center gap-5 rounded-2xl bg-gradient-to-br from-sun-50 to-clay-50 p-8 text-center">
+          <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-sun-500 text-white shadow-lg shadow-sun-500/30">
             <Sparkles size={28} />
           </span>
           <div>
-            <p className="text-lg font-extrabold text-slate-900">Secuencia de colores</p>
+            <p className="text-lg font-bold text-slate-900">Secuencia de colores</p>
             <p className="mx-auto mt-1 max-w-sm text-sm font-medium leading-relaxed text-slate-500">
               Observa la secuencia de colores y repítela en el mismo orden.
               Cada ronda añade un paso nuevo. Cada nivel completado vale 100
@@ -155,7 +155,7 @@ export default function SequenceGame({
                   disabled={phase !== "input"}
                   aria-label={pad.label}
                   className={cn(
-                    "flex aspect-[5/4] items-center justify-center rounded-3xl transition-all duration-150 sm:aspect-[2/1]",
+                    "flex aspect-[5/4] items-center justify-center rounded-2xl transition-all duration-150 sm:aspect-[2/1]",
                     pad.base,
                     isLit
                       ? cn("scale-[1.03] brightness-110 shadow-2xl", pad.glow)
@@ -170,7 +170,7 @@ export default function SequenceGame({
             })}
           </div>
 
-          <div className="flex items-center justify-between rounded-3xl bg-slate-50 p-4">
+          <div className="flex items-center justify-between rounded-2xl bg-slate-50 p-4">
             <p className="text-sm font-bold text-slate-500">
               {phase === "showing" && (
                 <span className="inline-flex items-center gap-2">
@@ -201,11 +201,11 @@ export default function SequenceGame({
           </div>
 
           {phase === "over" && result && (
-            <div className="animate-pop rounded-3xl border border-sun-100 bg-gradient-to-br from-sun-50 to-clay-50 p-6 text-center">
+            <div className="animate-pop rounded-2xl border border-sun-100 bg-gradient-to-br from-sun-50 to-clay-50 p-6 text-center">
               <p className="text-sm font-bold text-slate-500">
                 {result.record ? "¡Nuevo récord!" : "Puntuación obtenida"}
               </p>
-              <p className="mt-1 text-4xl font-extrabold text-sun-600">
+              <p className="mt-1 text-4xl font-bold text-sun-600">
                 {result.score}
               </p>
               <p className="mt-1 text-xs font-bold uppercase tracking-wide text-slate-400">
@@ -230,7 +230,7 @@ function Stat({
 }) {
   return (
     <div className="rounded-2xl border border-slate-100 bg-white p-3 text-center shadow-sm">
-      <p className="flex items-center justify-center gap-1 text-base font-extrabold text-slate-800">
+      <p className="flex items-center justify-center gap-1 text-base font-bold text-slate-800">
         {icon}
         {value}
       </p>

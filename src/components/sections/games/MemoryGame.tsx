@@ -148,7 +148,7 @@ export default function MemoryGame({
               onClick={() => flip(i)}
               aria-label={up ? c.name : "Tarjeta oculta"}
               className={cn(
-                "flex aspect-square items-center justify-center rounded-2xl border text-2xl transition-all duration-300 sm:rounded-3xl",
+                "flex aspect-square items-center justify-center rounded-2xl border text-2xl transition-all duration-300 sm:rounded-2xl",
                 up
                   ? cn(
                       "scale-[1.02] border-transparent shadow-md",
@@ -166,17 +166,17 @@ export default function MemoryGame({
       </div>
 
       {result ? (
-        <div className="animate-pop rounded-3xl border border-sun-100 bg-gradient-to-br from-sun-50 to-clay-50 p-6 text-center">
-          <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-3xl bg-sun-500 text-white shadow-lg shadow-sun-500/30">
+        <div className="animate-pop rounded-2xl border border-sun-100 bg-gradient-to-br from-sun-50 to-clay-50 p-6 text-center">
+          <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-sun-500 text-white shadow-lg shadow-sun-500/30">
             <Sparkles size={26} />
           </span>
-          <p className="mt-3 text-lg font-extrabold text-slate-900">
+          <p className="mt-3 text-lg font-bold text-slate-900">
             {result.record ? "¡Nuevo récord!" : "¡Bien hecho!"}
           </p>
           <p className="text-sm font-semibold text-slate-500">
             Has completado el tablero en {moves} movimientos y {seconds} segundos.
           </p>
-          <p className="mt-3 text-4xl font-extrabold text-sun-600">{result.score}</p>
+          <p className="mt-3 text-4xl font-bold text-sun-600">{result.score}</p>
           <p className="text-xs font-bold uppercase tracking-wide text-slate-400">
             Mejor marca: {Math.max(result.best, result.score)}
           </p>
@@ -185,7 +185,7 @@ export default function MemoryGame({
           </button>
         </div>
       ) : (
-        <div className="flex items-center justify-between rounded-3xl bg-slate-50 p-4">
+        <div className="flex items-center justify-between rounded-2xl bg-slate-50 p-4">
           <p className="text-xs font-semibold text-slate-500">
             {started
               ? "Toca dos tarjetas para encontrar parejas iguales."
@@ -214,7 +214,7 @@ function Metric({
       <span className="mx-auto mb-1 flex h-7 w-7 items-center justify-center rounded-lg bg-sun-50 text-sun-600">
         {icon}
       </span>
-      <p className="text-base font-extrabold text-slate-800">{value}</p>
+      <p className="text-base font-bold text-slate-800">{value}</p>
       <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400">{label}</p>
     </div>
   );

@@ -47,29 +47,24 @@ function NavRow({
   section,
   active,
   onClick,
-  compact,
 }: {
   section: SectionDef;
   active: boolean;
   onClick: () => void;
-  compact?: boolean;
 }) {
   const Icon = section.icon;
   return (
     <button
       onClick={onClick}
       className={cn(
-        "group flex w-full items-center gap-3 rounded-full text-left font-bold transition-all",
-        compact ? "px-3.5 py-3 text-sm" : "px-4 py-3 text-sm",
+        "flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-left text-sm font-bold transition-colors",
         active
-          ? cn("text-white shadow-lg", section.solid)
+          ? "bg-brand-100 text-brand-700"
           : "text-slate-600 hover:bg-slate-100"
       )}
-      style={active ? { boxShadow: `0 12px 24px -12px ${section.hex}` } : undefined}
     >
-      <Icon size={19} strokeWidth={2.3} className="shrink-0" />
+      <Icon size={18} strokeWidth={2.2} className="shrink-0" />
       <span className="flex-1 truncate">{section.label}</span>
-      {!active && <ChevronRight size={15} className="text-slate-300 group-hover:text-slate-400" />}
     </button>
   );
 }
@@ -101,23 +96,18 @@ export default function AppChrome({
   const sheetActive = SHEET_NAV.includes(section);
 
   return (
-    <div className="app-bg min-h-screen lg:pl-[284px]">
+    <div className="app-bg min-h-screen lg:pl-[248px]">
       {/* ------------------------------------------------ Sidebar escritorio */}
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-[284px] flex-col border-r border-slate-200/70 bg-white/80 px-5 py-7 backdrop-blur-xl lg:flex">
-        <div className="flex items-center gap-3 px-2">
-          <Mascot size={56} />
-          <div>
-            <p className="text-base font-extrabold tracking-tight text-slate-900">
-              Panela
-            </p>
-            <p className="-mt-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
-              Salud integral
-            </p>
-          </div>
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-[248px] flex-col border-r border-slate-200 bg-white px-4 py-6 lg:flex">
+        <div className="flex items-center gap-2.5 px-2">
+          <Mascot size={36} />
+          <p className="text-xl font-extrabold tracking-tight text-slate-900">
+            Panela
+          </p>
         </div>
 
-        <nav className="mt-8 flex flex-1 flex-col gap-1.5">
-          <p className="px-4 pb-2 text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+        <nav className="mt-7 flex flex-1 flex-col gap-1">
+          <p className="px-3.5 pb-1.5 text-[11px] font-bold text-slate-400">
             Secciones
           </p>
           {SECTIONS.map((s) => (
@@ -131,7 +121,7 @@ export default function AppChrome({
         </nav>
 
         {patient && (
-          <div className="rounded-3xl border border-slate-100 bg-slate-50/80 p-3.5">
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
             <div className="flex items-center gap-3">
               <Avatar
                 name={patient.name}
@@ -140,7 +130,7 @@ export default function AppChrome({
                 size={42}
               />
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-extrabold text-slate-800">
+                <p className="truncate text-sm font-bold text-slate-800">
                   {patient.name}
                 </p>
                 <p className="truncate text-[11px] font-semibold text-slate-500">
@@ -150,7 +140,7 @@ export default function AppChrome({
             </div>
             <button
               onClick={onSwitch}
-              className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl bg-white px-3 py-2.5 text-xs font-bold text-slate-600 shadow-sm transition hover:bg-brand-50 hover:text-brand-700"
+              className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-600 transition hover:bg-brand-50 hover:text-brand-700"
             >
               <SwitchCamera size={15} />
               Cambiar de paciente
@@ -160,7 +150,7 @@ export default function AppChrome({
       </aside>
 
       {/* ------------------------------------------------ Cabecera móvil */}
-      <header className="pb-safe sticky top-0 z-30 border-b border-slate-200/60 bg-[#f5f1e6]/85 backdrop-blur-xl lg:hidden">
+      <header className="pb-safe sticky top-0 z-30 border-b border-slate-200/60 bg-[#fbf6ec]/85 backdrop-blur-xl lg:hidden">
         <div className="flex items-center justify-between gap-3 px-4 py-3">
           <button onClick={onSwitch} className="flex min-w-0 items-center gap-3 text-left">
             {patient && (
@@ -175,7 +165,7 @@ export default function AppChrome({
               <span className="block text-[11px] font-semibold text-slate-500">
                 {greeting()}
               </span>
-              <span className="block truncate text-sm font-extrabold text-slate-900">
+              <span className="block truncate text-sm font-bold text-slate-900">
                 {patient?.name ?? "Panela"}
               </span>
             </span>
@@ -194,9 +184,9 @@ export default function AppChrome({
             {bellOpen && (
               <>
                 <div className="fixed inset-0 z-40" onClick={() => setBellOpen(false)} />
-                <div className="absolute right-0 z-50 mt-2 w-72 animate-pop rounded-3xl border border-slate-100 bg-white p-3 shadow-[var(--shadow-pop)]">
+                <div className="absolute right-0 z-50 mt-2 w-72 animate-pop rounded-2xl border border-slate-100 bg-white p-3 shadow-[var(--shadow-pop)]">
                   <div className="mb-2 flex items-center justify-between px-2 pt-1">
-                    <p className="text-sm font-extrabold text-slate-900">Recordatorios</p>
+                    <p className="text-sm font-bold text-slate-900">Recordatorios</p>
                     <button onClick={() => setBellOpen(false)} aria-label="Cerrar" className="text-slate-400">
                       <X size={16} />
                     </button>
@@ -236,7 +226,7 @@ export default function AppChrome({
 
       {/* ------------------------------------------------ Navegación inferior (móvil) */}
       <nav className="pb-safe fixed inset-x-0 bottom-0 z-40 lg:hidden">
-        <div className="mx-3 mb-3 flex items-end justify-around rounded-3xl border border-slate-200/70 bg-white/95 px-2 py-2 shadow-[var(--shadow-pop)] backdrop-blur">
+        <div className="mx-3 mb-3 flex items-end justify-around rounded-2xl border border-slate-200 bg-white/95 px-2 py-2 shadow-[var(--shadow-pop)] backdrop-blur">
           {MOBILENAV.slice(0, 2).map((id) => (
             <MobileTab
               key={id}
@@ -251,15 +241,13 @@ export default function AppChrome({
             onClick={() => go("mind")}
             aria-label="Mente activa"
             className={cn(
-              "flex -translate-y-3 flex-col items-center gap-1 rounded-3xl px-4 py-2 text-white shadow-lg transition active:scale-95",
-              section === "mind"
-                ? "bg-gradient-to-br from-sun-500 to-clay-600"
-                : "bg-gradient-to-br from-sun-500 to-clay-600"
+              "flex -translate-y-3 flex-col items-center gap-1 rounded-2xl px-4 py-2 text-white shadow-lg transition active:scale-95",
+              "bg-brand-500"
             )}
-            style={{ boxShadow: "0 14px 26px -10px rgba(184,112,63,.55)" }}
+            style={{ boxShadow: "0 12px 22px -10px rgba(0,154,116,.55)" }}
           >
             <Brain size={24} strokeWidth={2.3} />
-            <span className="text-[10px] font-extrabold">Mente</span>
+            <span className="text-[10px] font-bold">Mente</span>
           </button>
 
           <MobileTab
@@ -276,7 +264,7 @@ export default function AppChrome({
             )}
           >
             <LayoutGrid size={22} strokeWidth={2.2} />
-            <span className="text-[10px] font-extrabold">Más</span>
+            <span className="text-[10px] font-bold">Más</span>
           </button>
         </div>
       </nav>
@@ -288,10 +276,10 @@ export default function AppChrome({
             className="absolute inset-0 bg-slate-900/45 backdrop-blur-[2px] animate-fade-in"
             onClick={() => setSheetOpen(false)}
           />
-          <div className="absolute inset-x-0 bottom-0 animate-sheet rounded-t-[28px] bg-white p-5 pb-8 shadow-[var(--shadow-pop)]">
+          <div className="absolute inset-x-0 bottom-0 animate-sheet rounded-t-2xl bg-white p-5 pb-8 shadow-[var(--shadow-pop)]">
             <div className="mx-auto mb-4 h-1.5 w-12 rounded-full bg-slate-200" />
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-lg font-extrabold tracking-tight text-slate-900">
+              <h3 className="text-lg font-bold tracking-tight text-slate-900">
                 Todas las secciones
               </h3>
               <button
@@ -325,7 +313,7 @@ export default function AppChrome({
                       <Icon size={20} strokeWidth={2.2} />
                     </span>
                     <span className="flex-1">
-                      <span className="block text-sm font-extrabold">{s.label}</span>
+                      <span className="block text-sm font-bold">{s.label}</span>
                       <span className="block text-xs font-medium text-slate-500">
                         {s.description}
                       </span>
@@ -371,7 +359,7 @@ function MobileTab({
       )}
     >
       <Icon size={22} strokeWidth={active ? 2.5 : 2.1} />
-      <span className="text-[10px] font-extrabold">{def.short}</span>
+      <span className="text-[10px] font-bold">{def.short}</span>
     </button>
   );
 }
