@@ -96,9 +96,6 @@ export default function PatientSelector({
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Chip tone="leaf" icon="ShieldCheck" className="hidden sm:inline-flex">
-              Datos confidenciales
-            </Chip>
             <button onClick={() => setAddOpen(true)} className="btn-primary">
               <UserPlus size={17} strokeWidth={2.6} />
               <span className="hidden sm:inline">Nuevo paciente</span>
@@ -109,11 +106,7 @@ export default function PatientSelector({
 
         {/* Encabezado */}
         <div className="mt-10 max-w-2xl sm:mt-16">
-          <span className="chip bg-brand-50 text-brand-700">
-            <Users size={13} strokeWidth={2.6} />
-            Modo cuidador
-          </span>
-          <h1 className="mt-4 text-3xl font-bold leading-tight tracking-tight text-slate-900 sm:text-5xl">
+          <h1 className="text-3xl font-bold leading-tight tracking-tight text-slate-900 sm:text-5xl">
             ¿A quién cuidamos{" "}
             <span className="text-brand-500">
               hoy?

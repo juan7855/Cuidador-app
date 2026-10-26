@@ -19,7 +19,7 @@ export const pool =
     // mejor fallar rápido y mostrar el error.
     connectionTimeoutMillis: 8000,
     idleTimeoutMillis: 10000,
-    max: process.env.VERCEL ? 1 : 10,
+    max: process.env.VERCEL ? 3 : 10,
   });
 
 if (process.env.NODE_ENV !== "production") {

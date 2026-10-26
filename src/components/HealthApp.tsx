@@ -71,7 +71,11 @@ export default function HealthApp({ patients }: { patients: LitePatient[] }) {
       });
       setData(applyTodayTotals(d));
     } catch {
+      // Si no se pueden cargar los datos, se vuelve al selector en vez de
+      // quedar en la pantalla de carga.
+      localStorage.removeItem(STORAGE_KEY);
       setData(null);
+      setPatientId(null);
     }
   }, []);
 
