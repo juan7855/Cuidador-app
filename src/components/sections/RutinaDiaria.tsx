@@ -1,7 +1,7 @@
 "use client";
 
 import { Check, PartyPopper } from "lucide-react";
-import { Card, CardTitle, Chip, CheckButton, ProgressRing, MiniBars, DyIcon } from "@/components/ui";
+import { Card, CardTitle, Chip, CheckButton, ProgressRing, MiniBars, DyIcon, AnimatedNumber } from "@/components/ui";
 import { SectionHeader } from "@/components/sections/_shared";
 import { sectionById } from "@/components/nav";
 import { cn, hourLabel, isToday, normalizePhase, toneOf } from "@/lib/utils";
@@ -39,7 +39,7 @@ export default function RutinaDiaria({
         <Card className="flex items-center gap-5 p-5 sm:p-6">
           <ProgressRing value={routinePct} size={104} stroke={11} color="#1e2b28">
             <span className="text-2xl font-bold text-ink-700">
-              {t.routineDone}/{t.routineTotal}
+              <AnimatedNumber value={t.routineDone} />/{t.routineTotal}
             </span>
             <span className="text-[10px] font-bold uppercase tracking-wide text-slate-400">
               hábitos

@@ -20,6 +20,7 @@ import {
   Modal,
   Toggle,
   ProgressRing,
+  AnimatedNumber,
 } from "@/components/ui";
 import { SectionHeader, NoticeCard } from "@/components/sections/_shared";
 import { sectionById } from "@/components/nav";
@@ -93,7 +94,7 @@ export default function Medicamentos({
             color="#cb7e2e"
           >
             <span className="text-lg font-bold text-clay-700">
-              {takenToday}/{scheduled.length}
+              <AnimatedNumber value={takenToday} />/{scheduled.length}
             </span>
           </ProgressRing>
           <div>
@@ -107,7 +108,7 @@ export default function Medicamentos({
         </Card>
         <Card className="flex items-center gap-4 p-5">
           <ProgressRing value={avgAdherence} size={84} stroke={9} color="#009a74">
-            <span className="text-lg font-bold text-leaf-600">{avgAdherence}%</span>
+            <span className="text-lg font-bold text-leaf-600"><AnimatedNumber value={avgAdherence} />%</span>
           </ProgressRing>
           <div>
             <p className="text-sm font-bold text-slate-800">Adherencia 7 días</p>

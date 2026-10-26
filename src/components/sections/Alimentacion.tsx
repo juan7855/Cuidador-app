@@ -21,6 +21,7 @@ import {
   MiniBars,
   DyIcon,
   Modal,
+  AnimatedNumber,
 } from "@/components/ui";
 import { SectionHeader } from "@/components/sections/_shared";
 import { sectionById } from "@/components/nav";
@@ -98,7 +99,9 @@ export default function Alimentacion({
             gradientId="kcal-grad"
           >
             <Flame size={14} className="text-leaf-500" />
-            <span className="text-lg font-bold text-slate-800">{consumed}</span>
+            <span className="text-lg font-bold text-slate-800">
+              <AnimatedNumber value={consumed} />
+            </span>
             <span className="text-[10px] font-bold text-slate-400">de {goalKcal} kcal</span>
           </ProgressRing>
           <div className="flex-1">

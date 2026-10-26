@@ -23,31 +23,28 @@ export function useReducedMotion(): boolean {
 
 /** false en el primer render y true en el siguiente frame: permite animar desde 0. */
 function useEntered(): boolean {
-  const reduced = useReducedMotion();
   const [entered, setEntered] = useState(false);
   useEffect(() => {
     const id = requestAnimationFrame(() => setEntered(true));
     return () => cancelAnimationFrame(id);
   }, []);
-  return reduced || entered;
+  return entered;
 }
 
 /** Número que cuenta hasta su valor (ease-out cúbico) y reanima desde el valor previo. */
 export function AnimatedNumber({
   value,
-  duration = 900,
+  duration = 1500,
   decimals = 0,
 }: {
   value: number;
   duration?: number;
   decimals?: number;
 }) {
-  const reduced = useReducedMotion();
   const [shown, setShown] = useState(0);
   const from = useRef(0);
 
   useEffect(() => {
-    if (reduced) return;
     const start = performance.now();
     const origin = from.current;
     let raf = 0;
@@ -60,9 +57,9 @@ export function AnimatedNumber({
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [value, duration, reduced]);
+  }, [value, duration]);
 
-  const out = reduced ? value : shown;
+  const out = shown;
   return (
     <>
       {out.toLocaleString("es-ES", {
@@ -223,7 +220,7 @@ export function ProgressRing({
           strokeLinecap="round"
           strokeDasharray={c}
           strokeDashoffset={c - (c * pct) / 100}
-          className="transition-[stroke-dashoffset] duration-[1100ms] ease-[var(--ease-out)]"
+          className="transition-[stroke-dashoffset] duration-[1700ms] ease-[var(--ease-out)]"
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
@@ -257,7 +254,7 @@ export function Bar({
       style={{ height }}
     >
       <div
-        className={cn("h-full rounded-full transition-[width] duration-[900ms] ease-[var(--ease-out)]", barClassName ?? "bg-brand-500")}
+        className={cn("h-full rounded-full transition-[width] duration-[1400ms] ease-[var(--ease-out)]", barClassName ?? "bg-brand-500")}
         style={{ width: `${p}%` }}
       />
     </div>
@@ -288,7 +285,7 @@ export function CheckButton({
       aria-label={label}
       title={label}
       className={cn(
-        "flex shrink-0 items-center justify-center rounded-full border-2 transition-all duration-200 active:scale-90",
+        "relative flex shrink-0 items-center justify-center rounded-full border-2 transition-all duration-200 active:scale-90",
         done ? "border-transparent text-white shadow-md" : "border-slate-200 bg-white text-slate-300 hover:border-slate-300 hover:text-slate-400"
       )}
       style={
@@ -297,6 +294,14 @@ export function CheckButton({
           : { width: size, height: size }
       }
     >
+      {done && (
+        <span
+          key="burst"
+          aria-hidden
+          className="pointer-events-none absolute inset-0 rounded-full animate-burst"
+          style={{ backgroundColor: tone }}
+        />
+      )}
       <Check size={size * 0.5} strokeWidth={3} className={done ? "animate-pop" : ""} />
     </button>
   );
@@ -519,7 +524,7 @@ export function MiniBars({
                 style={{
                   height: h,
                   backgroundColor: it.color ?? "#009a74",
-                  animationDelay: `${i * 45}ms`,
+                  animationDelay: `${i * 80}ms`,
                 }}
                 title={`${it.label}: ${it.value}`}
               />

@@ -186,7 +186,7 @@ body {
 @keyframes fadeUp {
   from {
     opacity: 0;
-    transform: translateY(14px);
+    transform: translateY(26px);
   }
   to {
     opacity: 1;
@@ -256,7 +256,7 @@ body {
 }
 
 .animate-fade-up {
-  animation: fadeUp 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: fadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .animate-fade-in {
   animation: fadeIn 0.3s ease both;
@@ -278,31 +278,31 @@ body {
 }
 
 .stagger > * {
-  animation: fadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: fadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .stagger > *:nth-child(1) {
-  animation-delay: 0.02s;
+  animation-delay: 0.04s;
 }
 .stagger > *:nth-child(2) {
-  animation-delay: 0.07s;
+  animation-delay: 0.14s;
 }
 .stagger > *:nth-child(3) {
-  animation-delay: 0.12s;
+  animation-delay: 0.24s;
 }
 .stagger > *:nth-child(4) {
-  animation-delay: 0.17s;
+  animation-delay: 0.34s;
 }
 .stagger > *:nth-child(5) {
-  animation-delay: 0.22s;
+  animation-delay: 0.44s;
 }
 .stagger > *:nth-child(6) {
-  animation-delay: 0.27s;
+  animation-delay: 0.54s;
 }
 .stagger > *:nth-child(7) {
-  animation-delay: 0.32s;
+  animation-delay: 0.64s;
 }
 .stagger > *:nth-child(8) {
-  animation-delay: 0.37s;
+  animation-delay: 0.74s;
 }
 
 /* ------------------------------------------------------------------ */
@@ -353,7 +353,7 @@ body {
     transform: translate3d(0, 0, 0) scale(1);
   }
   50% {
-    transform: translate3d(36px, -28px, 0) scale(1.12);
+    transform: translate3d(60px, -44px, 0) scale(1.2);
   }
 }
 @keyframes sheen {
@@ -365,16 +365,30 @@ body {
   }
 }
 
+@keyframes burst {
+  0% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.1);
+  }
+}
+.animate-burst {
+  animation: burst 0.7s var(--ease-out) both;
+}
+
 .bar-grow {
   transform-origin: bottom;
-  animation: barGrow 0.7s var(--ease-out) both;
+  animation: barGrow 1.1s var(--ease-out) both;
 }
 .draw-line {
   stroke-dasharray: 1;
-  animation: drawLine 1.1s var(--ease-out) both;
+  animation: drawLine 1.8s var(--ease-out) both;
 }
 .fade-fill {
-  animation: fadeIn 0.9s ease 0.3s both;
+  animation: fadeIn 1s ease 0.5s both;
 }
 .ping-dot::after {
   content: "";
@@ -401,21 +415,21 @@ body {
   z-index: -1;
   border-radius: 9999px;
   filter: blur(70px);
-  animation: drift 14s ease-in-out infinite;
+  animation: drift 9s ease-in-out infinite;
 }
 .aurora::before {
   width: 360px;
   height: 360px;
   top: -80px;
   left: -60px;
-  background: rgba(0, 154, 116, 0.22);
+  background: rgba(0, 154, 116, 0.32);
 }
 .aurora::after {
   width: 320px;
   height: 320px;
   bottom: -60px;
   right: -40px;
-  background: rgba(224, 147, 57, 0.24);
+  background: rgba(224, 147, 57, 0.34);
   animation-delay: -7s;
 }
 
@@ -443,20 +457,34 @@ body {
     box-shadow var(--dur-base) ease;
 }
 .lift:hover {
-  transform: translateY(-2px);
+  transform: translateY(-4px);
   border-color: var(--color-brand-300);
   box-shadow: var(--shadow-pop);
 }
 
-/* Accesibilidad: quien pide menos movimiento no recibe animaciones */
+/* Accesibilidad: con "reducir movimiento" se apaga lo decorativo y lo espacial
+   (deriva, pulsos, rebotes, desplazamientos). Los rellenos de datos (barras,
+   anillos, líneas, números) se conservan como fundidos suaves. */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    animation-delay: 0ms !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+  .aurora::before,
+  .aurora::after,
+  .ping-dot::after,
+  .sheen::after,
+  .animate-floaty,
+  .wiggle-hover:hover,
+  .animate-burst,
+  .animate-shake {
+    animation: none !important;
+  }
+  .animate-fade-up,
+  .animate-pop,
+  .stagger > * {
+    animation-name: fadeIn !important;
+  }
+  .bar-grow {
+    animation-name: fadeIn;
+  }
+  .lift:hover {
+    transform: none;
   }
 }

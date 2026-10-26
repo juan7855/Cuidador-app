@@ -193,7 +193,13 @@ export default function PanelGeneral({
           icon="MoonStar"
           tone="ink"
           label="Sueño"
-          value={fmt1(v?.sleepHours)}
+          value={
+            v?.sleepHours != null ? (
+              <AnimatedNumber value={v.sleepHours} decimals={1} />
+            ) : (
+              "—"
+            )
+          }
           unit="h"
           sub={
             <span className="text-[11px] font-bold text-slate-400">
