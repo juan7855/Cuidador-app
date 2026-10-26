@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import { Lock } from "lucide-react";
 
 import Mascot from "@/components/Mascot";
@@ -13,7 +12,6 @@ export default function AccesoPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const refs = useRef<(HTMLInputElement | null)[]>([]);
-  const router = useRouter();
 
   const submit = async (code: string) => {
     setLoading(true);
@@ -25,8 +23,9 @@ export default function AccesoPage() {
         body: JSON.stringify({ code }),
       });
       if (res.ok) {
-        router.replace("/");
-        router.refresh();
+        // Navegación completa: garantiza que la página se pida con la cookie
+        // recién creada, sin depender de la caché del router del cliente.
+        window.location.replace("/");
         return;
       }
       const json = await res.json().catch(() => ({}));

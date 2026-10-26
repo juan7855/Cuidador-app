@@ -15,6 +15,11 @@ export const pool =
   globalForDb.__arenaNextJsPostgresqlPool ??
   new Pool({
     connectionString: databaseUrl,
+    // En serverless una conexión colgada dejaría la página cargando para siempre:
+    // mejor fallar rápido y mostrar el error.
+    connectionTimeoutMillis: 8000,
+    idleTimeoutMillis: 10000,
+    max: process.env.VERCEL ? 1 : 10,
   });
 
 if (process.env.NODE_ENV !== "production") {
