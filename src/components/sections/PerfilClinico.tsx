@@ -40,25 +40,26 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
       <Card className="overflow-hidden p-0">
         <div className="h-24 bg-gradient-to-r from-aqua-500 via-aqua-500 to-brand-500 sm:h-28" />
         <div className="px-5 pb-6 sm:px-7">
-          <div className="-mt-10 flex flex-col gap-4 sm:-mt-12 sm:flex-row sm:items-end sm:justify-between">
-            <div className="flex items-end gap-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
+            <div className="flex items-start gap-4">
+              {/* Solo el avatar invade el banner; el texto vive en la zona blanca */}
               <Avatar
                 name={p.name}
                 from={p.avatarFrom}
                 to={p.avatarTo}
                 size={84}
-                className="ring-4 ring-white"
+                className="-mt-10 ring-4 ring-white sm:-mt-12"
               />
-              <div className="pb-1">
-                <h2 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
+              <div className="min-w-0 pt-3">
+                <h2 className="break-words text-xl font-bold leading-tight tracking-tight text-slate-900 sm:text-2xl">
                   {p.name}
                 </h2>
-                <p className="text-sm font-semibold text-slate-500">
+                <p className="mt-0.5 text-sm font-semibold text-slate-500">
                   {p.relation} · {p.age} años · {p.gender === "F" ? "Mujer" : "Hombre"}
                 </p>
               </div>
             </div>
-            <div className="flex flex-wrap gap-2 sm:pb-1">
+            <div className="flex flex-wrap gap-2 sm:justify-end sm:pt-3">
               {p.bloodType && (
                 <Chip tone="coral" icon="Droplet">
                   Grupo {p.bloodType}
@@ -72,7 +73,7 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
             </div>
           </div>
 
-          <div className="mt-5 grid gap-3 sm:grid-cols-3">
+          <div className="mt-6 grid gap-3 sm:grid-cols-3">
             <div className="flex items-center gap-3 rounded-2xl bg-slate-50 p-3.5">
               <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-aqua-600 shadow-sm">
                 <Phone size={17} />
