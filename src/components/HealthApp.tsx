@@ -171,21 +171,6 @@ export default function HealthApp({ patients }: { patients: LitePatient[] }) {
     [data, patientId, postLog]
   );
 
-  const markRoutine = useCallback(
-    (id: number, done: boolean) => {
-      setData((d) =>
-        d
-          ? applyTodayTotals({
-              ...d,
-              routine: d.routine.map((r) => (r.id === id ? { ...r, doneToday: done } : r)),
-            })
-          : d
-      );
-      if (data) postLog({ kind: "routine", patientId, id, date: data.today, done });
-    },
-    [data, patientId, postLog]
-  );
-
   const setWater = useCallback(
     (glasses: number) => {
       setData((d) => (d ? { ...d, water: glasses } : d));
@@ -274,7 +259,6 @@ export default function HealthApp({ patients }: { patients: LitePatient[] }) {
           go={go}
           onToggleMed={markMed}
           onToggleMeal={markMeal}
-          onToggleRoutine={markRoutine}
         />
       )}
       {section === "perfil" && <PerfilClinico data={data} />}
@@ -295,9 +279,7 @@ export default function HealthApp({ patients }: { patients: LitePatient[] }) {
       {section === "mind" && (
         <MenteActiva data={data} onSaveScore={saveScore} />
       )}
-      {section === "routine" && (
-        <RutinaDiaria data={data} onToggle={markRoutine} />
-      )}
+      {section === "routine" && <RutinaDiaria data={data} />}
       {section === "community" && <Comunidad data={data} onChanged={reload} />}
     </AppChrome>
   );

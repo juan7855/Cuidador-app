@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Check, ChevronDown, PartyPopper } from "lucide-react";
-import { Card, CardTitle, Chip, CheckButton, ProgressRing, MiniBars, DyIcon, AnimatedNumber } from "@/components/ui";
+import { Check, ChevronDown, PartyPopper, Smartphone } from "lucide-react";
+import { Card, CardTitle, Chip, ProgressRing, MiniBars, DyIcon, AnimatedNumber } from "@/components/ui";
 import { SectionHeader } from "@/components/sections/_shared";
 import { sectionById } from "@/components/nav";
 import { cn, hourLabel, isToday, normalizePhase, toneOf } from "@/lib/utils";
@@ -18,10 +18,8 @@ const PHASES: { id: string; label: string; icon: string; tone: string }[] = [
 
 export default function RutinaDiaria({
   data,
-  onToggle,
 }: {
   data: DashboardData;
-  onToggle: (id: number, done: boolean) => void;
 }) {
   const def = sectionById("routine");
   const t = data.totals;
@@ -55,6 +53,12 @@ export default function RutinaDiaria({
       <SectionHeader
         def={def}
         subtitle={`Línea de tiempo de hábitos de ${data.patient.name.split(" ")[0]}`}
+        actions={
+          <span className="inline-flex items-center gap-1.5 rounded-xl bg-slate-100 px-3 py-1.5 text-[11px] font-bold text-slate-500">
+            <Smartphone size={13} />
+            Registrado desde la app de {data.patient.name.split(" ")[0]}
+          </span>
+        }
       />
 
       {/* Resumen compacto */}
@@ -170,12 +174,7 @@ export default function RutinaDiaria({
                   <table className="w-full">
                     <tbody>
                       {phase.tasks.map((task) => (
-                        <TaskRow
-                          key={task.id}
-                          task={task}
-                          tone={phase.tone}
-                          onToggle={() => onToggle(task.id, !task.doneToday)}
-                        />
+                        <TaskRow key={task.id} task={task} tone={phase.tone} />
                       ))}
                     </tbody>
                   </table>
@@ -209,11 +208,9 @@ export default function RutinaDiaria({
 function TaskRow({
   task,
   tone,
-  onToggle,
 }: {
   task: RoutineRow;
   tone: string;
-  onToggle: () => void;
 }) {
   const t = toneOf(tone);
   return (
@@ -255,15 +252,17 @@ function TaskRow({
         {hourLabel(task.time)}
       </td>
 
-      {/* Check */}
-      <td className="w-14 py-3 pr-5 text-right sm:pr-6">
-        <CheckButton
-          done={task.doneToday}
-          onClick={onToggle}
-          label={task.doneToday ? "Desmarcar hábito" : "Marcar hábito"}
-          tone="#1e2b28"
-          size={36}
-        />
+      {/* Estado (solo lectura) */}
+      <td className="w-28 py-3 pr-5 text-right sm:pr-6">
+        <span
+          className={cn(
+            "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold",
+            task.doneToday ? "bg-leaf-100 text-leaf-700" : "bg-slate-100 text-slate-400"
+          )}
+        >
+          {task.doneToday ? <Check size={12} strokeWidth={3} /> : null}
+          {task.doneToday ? "Hecho" : "Pendiente"}
+        </span>
       </td>
     </tr>
   );

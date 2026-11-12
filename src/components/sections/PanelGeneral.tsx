@@ -28,7 +28,6 @@ interface Props {
   go: (s: SectionId) => void;
   onToggleMed: (id: number, done: boolean) => void;
   onToggleMeal: (id: number, done: boolean) => void;
-  onToggleRoutine: (id: number, done: boolean) => void;
 }
 
 interface Action {
@@ -47,7 +46,6 @@ export default function PanelGeneral({
   go,
   onToggleMed,
   onToggleMeal,
-  onToggleRoutine,
 }: Props) {
   const def = sectionById("panel");
   const p = data.patient;
@@ -114,7 +112,6 @@ export default function PanelGeneral({
   const fireAction = (a: Action) => {
     if (a.kind === "med") onToggleMed(a.id, true);
     if (a.kind === "meal") onToggleMeal(a.id, true);
-    if (a.kind === "routine") onToggleRoutine(a.id, true);
   };
 
   const nextMed = data.meds.find((m) => m.scheduled && !m.takenToday);
@@ -268,13 +265,19 @@ export default function PanelGeneral({
                         {a.sub}
                       </p>
                     </div>
-                    <CheckButton
-                      done={false}
-                      onClick={() => fireAction(a)}
-                      label={`Marcar ${a.title}`}
-                      tone={a.hex}
-                      size={40}
-                    />
+                    {a.kind === "routine" ? (
+                      <span className="shrink-0 rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-bold text-slate-400">
+                        Pendiente
+                      </span>
+                    ) : (
+                      <CheckButton
+                        done={false}
+                        onClick={() => fireAction(a)}
+                        label={`Marcar ${a.title}`}
+                        tone={a.hex}
+                        size={40}
+                      />
+                    )}
                   </li>
                 );
               })}
