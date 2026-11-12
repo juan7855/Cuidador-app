@@ -1,6 +1,7 @@
 "use client";
 
-import { Check, PartyPopper } from "lucide-react";
+import { useState } from "react";
+import { Check, ChevronDown, PartyPopper } from "lucide-react";
 import { Card, CardTitle, Chip, CheckButton, ProgressRing, MiniBars, DyIcon, AnimatedNumber } from "@/components/ui";
 import { SectionHeader } from "@/components/sections/_shared";
 import { sectionById } from "@/components/nav";
@@ -27,6 +28,28 @@ export default function RutinaDiaria({
   const routinePct = t.routineTotal ? Math.round((100 * t.routineDone) / t.routineTotal) : 0;
   const allDone = t.routineDone === t.routineTotal && t.routineTotal > 0;
 
+  const phasesWithTasks = PHASES.map((phase) => {
+    const tasks = data.routine
+      .filter((r) => normalizePhase(r.phase) === phase.id)
+      .sort((a, b) => a.time.localeCompare(b.time));
+    const done = tasks.filter((x) => x.doneToday).length;
+    return { ...phase, tasks, done };
+  }).filter((p) => p.tasks.length > 0);
+
+  const [openPhases, setOpenPhases] = useState<Set<string>>(() => {
+    const incomplete = phasesWithTasks.find((p) => p.done < p.tasks.length);
+    return new Set(incomplete ? [incomplete.id] : []);
+  });
+
+  const toggle = (id: string) => {
+    setOpenPhases((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
   return (
     <div className="stagger flex flex-col gap-5 sm:gap-6">
       <SectionHeader
@@ -34,7 +57,7 @@ export default function RutinaDiaria({
         subtitle={`Línea de tiempo de hábitos de ${data.patient.name.split(" ")[0]}`}
       />
 
-      {/* Resumen */}
+      {/* Resumen compacto */}
       <div className="grid gap-4 sm:gap-5 lg:grid-cols-3">
         <Card className="flex items-center gap-5 p-5 sm:p-6">
           <ProgressRing value={routinePct} size={104} stroke={11} color="#1e2b28">
@@ -75,57 +98,93 @@ export default function RutinaDiaria({
         </Card>
       </div>
 
-      {/* Línea de tiempo */}
-      <div className="flex flex-col gap-5 sm:gap-6">
-        {PHASES.map((phase) => {
-          const tasks = data.routine
-            .filter((r) => normalizePhase(r.phase) === phase.id)
-            .sort((a, b) => a.time.localeCompare(b.time));
-          if (!tasks.length) return null;
-          const done = tasks.filter((x) => x.doneToday).length;
+      {/* Fases desplegables */}
+      <Card className="divide-y divide-slate-100 overflow-hidden p-0">
+        {phasesWithTasks.map((phase) => {
+          const isOpen = openPhases.has(phase.id);
+          const phasePct = phase.tasks.length
+            ? Math.round((100 * phase.done) / phase.tasks.length)
+            : 0;
           const pt = toneOf(phase.tone);
+          const phaseComplete = phase.done === phase.tasks.length;
+
           return (
-            <Card key={phase.id} className="overflow-hidden">
-              <div className={cn("flex items-center justify-between gap-3 p-5 sm:px-6", pt.soft)}>
-                <div className="flex items-center gap-3">
-                  <span className={cn("flex h-10 w-10 items-center justify-center rounded-2xl bg-white shadow-sm", pt.text)}>
-                    <DyIcon name={phase.icon} size={20} strokeWidth={2.3} />
-                  </span>
-                  <div>
-                    <h3 className="text-sm font-bold text-slate-800 sm:text-base">
-                      {phase.label}
-                    </h3>
-                    <p className="text-[11px] font-bold text-slate-500">
-                      {done} de {tasks.length} completados
-                    </p>
+            <div key={phase.id}>
+              {/* Cabecera de fase — siempre visible */}
+              <button
+                onClick={() => toggle(phase.id)}
+                className={cn(
+                  "flex w-full items-center gap-3 px-5 py-4 text-left transition-colors hover:bg-slate-50 sm:px-6",
+                  isOpen && "bg-slate-50/60"
+                )}
+              >
+                <span className={cn("flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl", pt.soft, pt.text)}>
+                  <DyIcon name={phase.icon} size={20} strokeWidth={2.3} />
+                </span>
+
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-sm font-bold text-slate-800">{phase.label}</h3>
+                    {phaseComplete && (
+                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-leaf-100 text-leaf-600">
+                        <Check size={12} strokeWidth={3} />
+                      </span>
+                    )}
                   </div>
+                  <p className="text-[11px] font-bold text-slate-400">
+                    {phase.done}/{phase.tasks.length} completados
+                  </p>
                 </div>
-                <div className="hidden h-2 w-32 overflow-hidden rounded-full bg-white/70 sm:block">
-                  <div
-                    className={cn("h-full rounded-full transition-all duration-700", pt.solid)}
-                    style={{ width: `${(done / tasks.length) * 100}%` }}
-                  />
+
+                {/* Barra de progreso inline */}
+                <div className="hidden w-28 sm:block">
+                  <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
+                    <div
+                      className={cn("h-full rounded-full transition-all duration-700", pt.solid)}
+                      style={{ width: `${phasePct}%` }}
+                    />
+                  </div>
+                  <p className="mt-1 text-right text-[10px] font-bold tabular-nums text-slate-400">
+                    {phasePct}%
+                  </p>
+                </div>
+
+                <ChevronDown
+                  size={18}
+                  strokeWidth={2.5}
+                  className={cn(
+                    "shrink-0 text-slate-400 transition-transform duration-200",
+                    isOpen && "rotate-180"
+                  )}
+                />
+              </button>
+
+              {/* Contenido desplegable */}
+              <div
+                className={cn(
+                  "grid transition-[grid-template-rows] duration-300 ease-in-out",
+                  isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                )}
+              >
+                <div className="overflow-hidden">
+                  <table className="w-full">
+                    <tbody>
+                      {phase.tasks.map((task) => (
+                        <TaskRow
+                          key={task.id}
+                          task={task}
+                          tone={phase.tone}
+                          onToggle={() => onToggle(task.id, !task.doneToday)}
+                        />
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </div>
-
-              <ul className="relative px-5 py-2 sm:px-6">
-                <span
-                  className={cn("absolute bottom-6 left-[38px] top-6 w-0.5 sm:left-[42px]", pt.soft)}
-                  aria-hidden
-                />
-                {tasks.map((task) => (
-                  <TaskRow
-                    key={task.id}
-                    task={task}
-                    tone={phase.tone}
-                    onToggle={() => onToggle(task.id, !task.doneToday)}
-                  />
-                ))}
-              </ul>
-            </Card>
+            </div>
           );
         })}
-      </div>
+      </Card>
 
       {allDone && (
         <Card className="flex items-center gap-4 border-transparent bg-gradient-to-r from-ink-50 to-sun-50 p-5 sm:p-6">
@@ -158,16 +217,26 @@ function TaskRow({
 }) {
   const t = toneOf(tone);
   return (
-    <li className="relative flex items-center gap-3.5 py-3 sm:gap-4">
-      <span
-        className={cn(
-          "z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full ring-4 ring-white",
-          task.doneToday ? cn(t.solid, "text-white") : cn(t.soft, t.text)
-        )}
-      >
-        {task.doneToday ? <Check size={16} strokeWidth={3} /> : <DyIcon name={task.icon} size={16} strokeWidth={2.3} />}
-      </span>
-      <div className="min-w-0 flex-1">
+    <tr
+      className={cn(
+        "group border-t border-slate-50 transition-colors",
+        task.doneToday ? "bg-slate-50/50" : "hover:bg-slate-50/40"
+      )}
+    >
+      {/* Icono */}
+      <td className="w-12 py-3 pl-5 sm:pl-6">
+        <span
+          className={cn(
+            "flex h-8 w-8 items-center justify-center rounded-full",
+            task.doneToday ? cn(t.solid, "text-white") : cn(t.soft, t.text)
+          )}
+        >
+          {task.doneToday ? <Check size={14} strokeWidth={3} /> : <DyIcon name={task.icon} size={14} strokeWidth={2.3} />}
+        </span>
+      </td>
+
+      {/* Título y detalle */}
+      <td className="py-3">
         <p
           className={cn(
             "text-sm font-bold",
@@ -176,25 +245,26 @@ function TaskRow({
         >
           {task.title}
         </p>
-        <p
-          className={cn(
-            "truncate text-xs font-medium",
-            task.doneToday ? "text-slate-400" : "text-slate-400"
-          )}
-        >
+        <p className="truncate text-xs font-medium text-slate-400">
           {task.detail}
         </p>
-      </div>
-      <span className="hidden w-16 shrink-0 text-right text-xs font-bold tabular-nums text-slate-400 sm:block">
+      </td>
+
+      {/* Hora */}
+      <td className="hidden w-20 py-3 text-right text-xs font-bold tabular-nums text-slate-400 sm:table-cell">
         {hourLabel(task.time)}
-      </span>
-      <CheckButton
-        done={task.doneToday}
-        onClick={onToggle}
-        label={task.doneToday ? "Desmarcar hábito" : "Marcar hábito"}
-        tone="#1e2b28"
-        size={40}
-      />
-    </li>
+      </td>
+
+      {/* Check */}
+      <td className="w-14 py-3 pr-5 text-right sm:pr-6">
+        <CheckButton
+          done={task.doneToday}
+          onClick={onToggle}
+          label={task.doneToday ? "Desmarcar hábito" : "Marcar hábito"}
+          tone="#1e2b28"
+          size={36}
+        />
+      </td>
+    </tr>
   );
 }
