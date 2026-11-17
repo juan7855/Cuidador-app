@@ -13,6 +13,7 @@ import {
   Stethoscope,
   FileText,
   ClipboardList,
+  User,
 } from "lucide-react";
 import { Card, CardTitle, Chip, Avatar, DyIcon, LineChart, MiniBars } from "@/components/ui";
 import { SectionHeader, StatTile } from "@/components/sections/_shared";
@@ -57,6 +58,33 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
                 <p className="mt-0.5 text-sm font-semibold text-slate-500">
                   {p.relation} · {p.age} años · {p.gender === "F" ? "Mujer" : "Hombre"}
                 </p>
+                <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1">
+                  <span className="flex items-center gap-1.5 text-xs font-bold text-slate-500">
+                    <Ruler size={14} className="text-slate-400" />
+                    {Math.round(p.heightCm ?? 0)} cm
+                  </span>
+                  <span className="flex items-center gap-1.5 text-xs font-bold text-slate-500">
+                    <Weight size={14} className="text-slate-400" />
+                    {(p.weightKg ?? 0).toFixed(1).replace(".", ",")} kg
+                  </span>
+                  {value && (
+                    <span className="flex items-center gap-1.5 text-xs font-bold text-slate-500">
+                      <DyIcon name="Calculator" size={14} className="text-slate-400" />
+                      IMC {String(value).replace(".", ",")}
+                      {cat && (
+                        <span
+                          className={cn(
+                            "chip px-1.5 py-0.5 text-[9px]",
+                            toneOf(cat.tone).soft,
+                            toneOf(cat.tone).text
+                          )}
+                        >
+                          {cat.label}
+                        </span>
+                      )}
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
             <div className="flex flex-wrap gap-2 sm:justify-end sm:pt-3">
@@ -122,40 +150,14 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
         <Card className="p-5 sm:p-6">
           <CardTitle icon="IdCard" tone="aqua" title="Datos personales" />
           <dl className="flex flex-col gap-3">
+            <DataRow icon={<User size={16} />} label="Nombre" value={p.name} />
+            <DataRow icon={<Phone size={16} />} label="Teléfono" value={p.phone ?? "—"} />
             <DataRow icon={<Cake size={16} />} label="Fecha de nacimiento" value={birth} />
-            <DataRow icon={<Ruler size={16} />} label="Altura" value={`${Math.round(p.heightCm ?? 0)} cm`} />
-            <DataRow
-              icon={<Weight size={16} />}
-              label="Peso"
-              value={`${(p.weightKg ?? 0).toFixed(1).replace(".", ",")} kg`}
-            />
             <DataRow
               icon={<Droplet size={16} />}
               label="Grupo sanguíneo"
               value={p.bloodType ?? "—"}
             />
-            <div className="flex items-center justify-between gap-3 rounded-2xl bg-aqua-50/70 px-3.5 py-3">
-              <span className="flex items-center gap-2.5 text-xs font-bold text-aqua-800">
-                <DyIcon name="Calculator" size={16} />
-                IMC
-              </span>
-              <span className="flex items-center gap-2">
-                <strong className="text-sm font-bold text-aqua-900">
-                  {value ? String(value).replace(".", ",") : "—"}
-                </strong>
-                {cat && (
-                  <span
-                    className={cn(
-                      "chip px-2 py-0.5 text-[10px]",
-                      toneOf(cat.tone).soft,
-                      toneOf(cat.tone).text
-                    )}
-                  >
-                    {cat.label}
-                  </span>
-                )}
-              </span>
-            </div>
           </dl>
         </Card>
 
