@@ -101,20 +101,7 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
             </div>
           </div>
 
-          <div className="mt-6 grid gap-3 sm:grid-cols-3">
-            <div className="flex items-center gap-3 rounded-2xl bg-slate-50 p-3.5">
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-aqua-600 shadow-sm">
-                <Phone size={17} />
-              </span>
-              <div className="min-w-0">
-                <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400">
-                  Teléfono
-                </p>
-                <p className="truncate text-sm font-bold text-slate-700">
-                  {p.phone ?? "—"}
-                </p>
-              </div>
-            </div>
+          <div className="mt-6 grid gap-3 sm:grid-cols-2">
             <div className="flex items-center gap-3 rounded-2xl bg-slate-50 p-3.5">
               <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-brand-600 shadow-sm">
                 <ShieldCheck size={17} />
