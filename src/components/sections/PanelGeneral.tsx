@@ -28,6 +28,7 @@ interface Props {
   go: (s: SectionId) => void;
   onToggleMed: (id: number, done: boolean) => void;
   onToggleMeal: (id: number, done: boolean) => void;
+  professionalName: string;
 }
 
 interface Action {
@@ -46,6 +47,7 @@ export default function PanelGeneral({
   go,
   onToggleMed,
   onToggleMeal,
+  professionalName,
 }: Props) {
   const def = sectionById("panel");
   const p = data.patient;
@@ -135,19 +137,20 @@ export default function PanelGeneral({
           <div className="min-w-0">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1 text-[11px] font-bold text-brand-700">
               <Sparkles size={12} />
-              Plan de hoy
+              Plan de hoy de {firstName}
             </span>
             <h2 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl">
-              {greeting()}, {firstName}
+              {greeting()}, {professionalName}
             </h2>
             <p className="mt-1.5 max-w-md text-sm font-medium leading-relaxed text-slate-600">
-              Llevas {data.totals.medsDone + data.totals.mealsDone + data.totals.routineDone + (data.totals.exerciseDone ? 1 : 0)}{" "}
+              {firstName} lleva{" "}
+              {data.totals.medsDone + data.totals.mealsDone + data.totals.routineDone + (data.totals.exerciseDone ? 1 : 0)}{" "}
               de{" "}
               {data.totals.medsTotal +
                 data.totals.mealsTotal +
                 data.totals.routineTotal +
                 (data.totals.hasExercise ? 1 : 0)}{" "}
-              actividades completadas. ¡Vas a buen ritmo!
+              actividades completadas. ¡Va a buen ritmo!
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
               {nextMed ? (

@@ -284,6 +284,17 @@ export const gameScores = pgTable("game_scores", {
   playedAt: timestamp("played_at").defaultNow(),
 });
 
+// Profesionales de salud que usan "app cuidador" — tabla nueva, propia de esta
+// app. NO es la tabla "caregivers" de abajo: esa está pensada para cuentas
+// reales de Supabase Auth compartidas con MiSalud y esta app no la usa. Por
+// ahora solo guarda el nombre a mostrar en el saludo; el acceso sigue siendo
+// una sola clave compartida (ver src/lib/access.ts), sin login individual.
+export const careProfessionals = pgTable("care_professionals", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 // ---------------------------------------------------------------------------
 // Comunidad: foro y mensajes entre pacientes, en MiSalud (ver
 // INTEGRACION-CUIDADOR.md). Estas tablas ya existían en la base real cuando

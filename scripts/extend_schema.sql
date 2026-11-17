@@ -109,3 +109,15 @@ CREATE TABLE IF NOT EXISTS game_scores (
   detail text,
   played_at timestamp DEFAULT now()
 );
+
+-- ---------------------------------------------------------------------------
+-- care_professionals: tabla nueva, propia de "app cuidador". NO es la tabla
+-- "caregivers" (esa está pensada para cuentas reales de Supabase Auth
+-- compartidas con MiSalud). Guarda solo el nombre a mostrar en el saludo;
+-- el acceso sigue siendo una sola clave compartida, sin login individual.
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS care_professionals (
+  id serial PRIMARY KEY,
+  name text NOT NULL,
+  created_at timestamp DEFAULT now()
+);
