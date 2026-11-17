@@ -15,16 +15,15 @@ import {
   ClipboardList,
   User,
 } from "lucide-react";
-import { Card, CardTitle, Chip, Avatar, DyIcon, LineChart, MiniBars } from "@/components/ui";
-import { SectionHeader, StatTile } from "@/components/sections/_shared";
+import { Card, CardTitle, Chip, Avatar, DyIcon } from "@/components/ui";
+import { SectionHeader } from "@/components/sections/_shared";
 import { sectionById } from "@/components/nav";
-import { bmi, bmiCategory, cn, isToday, toneOf } from "@/lib/utils";
+import { bmi, bmiCategory, cn, toneOf } from "@/lib/utils";
 import type { Assessment, DashboardData } from "@/lib/types";
 
 export default function PerfilClinico({ data }: { data: DashboardData }) {
   const def = sectionById("perfil");
   const p = data.patient;
-  const v = data.todayVital;
   const value = bmi(p.weightKg, p.heightCm);
   const cat = value ? bmiCategory(value) : null;
 
@@ -298,69 +297,6 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
           </table>
         </div>
       </Card>
-
-      {/* Evolción */}
-      <div>
-        <h3 className="mb-3 px-1 text-sm font-bold uppercase tracking-wide text-slate-400">
-          Evolción · últimos 7 días
-        </h3>
-        <div className="grid gap-5 sm:gap-6 lg:grid-cols-3">
-          <StatTile
-            icon="HeartPulse"
-            tone="coral"
-            label="Pulso medio"
-            value={Math.round(avg(data.vitals.map((x) => x.heartRate)))}
-            unit="lpm"
-            footer={
-              <LineChart
-                height={56}
-                series={[
-                  {
-                    values: data.vitals.map((x) => x.heartRate ?? 0),
-                    color: "#b85f59",
-                    fill: "#b85f5922",
-                    width: 2,
-                  },
-                ]}
-              />
-            }
-          />
-          <StatTile
-            icon="Activity"
-            tone="brand"
-            label="Presión arterial"
-            value={`${v?.systolic}/${v?.diastolic}`}
-            unit="mmHg"
-            footer={
-              <LineChart
-                height={56}
-                series={[
-                  { values: data.vitals.map((x) => x.systolic ?? 0), color: "#009a74", width: 2 },
-                  { values: data.vitals.map((x) => x.diastolic ?? 0), color: "#4399b2", width: 2 },
-                ]}
-              />
-            }
-          />
-          <StatTile
-            icon="Footprints"
-            tone="leaf"
-            label="Pasos hoy"
-            value={(v?.steps ?? 0).toLocaleString("es-ES")}
-            footer={
-              <MiniBars
-                height={48}
-                max={Math.max(...data.week.map((w) => w.steps), 1)}
-                items={data.week.map((w) => ({
-                  label: w.weekdayShort[0].toUpperCase(),
-                  value: w.steps,
-                  highlight: isToday(w.date),
-                  color: "#009a74",
-                }))}
-              />
-            }
-          />
-        </div>
-      </div>
     </div>
   );
 }
@@ -420,11 +356,6 @@ function InfoGroup({
       )}
     </div>
   );
-}
-
-function avg(xs: (number | null | undefined)[]) {
-  const vals = xs.filter((x): x is number => x != null);
-  return vals.reduce((a, b) => a + b, 0) / Math.max(1, vals.length);
 }
 
 const LABELS = {
