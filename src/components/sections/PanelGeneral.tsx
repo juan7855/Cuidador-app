@@ -28,7 +28,6 @@ interface Props {
   go: (s: SectionId) => void;
   onToggleMed: (id: number, done: boolean) => void;
   onToggleMeal: (id: number, done: boolean) => void;
-  professionalName: string;
 }
 
 interface Action {
@@ -47,7 +46,6 @@ export default function PanelGeneral({
   go,
   onToggleMed,
   onToggleMeal,
-  professionalName,
 }: Props) {
   const def = sectionById("panel");
   const p = data.patient;
@@ -140,7 +138,7 @@ export default function PanelGeneral({
               Plan de hoy de {firstName}
             </span>
             <h2 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl">
-              {greeting()}, {professionalName}
+              {greeting()}
             </h2>
             <p className="mt-1.5 max-w-md text-sm font-medium leading-relaxed text-slate-600">
               {firstName} lleva{" "}

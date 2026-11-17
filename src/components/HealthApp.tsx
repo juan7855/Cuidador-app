@@ -58,13 +58,7 @@ function Splash() {
   );
 }
 
-export default function HealthApp({
-  patients,
-  professionalName,
-}: {
-  patients: LitePatient[];
-  professionalName: string;
-}) {
+export default function HealthApp({ patients }: { patients: LitePatient[] }) {
   const [hydrated, setHydrated] = useState(false);
   const [patientId, setPatientId] = useState<number | null>(null);
   const [data, setData] = useState<DashboardData | null>(null);
@@ -265,7 +259,6 @@ export default function HealthApp({
           go={go}
           onToggleMed={markMed}
           onToggleMeal={markMeal}
-          professionalName={professionalName}
         />
       )}
       {section === "perfil" && <PerfilClinico data={data} />}
