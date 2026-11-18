@@ -81,13 +81,13 @@ export default function PatientSelector({
       <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-5 py-8 sm:px-8 sm:py-12">
         {/* Marca */}
         <header className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <MascotVideo pose="pregunta" size={96} />
+          <div className="flex items-center gap-5">
+            <MascotVideo pose="pregunta" size={136} />
             <div>
-              <p className="text-2xl font-bold tracking-tight text-slate-900">
+              <p className="text-4xl font-extrabold leading-none tracking-tight text-slate-900">
                 Panela
               </p>
-              <p className="-mt-0.5 text-xs font-semibold text-slate-500">
+              <p className="mt-1 text-sm font-semibold text-slate-500">
                 Plataforma de cuidado integral
               </p>
             </div>
