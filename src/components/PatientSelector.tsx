@@ -81,13 +81,16 @@ export default function PatientSelector({
       <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-5 py-8 sm:px-8 sm:py-12">
         {/* Marca */}
         <header className="flex items-center justify-between">
-          <div>
-            <p className="text-lg font-bold tracking-tight text-slate-900">
-              Panela
-            </p>
-            <p className="-mt-0.5 text-[11px] font-semibold text-slate-500">
-              Plataforma de cuidado integral
-            </p>
+          <div className="flex items-center gap-4">
+            <MascotVideo pose="pregunta" size={96} />
+            <div>
+              <p className="text-2xl font-bold tracking-tight text-slate-900">
+                Panela
+              </p>
+              <p className="-mt-0.5 text-xs font-semibold text-slate-500">
+                Plataforma de cuidado integral
+              </p>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <button onClick={() => setAddOpen(true)} className="btn-primary">
@@ -99,25 +102,18 @@ export default function PatientSelector({
         </header>
 
         {/* Encabezado */}
-        <div className="mt-10 flex flex-col items-start gap-4 sm:mt-16 sm:flex-row sm:items-center sm:justify-between">
-          <div className="max-w-2xl">
-            <h1 className="text-3xl font-bold leading-tight tracking-tight text-slate-900 sm:text-5xl">
-              ¿A quién cuidamos{" "}
-              <span className="text-brand-500">
-                hoy?
-              </span>
-            </h1>
-            <p className="mt-3 text-sm leading-relaxed text-slate-500 sm:text-base">
-              Selecciona un paciente para acceder a su panel de salud:
-              medicación, alimentación, actividad física, estimulación cognitiva y
-              rutina diaria en un solo lugar.
-            </p>
-          </div>
-          <MascotVideo
-            pose="pregunta"
-            size={120}
-            className="hidden shrink-0 animate-floaty sm:block"
-          />
+        <div className="mt-10 max-w-2xl sm:mt-16">
+          <h1 className="text-3xl font-bold leading-tight tracking-tight text-slate-900 sm:text-5xl">
+            ¿A quién cuidamos{" "}
+            <span className="text-brand-500">
+              hoy?
+            </span>
+          </h1>
+          <p className="mt-3 text-sm leading-relaxed text-slate-500 sm:text-base">
+            Selecciona un paciente para acceder a su panel de salud:
+            medicación, alimentación, actividad física, estimulación cognitiva y
+            rutina diaria en un solo lugar.
+          </p>
         </div>
 
         {/* Tarjetas de pacientes */}
