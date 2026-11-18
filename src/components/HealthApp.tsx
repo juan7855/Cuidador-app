@@ -82,19 +82,12 @@ export default function HealthApp({ patients }: { patients: LitePatient[] }) {
     }
   }, []);
 
-  // Lee el paciente guardado tras la hidratación (localStorage no existe en el servidor).
   /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      const id = Number(raw);
-      if (patients.some((p) => p.id === id)) {
-        setPatientId(id);
-        void load(id);
-      }
-    }
+    // Cada visita nueva a la app empieza en el selector de perfiles.
+    localStorage.removeItem(STORAGE_KEY);
     setHydrated(true);
-  }, [load, patients]);
+  }, []);
   /* eslint-enable react-hooks/set-state-in-effect */
 
   const select = useCallback(
