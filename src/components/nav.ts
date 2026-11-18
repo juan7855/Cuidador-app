@@ -7,6 +7,8 @@ import {
   Brain,
   CalendarCheck,
   MessagesSquare,
+  BarChart3,
+  Bell,
   type LucideIcon,
 } from "lucide-react";
 
@@ -18,7 +20,9 @@ export type SectionId =
   | "exercise"
   | "mind"
   | "routine"
-  | "community";
+  | "community"
+  | "indicadores"
+  | "avisos";
 
 export interface SectionDef {
   id: SectionId;
@@ -117,6 +121,28 @@ export const SECTIONS: SectionDef[] = [
     short: "Comunidad",
     description: "Foro y mensajes con otros pacientes en MiSalud",
     icon: MessagesSquare,
+    soft: "bg-brand-100",
+    text: "text-brand-700",
+    solid: "bg-brand-500",
+    hex: "#009a74",
+  },
+  {
+    id: "indicadores",
+    label: "Indicadores",
+    short: "Indicadores",
+    description: "Gráficas de bienestar, medicación, actividad y mente",
+    icon: BarChart3,
+    soft: "bg-brand-100",
+    text: "text-brand-700",
+    solid: "bg-brand-500",
+    hex: "#009a74",
+  },
+  {
+    id: "avisos",
+    label: "Avisos",
+    short: "Avisos",
+    description: "Pendientes y alertas que necesitan tu atención",
+    icon: Bell,
     soft: "bg-brand-100",
     text: "text-brand-700",
     solid: "bg-brand-500",

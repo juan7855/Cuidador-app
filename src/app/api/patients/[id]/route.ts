@@ -261,6 +261,51 @@ export async function GET(
   return NextResponse.json(data);
 }
 
+// Actualiza los contactos de emergencia de un paciente ya creado (lo usa el
+// paso 3 del asistente de alta, después de que el paciente ya existe).
+export async function PATCH(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+  const pid = Number(id);
+  if (!pid || Number.isNaN(pid)) {
+    return NextResponse.json({ error: "Paciente no válido" }, { status: 400 });
+  }
+
+  const body = (await req.json().catch(() => ({}))) as {
+    emergencyContacts?: { name?: string; phone?: string; relation?: string }[];
+  };
+
+  if (!Array.isArray(body.emergencyContacts)) {
+    return NextResponse.json(
+      { error: "emergencyContacts debe ser un arreglo" },
+      { status: 400 }
+    );
+  }
+
+  const cleaned = body.emergencyContacts
+    .map((c) => ({
+      name: c.name?.trim() ?? "",
+      phone: c.phone?.trim() ?? "",
+      relation: c.relation?.trim() ?? "",
+    }))
+    .filter((c) => c.name && c.phone);
+
+  const [updated] = await db
+    .update(patients)
+    .set({ emergencyContacts: cleaned.length ? cleaned : null })
+    .where(eq(patients.id, pid))
+    .returning();
+
+  if (!updated) {
+    return NextResponse.json({ error: "Paciente no encontrado" }, { status: 404 });
+  }
+
+  const { pin: _pin, ...patientPublic } = updated;
+  return NextResponse.json({ patient: patientPublic });
+}
+
 // Borra el paciente y todo lo que cuelga de él. La base es compartida con
 // MiSalud y no controlamos sus migraciones, así que no confiamos en ON DELETE
 // CASCADE: se borran primero los registros hijos (logs antes que sus padres).

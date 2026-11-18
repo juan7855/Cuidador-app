@@ -50,6 +50,12 @@ export const patients = pgTable("patients", {
     phone: string;
     relation: string;
   }>(), // (nueva)
+  // Lista de contactos de emergencia (sustituye en la práctica a
+  // emergencyContact, que solo admitía uno). Se deja la columna singular
+  // intacta por compatibilidad con pacientes sembrados antes de este cambio.
+  emergencyContacts: jsonb("emergency_contacts").$type<
+    { name: string; phone: string; relation: string }[]
+  >(), // (nueva)
   createdAt: timestamp("created_at").defaultNow(), // (real)
 });
 

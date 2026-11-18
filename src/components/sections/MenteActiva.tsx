@@ -25,7 +25,7 @@ import SequenceGame from "@/components/sections/games/SequenceGame";
 
 type GameId = "memory" | "math" | "sequence";
 
-const GAMES: {
+export const GAMES: {
   id: GameId;
   title: string;
   tagline: string;
@@ -74,7 +74,7 @@ const GAMES: {
   },
 ];
 
-const GAME_LABEL: Record<string, string> = {
+export const GAME_LABEL: Record<string, string> = {
   memory: "Memoria",
   math: "Cálculo",
   sequence: "Secuencia",

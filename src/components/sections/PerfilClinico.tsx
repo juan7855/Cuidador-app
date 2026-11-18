@@ -28,9 +28,16 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
   const cat = value ? bmiCategory(value) : null;
 
   const birth = p.birthDate.split("-").reverse().join("/");
-  const emergency = p.emergencyContact as
-    | { name: string; phone: string; relation: string }
-    | null;
+  type EmergencyContact = { name: string; phone: string; relation: string };
+  // p.emergencyContacts (plural) es la fuente nueva; si está vacía o ausente
+  // (pacientes creados antes de este cambio) se usa el p.emergencyContact
+  // singular de siempre, envuelto en una lista de 1.
+  const emergencyContacts: EmergencyContact[] =
+    (p.emergencyContacts as EmergencyContact[] | null)?.length
+      ? (p.emergencyContacts as EmergencyContact[])
+      : p.emergencyContact
+        ? [p.emergencyContact as EmergencyContact]
+        : [];
 
   return (
     <div className="stagger flex flex-col gap-5 sm:gap-6">
@@ -186,26 +193,37 @@ export default function PerfilClinico({ data }: { data: DashboardData }) {
         </Card>
 
         <div className="flex flex-col gap-5 sm:gap-6">
-          {emergency && (
+          {emergencyContacts.length > 0 && (
             <Card className="overflow-hidden border-transparent bg-gradient-to-br from-coral-500 to-coral-600 p-5 text-white sm:p-6">
               <div className="flex items-center gap-3">
-                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/20">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white/20">
                   <Siren size={22} />
                 </span>
-                <div>
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-white/80">
-                    Contacto de emergencia
-                  </p>
-                  <p className="text-base font-bold">{emergency.name}</p>
-                </div>
+                <p className="text-[11px] font-bold uppercase tracking-wider text-white/80">
+                  {emergencyContacts.length > 1
+                    ? "Contactos de emergencia"
+                    : "Contacto de emergencia"}
+                </p>
               </div>
-              <a
-                href={`tel:${emergency.phone.replace(/\s/g, "")}`}
-                className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-white px-4 py-3 text-sm font-bold text-coral-600 shadow-lg transition hover:bg-coral-50 active:scale-[0.98]"
-              >
-                <PhoneCall size={17} />
-                Llamar · {emergency.phone}
-              </a>
+              <div className="mt-4 flex flex-col gap-2">
+                {emergencyContacts.map((c, i) => (
+                  <a
+                    key={i}
+                    href={`tel:${c.phone.replace(/\s/g, "")}`}
+                    className="flex w-full items-center justify-between gap-3 rounded-2xl bg-white px-4 py-3 text-coral-600 shadow-lg transition hover:bg-coral-50 active:scale-[0.98]"
+                  >
+                    <span className="min-w-0">
+                      <span className="block truncate text-sm font-bold">
+                        {c.name}
+                      </span>
+                      <span className="block truncate text-[11px] font-semibold text-coral-400">
+                        {c.relation || "Contacto"} · {c.phone}
+                      </span>
+                    </span>
+                    <PhoneCall size={17} className="shrink-0" />
+                  </a>
+                ))}
+              </div>
             </Card>
           )}
 

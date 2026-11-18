@@ -21,6 +21,7 @@ ALTER TABLE patients ADD COLUMN IF NOT EXISTS phone text;
 ALTER TABLE patients ADD COLUMN IF NOT EXISTS insurance text;
 ALTER TABLE patients ADD COLUMN IF NOT EXISTS address text;
 ALTER TABLE patients ADD COLUMN IF NOT EXISTS emergency_contact jsonb;
+ALTER TABLE patients ADD COLUMN IF NOT EXISTS emergency_contacts jsonb;
 
 -- ---------------------------------------------------------------------------
 -- clinical_profiles: ya existía (conditions/allergies/doctor_name/

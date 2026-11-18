@@ -14,6 +14,7 @@ import {
   CalendarCheck,
   LayoutDashboard,
   MessagesSquare,
+  BarChart3,
   X,
   type LucideIcon,
 } from "lucide-react";
@@ -22,6 +23,7 @@ import { SECTIONS, type SectionId, type SectionDef } from "@/components/nav";
 import { Avatar, DyIcon } from "@/components/ui";
 import { cn, greeting, toneOf } from "@/lib/utils";
 import type { Patient } from "@/lib/types";
+import type { Alert } from "@/lib/alerts";
 
 const ICONS: Record<string, LucideIcon> = {
   panel: LayoutDashboard,
@@ -32,16 +34,14 @@ const ICONS: Record<string, LucideIcon> = {
   mind: Brain,
   routine: CalendarCheck,
   community: MessagesSquare,
+  indicadores: BarChart3,
+  avisos: Bell,
 };
 
 const MOBILENAV: SectionId[] = ["panel", "meds", "mind", "routine"];
-const SHEET_NAV: SectionId[] = ["perfil", "food", "exercise", "community"];
+const SHEET_NAV: SectionId[] = ["perfil", "food", "exercise", "community", "indicadores", "avisos"];
 
-export interface Reminder {
-  icon: string;
-  tone: string;
-  text: string;
-}
+export type Reminder = Alert;
 
 function NavRow({
   section,
@@ -196,10 +196,10 @@ export default function AppChrome({
                       Todo al día. ¡Buen trabajo!
                     </p>
                   ) : (
-                    reminders.map((r, i) => {
+                    reminders.map((r) => {
                       const t = toneOf(r.tone);
                       return (
-                        <div key={i} className="flex items-center gap-3 rounded-2xl px-2 py-2.5 hover:bg-slate-50">
+                        <div key={r.id} className="flex items-center gap-3 rounded-2xl px-2 py-2.5 hover:bg-slate-50">
                           <span className={cn("flex h-9 w-9 shrink-0 items-center justify-center rounded-xl", t.soft, t.text)}>
                             <DyIcon name={r.icon} size={17} strokeWidth={2.3} />
                           </span>
@@ -210,6 +210,15 @@ export default function AppChrome({
                       );
                     })
                   )}
+                  <button
+                    onClick={() => {
+                      setBellOpen(false);
+                      go("avisos");
+                    }}
+                    className="mt-1 w-full rounded-xl px-2 py-2 text-center text-xs font-bold text-brand-600 transition hover:bg-brand-50"
+                  >
+                    Ver todos los avisos
+                  </button>
                 </div>
               </>
             )}

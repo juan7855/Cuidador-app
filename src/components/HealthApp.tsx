@@ -1,11 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import Mascot from "@/components/Mascot";
+import MascotVideo from "@/components/MascotVideo";
 import PatientSelector, { type LitePatient } from "@/components/PatientSelector";
-import AppChrome, { type Reminder } from "@/components/AppChrome";
+import AppChrome from "@/components/AppChrome";
 import { type SectionId } from "@/components/nav";
-import { jsonFetch, hourLabel } from "@/lib/utils";
+import { jsonFetch } from "@/lib/utils";
+import { buildAlerts } from "@/lib/alerts";
 import type { DashboardData } from "@/lib/types";
 import PanelGeneral from "@/components/sections/PanelGeneral";
 import PerfilClinico from "@/components/sections/PerfilClinico";
@@ -15,6 +16,8 @@ import Ejercicio from "@/components/sections/Ejercicio";
 import MenteActiva from "@/components/sections/MenteActiva";
 import RutinaDiaria from "@/components/sections/RutinaDiaria";
 import Comunidad from "@/components/sections/Comunidad";
+import Indicadores from "@/components/sections/Indicadores";
+import Avisos from "@/components/sections/Avisos";
 
 const STORAGE_KEY = "vitalcare.patient";
 
@@ -51,7 +54,7 @@ function applyTodayTotals(d: DashboardData): DashboardData {
 function Splash() {
   return (
     <div className="app-bg flex min-h-screen flex-col items-center justify-center gap-5">
-      <Mascot size={104} className="animate-pop" />
+      <MascotVideo pose="iconos" size={104} className="animate-pop" />
       <p className="text-lg font-bold tracking-tight text-slate-800">Panela</p>
       <span className="h-5 w-5 animate-spin rounded-full border-[3px] border-brand-200 border-t-brand-600" />
     </div>
@@ -200,46 +203,8 @@ export default function HealthApp({ patients }: { patients: LitePatient[] }) {
     [patientId, data]
   );
 
-  const reminders = useMemo<Reminder[]>(() => {
-    if (!data) return [];
-    const out: Reminder[] = [];
-    const now = new Date();
-    const nowMin = now.getHours() * 60 + now.getMinutes();
-    const pendingMeds = data.meds
-      .filter((m) => m.scheduled && !m.takenToday)
-      .sort((a, b) => a.time.localeCompare(b.time));
-    const nextMed =
-      pendingMeds.find((m) => {
-        const [h, mi] = m.time.split(":").map(Number);
-        return h * 60 + mi >= nowMin;
-      }) ?? pendingMeds[0];
-    if (nextMed) {
-      out.push({
-        icon: "Pill",
-        tone: "clay",
-        text: `${nextMed.name} ${nextMed.dosage} · ${hourLabel(nextMed.time)}`,
-      });
-    }
-    const pendingTask = data.routine
-      .filter((t) => !t.doneToday)
-      .sort((a, b) => a.time.localeCompare(b.time))[0];
-    if (pendingTask) {
-      out.push({
-        icon: pendingTask.icon,
-        tone: "ink",
-        text: `${pendingTask.title} · ${hourLabel(pendingTask.time)}`,
-      });
-    }
-    const goal = data.patient.goals?.waterGlasses ?? 8;
-    if (data.water < goal) {
-      out.push({
-        icon: "Droplets",
-        tone: "aqua",
-        text: `Hidratación: llevas ${data.water} de ${goal} vasos`,
-      });
-    }
-    return out.slice(0, 3);
-  }, [data]);
+  const alerts = useMemo(() => (data ? buildAlerts(data) : []), [data]);
+  const reminders = useMemo(() => alerts.slice(0, 3), [alerts]);
 
   if (!hydrated || (patientId !== null && !data)) return <Splash />;
   if (!patientId || !data)
@@ -281,6 +246,8 @@ export default function HealthApp({ patients }: { patients: LitePatient[] }) {
       )}
       {section === "routine" && <RutinaDiaria data={data} />}
       {section === "community" && <Comunidad data={data} onChanged={reload} />}
+      {section === "indicadores" && <Indicadores data={data} />}
+      {section === "avisos" && <Avisos data={data} />}
     </AppChrome>
   );
 }
