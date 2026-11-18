@@ -10,7 +10,6 @@ import {
   Dumbbell,
   ChevronRight,
   Pill,
-  Brain,
   CalendarCheck,
   LayoutDashboard,
   MessagesSquare,
@@ -31,14 +30,13 @@ const ICONS: Record<string, LucideIcon> = {
   meds: Pill,
   food: UtensilsCrossed,
   exercise: Dumbbell,
-  mind: Brain,
   routine: CalendarCheck,
   community: MessagesSquare,
   indicadores: BarChart3,
   avisos: Bell,
 };
 
-const MOBILENAV: SectionId[] = ["panel", "meds", "mind", "routine"];
+const MOBILENAV: SectionId[] = ["panel", "meds", "routine"];
 const SHEET_NAV: SectionId[] = ["perfil", "food", "exercise", "community", "indicadores", "avisos"];
 
 export type Reminder = Alert;
@@ -236,7 +234,7 @@ export default function AppChrome({
       {/* ------------------------------------------------ Navegación inferior (móvil) */}
       <nav className="pb-safe fixed inset-x-0 bottom-0 z-40 lg:hidden">
         <div className="mx-3 mb-3 flex items-end justify-around rounded-2xl border border-slate-200 bg-white/95 px-2 py-2 shadow-[var(--shadow-pop)] backdrop-blur">
-          {MOBILENAV.slice(0, 2).map((id) => (
+          {MOBILENAV.map((id) => (
             <MobileTab
               key={id}
               def={SECTIONS.find((s) => s.id === id)!}
@@ -244,26 +242,6 @@ export default function AppChrome({
               onClick={() => go(id)}
             />
           ))}
-
-          {/* Botón central: Mente activa */}
-          <button
-            onClick={() => go("mind")}
-            aria-label="Mente activa"
-            className={cn(
-              "flex -translate-y-3 flex-col items-center gap-1 rounded-2xl px-4 py-2 text-white shadow-lg transition active:scale-95",
-              "bg-brand-500"
-            )}
-            style={{ boxShadow: "0 12px 22px -10px rgba(0,154,116,.55)" }}
-          >
-            <Brain size={24} strokeWidth={2.3} />
-            <span className="text-[10px] font-bold">Mente</span>
-          </button>
-
-          <MobileTab
-            def={SECTIONS.find((s) => s.id === "routine")!}
-            active={section === "routine"}
-            onClick={() => go("routine")}
-          />
           <button
             onClick={() => setSheetOpen(true)}
             aria-label="Ver más secciones"

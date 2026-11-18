@@ -3,12 +3,11 @@
 import { useState } from "react";
 import { Card, CardTitle, LineChart, MiniBars, Segmented } from "@/components/ui";
 import { SectionHeader, StatTile, NoticeCard } from "@/components/sections/_shared";
-import { GAMES, GAME_LABEL } from "@/components/sections/MenteActiva";
 import { sectionById } from "@/components/nav";
-import { cn, isToday, lastNDates, pct, toneOf, weekdayShort } from "@/lib/utils";
+import { isToday, lastNDates, pct, toneOf, weekdayShort } from "@/lib/utils";
 import type { DashboardData } from "@/lib/types";
 
-type Tab = "bienestar" | "meds" | "actividad" | "mente";
+type Tab = "bienestar" | "meds" | "actividad" | "comunidad";
 
 function cap(s: string) {
   return s.charAt(0).toUpperCase() + s.slice(1);
@@ -52,7 +51,7 @@ export default function Indicadores({ data }: { data: DashboardData }) {
             { value: "bienestar", label: "Bienestar" },
             { value: "meds", label: "Medicamentos" },
             { value: "actividad", label: "Actividad y alimentación" },
-            { value: "mente", label: "Mente y comunidad" },
+            { value: "comunidad", label: "Comunidad" },
           ]}
         />
       </div>
@@ -60,7 +59,7 @@ export default function Indicadores({ data }: { data: DashboardData }) {
       {tab === "bienestar" && <Bienestar data={data} dates={dates} />}
       {tab === "meds" && <Medicamentos data={data} lowStock={lowStock} />}
       {tab === "actividad" && <Actividad data={data} />}
-      {tab === "mente" && <Mente data={data} />}
+      {tab === "comunidad" && <Comunidad data={data} />}
     </div>
   );
 }
@@ -235,64 +234,23 @@ function Actividad({ data }: { data: DashboardData }) {
   );
 }
 
-function Mente({ data }: { data: DashboardData }) {
+function Comunidad({ data }: { data: DashboardData }) {
   return (
-    <>
-      <div className="grid gap-4 sm:grid-cols-3">
-        {GAMES.map((g) => (
-          <StatTile
-            key={g.id}
-            icon="Trophy"
-            tone="brand"
-            label={GAME_LABEL[g.id] ?? g.title}
-            value={data.best[g.id] ?? 0}
-            unit="pts"
-          />
-        ))}
-      </div>
-
-      <Card className="p-5 sm:p-6">
-        <CardTitle icon="History" tone="ink" title="Partidas recientes" />
-        {data.recentScores.length === 0 ? (
-          <p className="py-6 text-center text-xs font-semibold text-slate-400">
-            Todavía no hay partidas registradas.
-          </p>
-        ) : (
-          <ul className="flex flex-col">
-            {data.recentScores.map((s, i) => (
-              <li
-                key={s.id}
-                className={cn(
-                  "flex items-center justify-between gap-3 py-2.5 text-sm",
-                  i !== 0 && "border-t border-slate-100"
-                )}
-              >
-                <span className="font-bold text-slate-700">
-                  {GAME_LABEL[s.game] ?? s.game}
-                </span>
-                <span className="font-bold text-slate-900">{s.score} pts</span>
-              </li>
-            ))}
-          </ul>
-        )}
-      </Card>
-
-      <Card className="p-5 sm:p-6">
-        <CardTitle icon="MessagesSquare" tone="brand" title="Comunidad" />
-        {data.community.member ? (
-          <NoticeCard tone="leaf" icon="Check" title="Participa en la comunidad">
-            Tiene acceso al foro y mensajes de MiSalud
-            {data.community.addedAt
-              ? ` desde el ${new Date(data.community.addedAt).toLocaleDateString("es-ES")}`
-              : ""}
-            .
-          </NoticeCard>
-        ) : (
-          <NoticeCard tone="slate" icon="MessagesSquare" title="Sin acceso a la comunidad">
-            Actívalo desde la sección Comunidad si quieres que participe en el foro.
-          </NoticeCard>
-        )}
-      </Card>
-    </>
+    <Card className="p-5 sm:p-6">
+      <CardTitle icon="MessagesSquare" tone="brand" title="Comunidad" />
+      {data.community.member ? (
+        <NoticeCard tone="leaf" icon="Check" title="Participa en la comunidad">
+          Tiene acceso al foro y mensajes de MiSalud
+          {data.community.addedAt
+            ? ` desde el ${new Date(data.community.addedAt).toLocaleDateString("es-ES")}`
+            : ""}
+          .
+        </NoticeCard>
+      ) : (
+        <NoticeCard tone="slate" icon="MessagesSquare" title="Sin acceso a la comunidad">
+          Actívalo desde la sección Comunidad si quieres que participe en el foro.
+        </NoticeCard>
+      )}
+    </Card>
   );
 }

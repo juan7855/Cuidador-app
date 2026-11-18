@@ -13,7 +13,6 @@ import PerfilClinico from "@/components/sections/PerfilClinico";
 import Medicamentos from "@/components/sections/Medicamentos";
 import Alimentacion from "@/components/sections/Alimentacion";
 import Ejercicio from "@/components/sections/Ejercicio";
-import MenteActiva from "@/components/sections/MenteActiva";
 import RutinaDiaria from "@/components/sections/RutinaDiaria";
 import Comunidad from "@/components/sections/Comunidad";
 import Indicadores from "@/components/sections/Indicadores";
@@ -181,21 +180,6 @@ export default function HealthApp({ patients }: { patients: LitePatient[] }) {
     if (patientId) await load(patientId);
   }, [patientId, load]);
 
-  const saveScore = useCallback(
-    async (game: string, score: number, detail: string) => {
-      if (!patientId || !data) return score;
-      const res = await fetch("/api/games", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ patientId, game, score, detail }),
-      });
-      const json = (await res.json()) as { best: Record<string, number> };
-      setData((d) => (d ? { ...d, best: json.best } : d));
-      return json.best[game] ?? score;
-    },
-    [patientId, data]
-  );
-
   const alerts = useMemo(() => (data ? buildAlerts(data) : []), [data]);
   const reminders = useMemo(() => alerts.slice(0, 3), [alerts]);
 
@@ -233,9 +217,6 @@ export default function HealthApp({ patients }: { patients: LitePatient[] }) {
       )}
       {section === "exercise" && (
         <Ejercicio data={data} onToggle={markExercise} />
-      )}
-      {section === "mind" && (
-        <MenteActiva data={data} onSaveScore={saveScore} />
       )}
       {section === "routine" && <RutinaDiaria data={data} />}
       {section === "community" && <Comunidad data={data} onChanged={reload} />}

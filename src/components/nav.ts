@@ -4,7 +4,6 @@ import {
   Pill,
   UtensilsCrossed,
   Dumbbell,
-  Brain,
   CalendarCheck,
   MessagesSquare,
   BarChart3,
@@ -18,7 +17,6 @@ export type SectionId =
   | "meds"
   | "food"
   | "exercise"
-  | "mind"
   | "routine"
   | "community"
   | "indicadores"
@@ -94,17 +92,6 @@ export const SECTIONS: SectionDef[] = [
     hex: "#009a74",
   },
   {
-    id: "mind",
-    label: "Mente activa",
-    short: "Mente",
-    description: "Juegos cognitivos para entrenar la memoria",
-    icon: Brain,
-    soft: "bg-brand-100",
-    text: "text-brand-700",
-    solid: "bg-brand-500",
-    hex: "#009a74",
-  },
-  {
     id: "routine",
     label: "Rutina diaria",
     short: "Rutina",
@@ -130,7 +117,7 @@ export const SECTIONS: SectionDef[] = [
     id: "indicadores",
     label: "Indicadores",
     short: "Indicadores",
-    description: "Gráficas de bienestar, medicación, actividad y mente",
+    description: "Gráficas de bienestar, medicación, actividad y comunidad",
     icon: BarChart3,
     soft: "bg-brand-100",
     text: "text-brand-700",
