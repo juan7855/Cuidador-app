@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { Lock } from "lucide-react";
 
-import Mascot from "@/components/Mascot";
+import MascotVideo from "@/components/MascotVideo";
 
 const LENGTH = 6;
 
@@ -78,7 +78,7 @@ export default function AccesoPage() {
           </span>
         </div>
         <div className="my-8 flex flex-col items-center text-center lg:items-start lg:text-left">
-          <Mascot size={200} className="animate-floaty" />
+          <MascotVideo pose="escucha" size={200} className="animate-floaty" />
           <h2 className="mt-8 max-w-sm text-3xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-4xl">
             Acompañe a su familiar desde el computador o el celular.
           </h2>
