@@ -1,6 +1,5 @@
 "use client";
 
-import Mascot from "@/components/Mascot";
 import MascotVideo from "@/components/MascotVideo";
 import NewPatientWizard from "@/components/NewPatientWizard";
 import { useState } from "react";
@@ -82,16 +81,13 @@ export default function PatientSelector({
       <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-5 py-8 sm:px-8 sm:py-12">
         {/* Marca */}
         <header className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Mascot size={56} />
-            <div>
-              <p className="text-lg font-bold tracking-tight text-slate-900">
-                Panela
-              </p>
-              <p className="-mt-0.5 text-[11px] font-semibold text-slate-500">
-                Plataforma de cuidado integral
-              </p>
-            </div>
+          <div>
+            <p className="text-lg font-bold tracking-tight text-slate-900">
+              Panela
+            </p>
+            <p className="-mt-0.5 text-[11px] font-semibold text-slate-500">
+              Plataforma de cuidado integral
+            </p>
           </div>
           <div className="flex items-center gap-2">
             <button onClick={() => setAddOpen(true)} className="btn-primary">

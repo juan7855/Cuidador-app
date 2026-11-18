@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Check, Copy, Trash2, X } from "lucide-react";
-import Mascot from "@/components/Mascot";
 import MascotVideo from "@/components/MascotVideo";
 import { bmi, bmiCategory, cn } from "@/lib/utils";
 import type { Assessment } from "@/lib/types";
@@ -276,7 +275,6 @@ export default function NewPatientWizard({
         {/* Panel de marca */}
         <div className="aurora flex flex-col justify-between bg-slate-100 px-8 py-8 sm:px-14 sm:py-12">
           <div className="flex items-center gap-2.5">
-            <Mascot size={34} />
             <span className="text-2xl font-extrabold tracking-tight text-slate-900">
               Panela
             </span>

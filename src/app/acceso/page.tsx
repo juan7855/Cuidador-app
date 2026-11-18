@@ -73,7 +73,6 @@ export default function AccesoPage() {
       {/* Panel de marca */}
       <div className="aurora flex flex-col justify-between bg-slate-100 px-8 py-8 sm:px-14 sm:py-12">
         <div className="flex items-center gap-2.5">
-          <Mascot size={34} />
           <span className="text-2xl font-extrabold tracking-tight text-slate-900">
             Panela
           </span>
