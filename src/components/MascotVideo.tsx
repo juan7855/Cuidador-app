@@ -147,14 +147,26 @@ export default function MascotVideo({
     video.addEventListener("canplay", onCanPlay);
 
     let raf = 0;
+    let warned = false;
     const draw = () => {
       const w = canvas.width;
       const h = canvas.height;
       if (w && h && video.readyState >= 2) {
         ctx.drawImage(video, 0, 0, w, h);
-        const frame = ctx.getImageData(0, 0, w, h);
-        keyOutBackground(frame.data, w, h);
-        ctx.putImageData(frame, 0, 0);
+        try {
+          const frame = ctx.getImageData(0, 0, w, h);
+          keyOutBackground(frame.data, w, h);
+          ctx.putImageData(frame, 0, 0);
+        } catch (err) {
+          // Si el canvas queda "tainted" por algún motivo (p.ej. el host
+          // sirve el video desde otro origen) no podemos leer sus píxeles
+          // para quitar el fondo, pero el drawImage de arriba ya dejó el
+          // frame crudo pintado: mejor eso (con fondo negro) que nada.
+          if (!warned) {
+            warned = true;
+            console.error("MascotVideo: no se pudo leer el frame del canvas", err);
+          }
+        }
       }
       raf = requestAnimationFrame(draw);
     };
@@ -180,6 +192,12 @@ export default function MascotVideo({
       style={{ height, width }}
     >
       {!ready && <Mascot size={size} className="absolute inset-0" />}
+      {/*
+        No se usa display:none (ni "hidden" de Tailwind): varios navegadores
+        pausan o dejan de decodificar frames de un <video> con display:none,
+        lo que rompe el drawImage hacia el canvas. Se oculta visualmente
+        pero se mantiene "pintable".
+      */}
       <video
         ref={videoRef}
         src={SRC[pose]}
@@ -188,7 +206,15 @@ export default function MascotVideo({
         loop={loop}
         playsInline
         preload="auto"
-        className="hidden"
+        aria-hidden
+        style={{
+          position: "absolute",
+          width: 1,
+          height: 1,
+          opacity: 0,
+          pointerEvents: "none",
+          overflow: "hidden",
+        }}
       />
       <canvas
         ref={canvasRef}
