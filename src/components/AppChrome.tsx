@@ -10,7 +10,6 @@ import {
   Dumbbell,
   ChevronRight,
   Pill,
-  CalendarCheck,
   LayoutDashboard,
   MessagesSquare,
   BarChart3,
@@ -30,13 +29,12 @@ const ICONS: Record<string, LucideIcon> = {
   meds: Pill,
   food: UtensilsCrossed,
   exercise: Dumbbell,
-  routine: CalendarCheck,
   community: MessagesSquare,
   indicadores: BarChart3,
   avisos: Bell,
 };
 
-const MOBILENAV: SectionId[] = ["panel", "meds", "routine"];
+const MOBILENAV: SectionId[] = ["panel", "meds"];
 const SHEET_NAV: SectionId[] = ["perfil", "food", "exercise", "community", "indicadores", "avisos"];
 
 export type Reminder = Alert;

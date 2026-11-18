@@ -13,7 +13,6 @@ import PerfilClinico from "@/components/sections/PerfilClinico";
 import Medicamentos from "@/components/sections/Medicamentos";
 import Alimentacion from "@/components/sections/Alimentacion";
 import Ejercicio from "@/components/sections/Ejercicio";
-import RutinaDiaria from "@/components/sections/RutinaDiaria";
 import Comunidad from "@/components/sections/Comunidad";
 import Indicadores from "@/components/sections/Indicadores";
 import Avisos from "@/components/sections/Avisos";
@@ -218,7 +217,6 @@ export default function HealthApp({ patients }: { patients: LitePatient[] }) {
       {section === "exercise" && (
         <Ejercicio data={data} onToggle={markExercise} />
       )}
-      {section === "routine" && <RutinaDiaria data={data} />}
       {section === "community" && <Comunidad data={data} onChanged={reload} />}
       {section === "indicadores" && <Indicadores data={data} />}
       {section === "avisos" && <Avisos data={data} />}

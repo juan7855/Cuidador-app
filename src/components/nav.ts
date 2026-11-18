@@ -4,7 +4,6 @@ import {
   Pill,
   UtensilsCrossed,
   Dumbbell,
-  CalendarCheck,
   MessagesSquare,
   BarChart3,
   Bell,
@@ -17,7 +16,6 @@ export type SectionId =
   | "meds"
   | "food"
   | "exercise"
-  | "routine"
   | "community"
   | "indicadores"
   | "avisos";
@@ -86,17 +84,6 @@ export const SECTIONS: SectionDef[] = [
     short: "Ejercicio",
     description: "Plan semanal de movimiento y actividad",
     icon: Dumbbell,
-    soft: "bg-brand-100",
-    text: "text-brand-700",
-    solid: "bg-brand-500",
-    hex: "#009a74",
-  },
-  {
-    id: "routine",
-    label: "Rutina diaria",
-    short: "Rutina",
-    description: "Línea de tiempo de hábitos del día",
-    icon: CalendarCheck,
     soft: "bg-brand-100",
     text: "text-brand-700",
     solid: "bg-brand-500",
